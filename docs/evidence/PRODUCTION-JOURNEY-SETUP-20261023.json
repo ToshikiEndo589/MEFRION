@@ -1,0 +1,133 @@
+{
+  "action": "setup",
+  "passed": true,
+  "checks": [
+    {
+      "check": "password-login-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "password-login-family",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "password-login-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "list_pets",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "feed_page",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "create_pet",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "album",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "invite",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "accept_invite",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "accept_invite",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "begin_photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "original-upload-image",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "finish_photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "consent",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "begin_video",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "original-upload-video",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "poster-upload",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "finish_video",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "consent",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "album",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "private-image-family",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "private-image-outsider-denied",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "set_public_profile",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "request_publication",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "request_publication",
+      "status": 200,
+      "passed": true
+    }
+  ],
+  "email_delivery_tested": false,
+  "scope": "real production Auth login / customer RPC / synthetic fixtures only"
+}

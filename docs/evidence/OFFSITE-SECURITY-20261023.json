@@ -1,0 +1,7 @@
+{
+  "anonymous_denied": true,
+  "wrong_token_denied": true,
+  "authorized_destination_ready": true,
+  "plaintext_rejected": true,
+  "invalid_path_rejected": true
+}

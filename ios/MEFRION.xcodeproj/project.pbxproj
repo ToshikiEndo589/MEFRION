@@ -1,0 +1,594 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A01120261011000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A01120261011000000000002 /* PrivacyInfo.xcprivacy */; };
+		01209EC0811DB97286029A16 /* CloudFamilyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8006E89B18B3FCA8AB2BA302 /* CloudFamilyClient.swift */; };
+		069825B4485022BEDEF17CBB /* AuthenticationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048A144015F950A5647B8212 /* AuthenticationSheet.swift */; };
+		07218CA1CF2E1A906F484D47 /* CloudProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5969E2ADC7D4F188E725B3CB /* CloudProfileEditor.swift */; };
+		1168E30D4393B6330285BEE5 /* CloudTwinsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023E22DE01E07C95469DAE0C /* CloudTwinsView.swift */; };
+		164BA2A1DDD0DBEB40A28567 /* MEFRIONApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4D8B596ADF054D5B0587CC /* MEFRIONApp.swift */; };
+		1DF878191E8C9CF8D4B72228 /* PrototypeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1140090C2255C89DD3BD6ECD /* PrototypeUITests.swift */; };
+		218983091370DE715FF922ED /* TwinsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52741047D9B26558CB1CABD7 /* TwinsView.swift */; };
+		246BFA0464380925FBAFB519 /* CloudFamilyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577DD7C78C51260F61D7139A /* CloudFamilyViews.swift */; };
+		2DBCDE5DC577981EA8F977EE /* ImageInputViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1620F3D6D8CE8439CCB23B82 /* ImageInputViews.swift */; };
+		30623BD2808338566C0D72A5 /* CloudPublicPetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333FA26F65447CCD3770F319 /* CloudPublicPetView.swift */; };
+		31CBEF202792795C1827445E /* CloudPhotoCodecTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB7DDC5A15516E52847594A /* CloudPhotoCodecTests.swift */; };
+		40566BDC189876BDB5D91DD1 /* PrototypePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2387C4CA4B54917CF5DE5D23 /* PrototypePolicy.swift */; };
+		56EF8607AF235B79313A271A /* AccountRetirementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A842DC8999A5C03AA40589 /* AccountRetirementView.swift */; };
+		587854A59EFBF8969CAFD37F /* PrototypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37B9395C2BAF168F977CE9F /* PrototypeTests.swift */; };
+		5E15261F45523F268A5D9AD1 /* OAuthBrowserFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C199EC6CA2981EF073DF546E /* OAuthBrowserFlow.swift */; };
+		7750404333F3630415D6A2FD /* PrototypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E6D2539EA338E17C773440 /* PrototypeStore.swift */; };
+		819FF858DBDD31D24EA6AAD7 /* DemoTwinsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A54FD92887E63C80BE0CF60 /* DemoTwinsEngine.swift */; };
+		9C603D3EF87F184449FAF93C /* DesignFlows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6683B0AB5F42FAFF8BA70FCB /* DesignFlows.swift */; };
+		9D8331EFA742E42D9F05FFD0 /* CloudAccountPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D214128A38A4D93ED78086 /* CloudAccountPage.swift */; };
+		AA210A1B0000000000000002 /* CloudAlbumFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA210A1B0000000000000001 /* CloudAlbumFeatures.swift */; };
+		9DB6D1654FB9DE3882939EBF /* PrivatePersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ECC3046CF39D69E7055374 /* PrivatePersistence.swift */; };
+		A1B92925668E48322F7A9F6A /* AlbumViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE9ACC528F6C096849B7D6C /* AlbumViews.swift */; };
+		ACD3D7A634FADE835EC5982D /* SocialClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0CBA753586DFA232D1E71AB /* SocialClient.swift */; };
+		BB2C43C88D5DAC7C4CA7CAE3 /* CloudMemoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D05176CF1B19A040F86A2FA /* CloudMemoriesView.swift */; };
+		C1A2C0CBBBDABE88188ED50F /* DevelopmentPublicConfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = 0BB613048EA8DEBC11F1A58F /* DevelopmentPublicConfiguration.json */; };
+		C2E39132EDB987D51C264337 /* CloudPhotoCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD6421BAF715C780BF4853A /* CloudPhotoCodec.swift */; };
+		C70387E877A215E4A8397157 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A6D48D6290E990F7B093B2 /* HomeView.swift */; };
+		D0DEAC25E51F234EA3512A4E /* EmailAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DC5218BCBA9649894A87AA /* EmailAccountView.swift */; };
+		DE2EB8F42DADE8A886AB1E5F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00DCD00540900251E41C7A /* Theme.swift */; };
+		E1A51BA05D8030B0011D238D /* CloudUploadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF4AA0E4F038B7B575DABB1 /* CloudUploadQueue.swift */; };
+		F2687002D4A70A82C8684105 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BF729FFE074CAEE622C0292 /* Assets.xcassets */; };
+		F9043F65F7DCCA350E9AE15E /* CloudSocialViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2C8857DF5DAF6CFEE02D8B /* CloudSocialViews.swift */; };
+		A4402A1959814FB8C41717CF /* PetVisualFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19142B097797D85B016E6D0A; };
+		47BA0942368144D6369EA32D /* ReferenceTwinsEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5053C9B5B67FC3B735630928; };
+		179084E4D4A671A9E8381401 /* ReferenceTwinsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3F6C27163FF2924963C683; };
+		2DA26E4E8099077EF44F8A14 /* ReferenceTwinsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80AF0E841395B0A8C13C877; };
+		E20F0AD7D1A08250B9A5A1EE /* TwinsReferenceData in Resources */ = {isa = PBXBuildFile; fileRef = 85C1FEA289CBB64F042CC80F; };
+		BEEFAA000000000000000101 /* PetSubjectCrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEFAA000000000000000001; };
+		BEEFAA000000000000000102 /* PetResemblance.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEFAA000000000000000002; };
+		BEEFAA000000000000000103 /* MEFRIONResemblance.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = BEEFAA000000000000000003; };
+		BEEFAA000000000000000104 /* ModelNotices.txt in Resources */ = {isa = PBXBuildFile; fileRef = BEEFAA000000000000000004; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1241936D4DD3AAD68FE7BFBD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 244210E48437B6556980A702 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34A04005BCAF206EEC990BD9;
+			remoteInfo = MEFRION;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A01120261011000000000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		023E22DE01E07C95469DAE0C /* CloudTwinsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudTwinsView.swift; sourceTree = "<group>"; };
+		048A144015F950A5647B8212 /* AuthenticationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationSheet.swift; sourceTree = "<group>"; };
+		0A54FD92887E63C80BE0CF60 /* DemoTwinsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTwinsEngine.swift; sourceTree = "<group>"; };
+		0BB613048EA8DEBC11F1A58F /* DevelopmentPublicConfiguration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = DevelopmentPublicConfiguration.json; sourceTree = "<group>"; };
+		1140090C2255C89DD3BD6ECD /* PrototypeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrototypeUITests.swift; sourceTree = "<group>"; };
+		1620F3D6D8CE8439CCB23B82 /* ImageInputViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageInputViews.swift; sourceTree = "<group>"; };
+		1B2C8857DF5DAF6CFEE02D8B /* CloudSocialViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSocialViews.swift; sourceTree = "<group>"; };
+		2387C4CA4B54917CF5DE5D23 /* PrototypePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrototypePolicy.swift; sourceTree = "<group>"; };
+		2B208AFF0FD70CBB38FE6B5E /* MEFRIONUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = MEFRIONUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		333FA26F65447CCD3770F319 /* CloudPublicPetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudPublicPetView.swift; sourceTree = "<group>"; };
+		45ECC3046CF39D69E7055374 /* PrivatePersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivatePersistence.swift; sourceTree = "<group>"; };
+		50A842DC8999A5C03AA40589 /* AccountRetirementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRetirementView.swift; sourceTree = "<group>"; };
+		52741047D9B26558CB1CABD7 /* TwinsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwinsView.swift; sourceTree = "<group>"; };
+		577DD7C78C51260F61D7139A /* CloudFamilyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFamilyViews.swift; sourceTree = "<group>"; };
+		5969E2ADC7D4F188E725B3CB /* CloudProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudProfileEditor.swift; sourceTree = "<group>"; };
+		6683B0AB5F42FAFF8BA70FCB /* DesignFlows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignFlows.swift; sourceTree = "<group>"; };
+		8006E89B18B3FCA8AB2BA302 /* CloudFamilyClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFamilyClient.swift; sourceTree = "<group>"; };
+		8B4D8B596ADF054D5B0587CC /* MEFRIONApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MEFRIONApp.swift; sourceTree = "<group>"; };
+		8BF729FFE074CAEE622C0292 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9D05176CF1B19A040F86A2FA /* CloudMemoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudMemoriesView.swift; sourceTree = "<group>"; };
+		A172CEDCAE47474B615C54D5 /* MEFRION.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = MEFRION.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9DC5218BCBA9649894A87AA /* EmailAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAccountView.swift; sourceTree = "<group>"; };
+		AB00DCD00540900251E41C7A /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		ABE9ACC528F6C096849B7D6C /* AlbumViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViews.swift; sourceTree = "<group>"; };
+		AEB7DDC5A15516E52847594A /* CloudPhotoCodecTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudPhotoCodecTests.swift; sourceTree = "<group>"; };
+		B1A6D48D6290E990F7B093B2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		BFF4AA0E4F038B7B575DABB1 /* CloudUploadQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudUploadQueue.swift; sourceTree = "<group>"; };
+		C199EC6CA2981EF073DF546E /* OAuthBrowserFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthBrowserFlow.swift; sourceTree = "<group>"; };
+		C5D214128A38A4D93ED78086 /* CloudAccountPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAccountPage.swift; sourceTree = "<group>"; };
+		AA210A1B0000000000000001 /* CloudAlbumFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAlbumFeatures.swift; sourceTree = "<group>"; };
+		CBD6421BAF715C780BF4853A /* CloudPhotoCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudPhotoCodec.swift; sourceTree = "<group>"; };
+		D1E6D2539EA338E17C773440 /* PrototypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrototypeStore.swift; sourceTree = "<group>"; };
+		D37B9395C2BAF168F977CE9F /* PrototypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrototypeTests.swift; sourceTree = "<group>"; };
+		E7F08BCC397888750F5CB9BD /* MEFRIONTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = MEFRIONTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0CBA753586DFA232D1E71AB /* SocialClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialClient.swift; sourceTree = "<group>"; };
+		19142B097797D85B016E6D0A /* PetVisualFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetVisualFeature.swift; sourceTree = "<group>"; };
+		5053C9B5B67FC3B735630928 /* ReferenceTwinsEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTwinsEngine.swift; sourceTree = "<group>"; };
+		0D3F6C27163FF2924963C683 /* ReferenceTwinsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTwinsView.swift; sourceTree = "<group>"; };
+		A80AF0E841395B0A8C13C877 /* ReferenceTwinsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceTwinsTests.swift; sourceTree = "<group>"; };
+		85C1FEA289CBB64F042CC80F /* TwinsReferenceData */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TwinsReferenceData; sourceTree = "<group>"; };
+		BEEFAA000000000000000001 /* PetSubjectCrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetSubjectCrop.swift; sourceTree = "<group>"; };
+		BEEFAA000000000000000002 /* PetResemblance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetResemblance.swift; sourceTree = "<group>"; };
+		BEEFAA000000000000000003 /* MEFRIONResemblance.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = MEFRIONResemblance.mlpackage; sourceTree = "<group>"; };
+		BEEFAA000000000000000004 /* ModelNotices.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ModelNotices.txt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C2FFCD06FBE37B042DC2BBB3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0A3E27B8CA818264D75C8D81 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A172CEDCAE47474B615C54D5 /* MEFRION.app */,
+				E7F08BCC397888750F5CB9BD /* MEFRIONTests.xctest */,
+				2B208AFF0FD70CBB38FE6B5E /* MEFRIONUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0D6E4079E36703EBD37C0072 = {
+			isa = PBXGroup;
+			children = (
+				E17E80AD8E2103CF3FC3FD96 /* MEFRION */,
+				781CAA6738A604344AE86EE3 /* MEFRIONTests */,
+				E851AFF3561E17503079FF35 /* MEFRIONUITests */,
+				0A3E27B8CA818264D75C8D81 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		781CAA6738A604344AE86EE3 /* MEFRIONTests */ = {
+			isa = PBXGroup;
+			children = (
+				A80AF0E841395B0A8C13C877 /* ReferenceTwinsTests.swift */,
+				AEB7DDC5A15516E52847594A /* CloudPhotoCodecTests.swift */,
+				D37B9395C2BAF168F977CE9F /* PrototypeTests.swift */,
+			);
+			path = MEFRIONTests;
+			sourceTree = "<group>";
+		};
+		E17E80AD8E2103CF3FC3FD96 /* MEFRION */ = {
+			isa = PBXGroup;
+			children = (
+				85C1FEA289CBB64F042CC80F /* TwinsReferenceData */,
+				0D3F6C27163FF2924963C683 /* ReferenceTwinsView.swift */,
+				5053C9B5B67FC3B735630928 /* ReferenceTwinsEngine.swift */,
+				BEEFAA000000000000000004 /* ModelNotices.txt */,
+				BEEFAA000000000000000003 /* MEFRIONResemblance.mlpackage */,
+				BEEFAA000000000000000002 /* PetResemblance.swift */,
+				BEEFAA000000000000000001 /* PetSubjectCrop.swift */,
+				19142B097797D85B016E6D0A /* PetVisualFeature.swift */,
+				50A842DC8999A5C03AA40589 /* AccountRetirementView.swift */,
+				ABE9ACC528F6C096849B7D6C /* AlbumViews.swift */,
+				048A144015F950A5647B8212 /* AuthenticationSheet.swift */,
+				C5D214128A38A4D93ED78086 /* CloudAccountPage.swift */,
+				AA210A1B0000000000000001 /* CloudAlbumFeatures.swift */,
+				8006E89B18B3FCA8AB2BA302 /* CloudFamilyClient.swift */,
+				577DD7C78C51260F61D7139A /* CloudFamilyViews.swift */,
+				9D05176CF1B19A040F86A2FA /* CloudMemoriesView.swift */,
+				CBD6421BAF715C780BF4853A /* CloudPhotoCodec.swift */,
+				5969E2ADC7D4F188E725B3CB /* CloudProfileEditor.swift */,
+				333FA26F65447CCD3770F319 /* CloudPublicPetView.swift */,
+				1B2C8857DF5DAF6CFEE02D8B /* CloudSocialViews.swift */,
+				023E22DE01E07C95469DAE0C /* CloudTwinsView.swift */,
+				BFF4AA0E4F038B7B575DABB1 /* CloudUploadQueue.swift */,
+				0A54FD92887E63C80BE0CF60 /* DemoTwinsEngine.swift */,
+				6683B0AB5F42FAFF8BA70FCB /* DesignFlows.swift */,
+				A9DC5218BCBA9649894A87AA /* EmailAccountView.swift */,
+				B1A6D48D6290E990F7B093B2 /* HomeView.swift */,
+				1620F3D6D8CE8439CCB23B82 /* ImageInputViews.swift */,
+				8B4D8B596ADF054D5B0587CC /* MEFRIONApp.swift */,
+				C199EC6CA2981EF073DF546E /* OAuthBrowserFlow.swift */,
+				45ECC3046CF39D69E7055374 /* PrivatePersistence.swift */,
+				2387C4CA4B54917CF5DE5D23 /* PrototypePolicy.swift */,
+				D1E6D2539EA338E17C773440 /* PrototypeStore.swift */,
+				F0CBA753586DFA232D1E71AB /* SocialClient.swift */,
+				AB00DCD00540900251E41C7A /* Theme.swift */,
+				52741047D9B26558CB1CABD7 /* TwinsView.swift */,
+				8BF729FFE074CAEE622C0292 /* Assets.xcassets */,
+				0BB613048EA8DEBC11F1A58F /* DevelopmentPublicConfiguration.json */,
+				A01120261011000000000002 /* PrivacyInfo.xcprivacy */,
+			);
+			path = MEFRION;
+			sourceTree = "<group>";
+		};
+		E851AFF3561E17503079FF35 /* MEFRIONUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1140090C2255C89DD3BD6ECD /* PrototypeUITests.swift */,
+			);
+			path = MEFRIONUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		16F90C2C0FEA799695F28B00 /* MEFRIONUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 76B96C5EF5145B0A3645A24E /* Build configuration list for PBXNativeTarget "MEFRIONUITests" */;
+			buildPhases = (
+				E5C9F5113B888FB7C1762EAB /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2E00EB28F7B2F3A858E9E2AB /* PBXTargetDependency */,
+			);
+			name = MEFRIONUITests;
+			productName = MEFRIONUITests;
+			productReference = 2B208AFF0FD70CBB38FE6B5E /* MEFRIONUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		34A04005BCAF206EEC990BD9 /* MEFRION */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B672BF3DA427763BF644BE3 /* Build configuration list for PBXNativeTarget "MEFRION" */;
+			buildPhases = (
+				311359423C6C0D478222A53A /* Sources */,
+				C2FFCD06FBE37B042DC2BBB3 /* Frameworks */,
+				CCB84210AD295E9F575C2012 /* Resources */,
+				BEEFAA000000000000000105 /* Copy validated public config */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MEFRION;
+			productName = MEFRION;
+			productReference = A172CEDCAE47474B615C54D5 /* MEFRION.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E5B4A42C1A9B11F842B19C64 /* MEFRIONTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FA394EFD07597E96CACD8E1 /* Build configuration list for PBXNativeTarget "MEFRIONTests" */;
+			buildPhases = (
+				1D74CFCF50D1DADB88E0EABE /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F26350DAFE3F19AABFD69AC4 /* PBXTargetDependency */,
+			);
+			name = MEFRIONTests;
+			productName = MEFRIONTests;
+			productReference = E7F08BCC397888750F5CB9BD /* MEFRIONTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		244210E48437B6556980A702 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 76F8DEC3DFE0BDB465198890 /* Build configuration list for PBXProject "MEFRION" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = ja;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				ja,
+				en,
+				Base,
+			);
+			mainGroup = 0D6E4079E36703EBD37C0072;
+			productRefGroup = 0A3E27B8CA818264D75C8D81 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				34A04005BCAF206EEC990BD9 /* MEFRION */,
+				E5B4A42C1A9B11F842B19C64 /* MEFRIONTests */,
+				16F90C2C0FEA799695F28B00 /* MEFRIONUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CCB84210AD295E9F575C2012 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E20F0AD7D1A08250B9A5A1EE /* TwinsReferenceData in Resources */,
+				BEEFAA000000000000000104 /* ModelNotices.txt in Resources */,
+				A01120261011000000000001 /* PrivacyInfo.xcprivacy in Resources */,
+				F2687002D4A70A82C8684105 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BEEFAA000000000000000105 /* Copy validated public config */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = ();
+			inputPaths = ();
+			name = "Copy validated public config";
+			outputPaths = ();
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -eu\npython3 \"$SRCROOT/../scripts/copy_ios_public_configuration.py\" --source-dir \"$SRCROOT/MEFRION\" --destination-dir \"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\" --configuration \"$CONFIGURATION\" --action \"$ACTION\" --bundle-id \"$PRODUCT_BUNDLE_IDENTIFIER\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D74CFCF50D1DADB88E0EABE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2DA26E4E8099077EF44F8A14 /* ReferenceTwinsTests.swift in Sources */,
+				31CBEF202792795C1827445E /* CloudPhotoCodecTests.swift in Sources */,
+				587854A59EFBF8969CAFD37F /* PrototypeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		311359423C6C0D478222A53A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				179084E4D4A671A9E8381401 /* ReferenceTwinsView.swift in Sources */,
+				47BA0942368144D6369EA32D /* ReferenceTwinsEngine.swift in Sources */,
+				BEEFAA000000000000000103 /* MEFRIONResemblance.mlpackage in Sources */,
+				BEEFAA000000000000000102 /* PetResemblance.swift in Sources */,
+				BEEFAA000000000000000101 /* PetSubjectCrop.swift in Sources */,
+				A4402A1959814FB8C41717CF /* PetVisualFeature.swift in Sources */,
+				56EF8607AF235B79313A271A /* AccountRetirementView.swift in Sources */,
+				A1B92925668E48322F7A9F6A /* AlbumViews.swift in Sources */,
+				069825B4485022BEDEF17CBB /* AuthenticationSheet.swift in Sources */,
+				9D8331EFA742E42D9F05FFD0 /* CloudAccountPage.swift in Sources */,
+				AA210A1B0000000000000002 /* CloudAlbumFeatures.swift in Sources */,
+				01209EC0811DB97286029A16 /* CloudFamilyClient.swift in Sources */,
+				246BFA0464380925FBAFB519 /* CloudFamilyViews.swift in Sources */,
+				BB2C43C88D5DAC7C4CA7CAE3 /* CloudMemoriesView.swift in Sources */,
+				C2E39132EDB987D51C264337 /* CloudPhotoCodec.swift in Sources */,
+				07218CA1CF2E1A906F484D47 /* CloudProfileEditor.swift in Sources */,
+				30623BD2808338566C0D72A5 /* CloudPublicPetView.swift in Sources */,
+				F9043F65F7DCCA350E9AE15E /* CloudSocialViews.swift in Sources */,
+				1168E30D4393B6330285BEE5 /* CloudTwinsView.swift in Sources */,
+				E1A51BA05D8030B0011D238D /* CloudUploadQueue.swift in Sources */,
+				819FF858DBDD31D24EA6AAD7 /* DemoTwinsEngine.swift in Sources */,
+				9C603D3EF87F184449FAF93C /* DesignFlows.swift in Sources */,
+				D0DEAC25E51F234EA3512A4E /* EmailAccountView.swift in Sources */,
+				C70387E877A215E4A8397157 /* HomeView.swift in Sources */,
+				2DBCDE5DC577981EA8F977EE /* ImageInputViews.swift in Sources */,
+				164BA2A1DDD0DBEB40A28567 /* MEFRIONApp.swift in Sources */,
+				5E15261F45523F268A5D9AD1 /* OAuthBrowserFlow.swift in Sources */,
+				9DB6D1654FB9DE3882939EBF /* PrivatePersistence.swift in Sources */,
+				40566BDC189876BDB5D91DD1 /* PrototypePolicy.swift in Sources */,
+				7750404333F3630415D6A2FD /* PrototypeStore.swift in Sources */,
+				ACD3D7A634FADE835EC5982D /* SocialClient.swift in Sources */,
+				DE2EB8F42DADE8A886AB1E5F /* Theme.swift in Sources */,
+				218983091370DE715FF922ED /* TwinsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5C9F5113B888FB7C1762EAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1DF878191E8C9CF8D4B72228 /* PrototypeUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2E00EB28F7B2F3A858E9E2AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34A04005BCAF206EEC990BD9 /* MEFRION */;
+			targetProxy = 1241936D4DD3AAD68FE7BFBD /* PBXContainerItemProxy */;
+		};
+		F26350DAFE3F19AABFD69AC4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34A04005BCAF206EEC990BD9 /* MEFRION */;
+			targetProxy = 1241936D4DD3AAD68FE7BFBD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0B0C687DF8B6B8DC790B519C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		28A722929B94EC37AFB5BA4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.local.mefrion.prototype.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = MEFRION;
+			};
+			name = Debug;
+		};
+		6C7EFF6369083C8E1F2B1994 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P24PQABLB8;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MEFRION/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MEFRION;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "ペットの写真を撮影して、そっくり検索で似た候補を探すためにカメラを使用します。検索ボタンを押すと写真の特徴データを検索サーバーに送り、写真そのものは送りません。";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "確認した思い出カードを写真ライブラリへ保存するために使用します。";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.local.mefrion.prototype;
+				"EXCLUDED_SOURCE_FILE_NAMES[sdk=iphoneos*]" = TwinsReferenceData;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		73EBF6644258C120893E685D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		DD3F495F7D6A5AA1C1769021 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.local.mefrion.prototype.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MEFRION.app/MEFRION";
+			};
+			name = Debug;
+		};
+		DD75E2CB1C510A828AC72D96 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = P24PQABLB8;
+				ENABLE_TESTABILITY = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MEFRION/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MEFRION;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "ペットの写真を撮影して、そっくり検索で似た候補を探すためにカメラを使用します。検索ボタンを押すと写真の特徴データを検索サーバーに送り、写真そのものは送りません。";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "確認した思い出カードを写真ライブラリへ保存するために使用します。";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mefrion.app;
+				"EXCLUDED_SOURCE_FILE_NAMES[sdk=iphoneos*]" = TwinsReferenceData;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		E670BC2FFE794172EBC92AE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.local.mefrion.prototype.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MEFRION.app/MEFRION";
+			};
+			name = Release;
+		};
+		F318EF763F11578FF40814E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.local.mefrion.prototype.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = MEFRION;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1B672BF3DA427763BF644BE3 /* Build configuration list for PBXNativeTarget "MEFRION" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6C7EFF6369083C8E1F2B1994 /* Debug */,
+				DD75E2CB1C510A828AC72D96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5FA394EFD07597E96CACD8E1 /* Build configuration list for PBXNativeTarget "MEFRIONTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD3F495F7D6A5AA1C1769021 /* Debug */,
+				E670BC2FFE794172EBC92AE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		76B96C5EF5145B0A3645A24E /* Build configuration list for PBXNativeTarget "MEFRIONUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28A722929B94EC37AFB5BA4F /* Debug */,
+				F318EF763F11578FF40814E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		76F8DEC3DFE0BDB465198890 /* Build configuration list for PBXProject "MEFRION" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73EBF6644258C120893E685D /* Debug */,
+				0B0C687DF8B6B8DC790B519C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 244210E48437B6556980A702 /* Project object */;
+}

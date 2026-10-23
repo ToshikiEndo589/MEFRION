@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-11",
+  "reported_error": "Loading espresso Network [espresso error: -2]",
+  "physical_cpu_only_reproduced_failure": true,
+  "physical_default_compute_feature_elements": 768,
+  "physical_stock_dog_candidates": 3,
+  "physical_stock_cat_candidates": 3,
+  "physical_self_photo_excluded_both_species": true,
+  "simulator_unit_passed": 6,
+  "simulator_ui_passed": 1,
+  "initial_fingerprint_resize_failed": 1,
+  "resize_edge_differences": 9,
+  "final_fingerprint_difference_limit": 12,
+  "physical_xctest": "not run; initial build blocked by missing test team; used existing app diagnostic",
+  "user_original_photo_verified": false,
+  "quality_accepted": false,
+  "final_fingerprint_12_device_probe": "dog/cat candidates 3, self excluded, COMPLETE PASS",
+  "updated_same_bundle_preserving_data": true
+}

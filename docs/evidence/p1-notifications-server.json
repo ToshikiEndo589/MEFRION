@@ -1,0 +1,192 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "original-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-members",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserved-family-invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserved-family-join",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "original-notification-settings",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "guest-notifications-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-family-notifications-private",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "immediate-setting",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-private-reserve",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-finish",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "immediate-other-provider-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "pause",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "paused-photo-omitted",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "off",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "off-omits-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "daily-setting",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "same-day-not-premature-digest",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "milestone-create",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "milestone-create",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "milestone-create",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "milestone-create",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "milestone-optin",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "living-status",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "known-date-only-milestone",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "deceased-status",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "deceased-no-automated-celebration",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "deceased-album-preserved",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-provider-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "groups-exclude-private-family-fields",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "apns_delivered": false,
+  "scope": "actual dev notification projection; no Push service or human notifications"
+}

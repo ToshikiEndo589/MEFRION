@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-23",
+  "action": "Remove added music and text-overlay features",
+  "removed": [
+    "audio file importer and preview",
+    "audio clip and volume controls",
+    "background audio mixing and photo-to-video conversion",
+    "text sticker controls and image/video rendering",
+    "decoration step and export cache",
+    "PostMediaEditor.swift and all four Xcode project references"
+  ],
+  "flow": "media -> caption -> submit",
+  "verification": {
+    "ui_test_result": "Passed",
+    "ui_test_count": 1,
+    "public_and_album_direct_caption": true,
+    "back_to_media_keeps_selection": true,
+    "release_iphone_unsigned_build": "BUILD SUCCEEDED",
+    "app_source_contains_removed_editor_symbols": false
+  },
+  "device_installed": false,
+  "existing_posts_deleted": false
+}

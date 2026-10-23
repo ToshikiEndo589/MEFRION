@@ -1,0 +1,26 @@
+{
+  "cron": [
+    {
+      "name": "mefrion-cloud-workers",
+      "active": true,
+      "schedule": "* * * * *"
+    },
+    {
+      "name": "mefrion-cloud-maintenance",
+      "active": true,
+      "schedule": "15 * * * *"
+    },
+    {
+      "name": "mefrion-database-snapshot",
+      "active": true,
+      "schedule": "30 18 * * *"
+    }
+  ],
+  "retirement": "done",
+  "failed_jobs": 0,
+  "database_bytes": 227112627,
+  "migration_count": 65,
+  "auth_soft_erased": true,
+  "originals_remaining": 0,
+  "public_objects_remaining": 0
+}

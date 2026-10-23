@@ -1,0 +1,123 @@
+{
+  "production": {
+    "cron": [
+      {
+        "name": "mefrion-cloud-workers",
+        "active": true
+      },
+      {
+        "name": "mefrion-cloud-maintenance",
+        "active": true
+      },
+      {
+        "name": "mefrion-database-snapshot",
+        "active": true
+      }
+    ],
+    "last_tick": "2026-10-23T04:46:00.016738+00:00",
+    "failed_jobs": 0,
+    "last_backup": "2026-10-23T00:22:18.621815+00:00",
+    "outstanding_jobs": 0,
+    "functions": [
+      {
+        "name": "private-image",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "private-video",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "public-image",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "public-video",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "shared-page",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "cloud-worker",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "asset-ingest",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "database-backup",
+        "status": "ACTIVE"
+      }
+    ],
+    "smtp_configured": true,
+    "email_confirmation_required": true,
+    "code_templates": true,
+    "site_url": "https://mefrion-support.toshiki1108.chatgpt.site",
+    "callback_configured": true,
+    "password_min_length": 12
+  },
+  "development": {
+    "cron": [
+      {
+        "name": "mefrion-cloud-workers",
+        "active": true
+      },
+      {
+        "name": "mefrion-cloud-maintenance",
+        "active": true
+      },
+      {
+        "name": "mefrion-database-snapshot",
+        "active": true
+      }
+    ],
+    "last_tick": "2026-10-23T04:46:00.046293+00:00",
+    "failed_jobs": 0,
+    "last_backup": "2026-10-23T04:37:05.557597+00:00",
+    "outstanding_jobs": 0,
+    "functions": [
+      {
+        "name": "private-image",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "public-image",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "shared-page",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "public-video",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "private-video",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "cloud-worker",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "asset-ingest",
+        "status": "ACTIVE"
+      },
+      {
+        "name": "database-backup",
+        "status": "ACTIVE"
+      }
+    ],
+    "smtp_configured": true,
+    "email_confirmation_required": true,
+    "code_templates": true,
+    "site_url": "https://mefrion-support.toshiki1108.chatgpt.site",
+    "callback_configured": true,
+    "password_min_length": 12
+  },
+  "local_launch_agent_removed": true
+}

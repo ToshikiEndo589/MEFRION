@@ -1,0 +1,131 @@
+{
+  "passed": true,
+  "scope": "former provider / safe consent metadata / synthetic image",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-accept",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-reservation",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "grant-sns",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "grant-twins",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "grant-external_share",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owner-cannot-inspect-family-provider-list",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "third-party-cannot-inspect-provider-list",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "anonymous-provider-list-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "remove-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "removed-family-album-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "removed-family-original-denied",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "former-provider-list-only-safe-metadata",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdraw-after-exit-sns",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdraw-after-exit-twins",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdraw-after-exit-external_share",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdrawal-visible-in-list",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "regrant-after-exit-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "former-provider-delete",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "deleted-photo-absent-from-provider-list",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

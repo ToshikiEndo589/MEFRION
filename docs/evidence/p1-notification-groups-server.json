@@ -1,0 +1,136 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "original-notification-preferences",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-profile",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-owned-notification-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "ready",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "sns-purpose",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "request-test-publication",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "off",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "real-family-reaction-while-disabled",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "disabled-groups-not-visible",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "on",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "remove-test-reaction",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "new-real-family-reaction",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "new-real-outsider-reaction",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "two-real-reactions-one-group",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "anonymous-groups-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "different-user-does-not-read-recipient-group",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdraw-source",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdrawn-groups-masked-immediately",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "push_sent": false
+}

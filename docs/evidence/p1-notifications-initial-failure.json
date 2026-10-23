@@ -1,0 +1,71 @@
+{
+  "passed": false,
+  "failure": "family-private-reserve failed",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "original-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "original-notification-settings",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "guest-notifications-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-family-notifications-private",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "immediate-setting",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-private-reserve",
+      "passed": false,
+      "status": 403
+    }
+  ]
+}

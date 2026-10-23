@@ -1,0 +1,386 @@
+{
+  "passed": false,
+  "failure": "permissions-admin failed",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "grant-synthetic-admin",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "register-reserved-publisher",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "metrics-before",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "anonymous-seed-create-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "ordinary-owner-seed-create-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "batch-two-pets-one-operator",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "batch-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "batch-key-conflict",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "batch-size-limit",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "staff-cannot-read-ordinary-private-family",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "managed-photo-reserve",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "managed-original-upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "managed-photo-ready",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "ordinary-user-managed-album-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "staff-managed-album-only",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "individual-image-rights",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "managed-draft",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "draft-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "unapproved-schedule-rejected",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "rights-required",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "editor-role-only",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "editor-cannot-approve",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "approver-role",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "approver-cannot-create",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "approval-explicit-rights",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "stale-approval-version-rejected",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "approver-cannot-schedule",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "dispatcher-admin",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-schedule",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "managed-photo-reserve",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "managed-original-upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "managed-photo-ready",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "ordinary-user-managed-album-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "staff-managed-album-only",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "individual-image-rights",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "managed-draft",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "draft-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "unapproved-schedule-rejected",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "rights-required",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "editor-role-only",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "editor-cannot-approve",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "approver-role",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "approver-cannot-create",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "approval-explicit-rights",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "stale-approval-version-rejected",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "approver-cannot-schedule",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "dispatcher-admin",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-schedule",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "ordinary-user-cannot-dispatch",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "due-two-dispatched",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "no-double-dispatch",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "seed-in-normal-public-feed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "only-real-reaction-counters",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "no-unfollowed-seed-in-following",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "follow-managed-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "followed-seed-only",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "block-managed-publisher",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "managed-block-excludes-all-publisher-pets",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "unblock",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "metrics-after",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "ordinary-user-metrics-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "edit-invalidates-publication",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "stale-editor-version-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "revision-requires-new-approval",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "permissions-admin",
+      "passed": false,
+      "status": 405
+    },
+    {
+      "check": "cleanup-synthetic-admin-role",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-managed-visibility",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-managed-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-managed-photo",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

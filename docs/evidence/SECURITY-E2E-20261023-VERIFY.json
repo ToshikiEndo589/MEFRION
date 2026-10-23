@@ -1,0 +1,523 @@
+{
+  "action": "verify",
+  "scope": "MEFRION production; dedicated synthetic fixtures only; bounded requests",
+  "passed": true,
+  "checks": [
+    {
+      "check": "anonymous-list_pets-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-list_pets-scope",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "anonymous-album-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-album-scope",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-members-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-members-scope",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-family_activity-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-family_activity-scope",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-photo-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-photo-scope",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-provided_photos-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-provided_photos-scope",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-sees-fixture-only",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "None-private-image-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-private-image-denied",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "family-private-image-allowed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "forged-jwt-private-image",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "None-private-video-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-private-video-denied",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "family-private-video-allowed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "forged-jwt-private-video",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "idor-delete_photo-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "idor-edit_photo-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "idor-consent-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "idor-begin_photo-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "idor-set_album_visibility-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "idor-stop_publication-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "idor-update_pet-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "idor-request_retirement-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "family-cannot-delete-other-provider",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "private-table-mefrion_reference_assets-None",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "private-table-mefrion_reference_assets-outsider",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "private-table-mefrion_reference_usage-None",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "private-table-mefrion_reference_usage-outsider",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "private-table-mefrion_reference_resemblance-None",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "private-table-mefrion_reference_resemblance-outsider",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "private-table-mefrion_resemblance_retries-None",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "private-table-mefrion_resemblance_retries-outsider",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "direct-storage-or-table-denied-38",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "direct-storage-or-table-denied-39",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "direct-storage-or-table-denied-40",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "foreign-bucket-list-has-no-objects",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "direct-storage-or-table-denied-42",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "foreign-upload-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "own-metadata-cannot-grant-operator",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "privilege-operator_queue-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-operator_cloud_health-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-seed_permissions-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-seed_list-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-report_queue-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-cloud_worker_status-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-cloud_database_snapshot-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-offsite_configuration-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-cloud_work_get-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "privilege-retirement_ack-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "internal-cloud-worker-no-token",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "internal-cloud-worker-wrong-token",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "internal-asset-ingest-no-token",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "internal-asset-ingest-wrong-token",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "internal-database-backup-no-token",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "internal-database-backup-wrong-token",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "internal-offsite-backup-no-token",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "internal-offsite-backup-wrong-token",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "gateway-input-63",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "gateway-input-64",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "gateway-input-65",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "gateway-input-66",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "untrusted-origin-preflight",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "trusted-origin-preflight",
+      "passed": true,
+      "status": 204
+    },
+    {
+      "check": "overlong-pet-name-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "over-five-minute-video-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "search-sql-input-is-data",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "oversized-search-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "feed-limit-clamped",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "oversized-photo-title-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "public_feed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-media-0",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-media-1",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-media-2",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "set_social_name",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "follow",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "social_connections",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "followers-hide-auth-identity",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "react",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "react",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "saved-feed-roundtrip",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "comment",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "comment-retry-idempotent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "comment-key-conflict-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "foreign-comment-delete-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "pet-speaker-impersonation-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "oversized-comment-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "block_pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "blocked-post-hidden",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "blocked-media-denied",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "block_pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "share-xss-escaped",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "stop_publication",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "share-withdrawal-immediate",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "consent-withdrawal-immediate",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "remove_member",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "ex-member-original-revoked",
+      "passed": true,
+      "status": 404
+    }
+  ],
+  "failed_checks": []
+}

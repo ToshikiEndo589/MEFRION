@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-12",
+  "bundle": "dev.local.mefrion.prototype",
+  "installed": true,
+  "physical_dog_cat_probe": "COMPLETE PASS",
+  "normal_launch": true,
+  "uninstalled": false,
+  "app_bytes": 62650330,
+  "full_reference_corpus_bundled": false,
+  "native_tests_passed": 8,
+  "server_checks_passed": 60,
+  "live_server_ui_tests_passed": 1,
+  "python_tests_passed": 87,
+  "private_user_photo_accuracy_evaluated": false
+}

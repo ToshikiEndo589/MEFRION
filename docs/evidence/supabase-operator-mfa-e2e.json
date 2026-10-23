@@ -1,0 +1,206 @@
+{
+  "passed": true,
+  "scope": "actual Auth / reserved synthetic TOTP / database role / revocation",
+  "checks": [
+    {
+      "check": "synthetic-operator-password-login",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "anon-operator-queue-denied",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "cannot-self-assign-role",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "test-moderator-role",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "role-without-mfa-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "enroll-synthetic-totp",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "unverified-factor-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "challenge-synthetic-totp",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "verify-synthetic-totp",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "actual-aal2-auth-user",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "mfa-moderator-queue",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "service-select-owned-synthetic-report",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "actual-mfa-moderator-review",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "operator-review-exact-retry",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "operator-review-key-conflict",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "authenticated-direct-service-review-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "test-editor-role",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "mfa-editor-cannot-read-moderation",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "mfa-editor-cannot-review",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "test-admin-role",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "mfa-admin-queue",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "revoke-test-role",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "revoked-role-immediately-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "restore-test-moderator",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "limited-expiry-assignment",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "before-expiry-queue-allowed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "expired-role-old-aal2-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "restore-test-role-for-factor-check",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "second-password-session-for-logout",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "second-totp-challenge",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "second-totp-verify",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "second-session-moderator-before-logout",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "actual-second-session-auth-logout",
+      "status": 204,
+      "passed": true
+    },
+    {
+      "check": "logged-out-old-jwt-with-verified-factor-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "first-session-still-allowed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "remove-test-totp-factor",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "removed-factor-old-aal2-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "actual-auth-logout",
+      "status": 204,
+      "passed": true
+    },
+    {
+      "check": "logged-out-session-old-jwt-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "cleanup-disable-synthetic-operator",
+      "status": 200,
+      "passed": true
+    }
+  ]
+}

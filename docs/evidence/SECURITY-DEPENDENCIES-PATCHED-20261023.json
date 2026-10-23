@@ -1,0 +1,163 @@
+{
+  "source": "OSV public advisory database",
+  "scope": "declared exact pins + installed Python environment + pinned Edge SDK direct dependencies",
+  "passed": true,
+  "items": [
+    {
+      "ecosystem": "PyPI",
+      "package": "asn1crypto",
+      "version": "1.5.1",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "cffi",
+      "version": "2.1.1",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "coremltools",
+      "version": "9.0",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "cryptography",
+      "version": "50.0.2",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "huggingface-hub",
+      "version": "2.3.0",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "numpy",
+      "version": "2.0.2",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "pg8000",
+      "version": "1.31.5",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "pgpy",
+      "version": "0.6.0",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "pillow",
+      "version": "13.0.0",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "pip",
+      "version": "26.2.2",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "pyasn1",
+      "version": "0.6.4",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "pycparser",
+      "version": "3.12",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "python-dateutil",
+      "version": "3.0.0",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "scramp",
+      "version": "1.4.18",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "six",
+      "version": "1.17.0",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "torch",
+      "version": "2.14.1",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "transformers",
+      "version": "5.20.2",
+      "advisories": []
+    },
+    {
+      "ecosystem": "PyPI",
+      "package": "tzdata",
+      "version": "2026.5",
+      "advisories": []
+    },
+    {
+      "ecosystem": "npm",
+      "package": "@imagemagick/magick-wasm",
+      "version": "0.0.45",
+      "advisories": []
+    },
+    {
+      "ecosystem": "npm",
+      "package": "@supabase/auth-js",
+      "version": "2.71.1",
+      "advisories": []
+    },
+    {
+      "ecosystem": "npm",
+      "package": "@supabase/functions-js",
+      "version": "2.4.6",
+      "advisories": []
+    },
+    {
+      "ecosystem": "npm",
+      "package": "@supabase/node-fetch",
+      "version": "2.6.15",
+      "advisories": []
+    },
+    {
+      "ecosystem": "npm",
+      "package": "@supabase/postgrest-js",
+      "version": "1.21.4",
+      "advisories": []
+    },
+    {
+      "ecosystem": "npm",
+      "package": "@supabase/realtime-js",
+      "version": "2.15.5",
+      "advisories": []
+    },
+    {
+      "ecosystem": "npm",
+      "package": "@supabase/storage-js",
+      "version": "2.12.1",
+      "advisories": []
+    },
+    {
+      "ecosystem": "npm",
+      "package": "@supabase/supabase-js",
+      "version": "2.57.4",
+      "advisories": []
+    }
+  ]
+}

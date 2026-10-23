@@ -1,0 +1,8 @@
+{
+  "dog_cat_only": true,
+  "image_files": 5221,
+  "archive_bytes": 408744202,
+  "archive_entries": 15731,
+  "archive_crc_verified": true,
+  "non_dog_cat_category_csv_in_archive": false
+}

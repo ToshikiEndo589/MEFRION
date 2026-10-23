@@ -1,0 +1,166 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "create-reserved-tag-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-profile-explicit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-profile-explicit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "ready",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "sns-purpose",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reject-empty",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "reject-duplicates",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "reject-missing-primary",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "reject-too-many",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "reject-foreign-tag",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "reject-implicit-publish",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "reject-outsider",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "reject-anonymous",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "request-owned-two-tags",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "same-key-retry",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "same-key-changed-tags-rejected",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "public-tags-projection",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "derived-image-before-withdraw",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "tag-profile-withdraw",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "old-post-hidden",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "derived-image-immediately-hidden",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "re-enable-tag",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "old-post-does-not-revive",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "scope": "reserved dev accounts, owned illustration only"
+}

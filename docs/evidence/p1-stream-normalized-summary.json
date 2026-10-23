@@ -1,0 +1,64 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "modelName" : "iPhone 17",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 26,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "MEFRION · Built with macOS 26.6",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1791541611.84,
+  "passedTests" : 26,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791541589.785,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertEqual failed: (\"[]\") is not equal to (\"[\"1\"]\")",
+      "targetName" : "MEFRIONTests",
+      "testIdentifier" : 26,
+      "testIdentifierString" : "PrototypeTests/testStreamedTwinsRankingMatchesBatchAndExcludesSource()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONTests/PrototypeTests/testStreamedTwinsRankingMatchesBatchAndExcludesSource",
+      "testName" : "testStreamedTwinsRankingMatchesBatchAndExcludesSource()"
+    },
+    {
+      "failureText" : "XCTAssertFalse failed - Owned demo fixture must exercise the result path",
+      "targetName" : "MEFRIONTests",
+      "testIdentifier" : 28,
+      "testIdentifierString" : "PrototypeTests/testVisionOwnedDemoSearchHasNoSelfAndAtMostThree()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONTests/PrototypeTests/testVisionOwnedDemoSearchHasNoSelfAndAtMostThree",
+      "testName" : "testVisionOwnedDemoSearchHasNoSelfAndAtMostThree()"
+    }
+  ],
+  "title" : "Test - MEFRION",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "75% of duration",
+      "text" : "1 longest test run with outlier durations exceeding 1.16s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 28
+}

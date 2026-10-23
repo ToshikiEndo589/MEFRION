@@ -1,0 +1,558 @@
+{
+  "date": "2026-10-10",
+  "scope": "partial evidence; not 69 E2E passes",
+  "items": [
+    {
+      "id": "T-01",
+      "scenario": "新規ユーザーがアルバム入口から登録元の導線へ戻りPet作成できる",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "登録・非公開作成・日付のSimulator/合成API証拠",
+      "remaining": "実認証と実iPhoneでの入口復帰・編集"
+    },
+    {
+      "id": "T-02",
+      "scenario": "写真0枚でPet作成 保存できる。公開はされない",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "登録・非公開作成・日付のSimulator/合成API証拠",
+      "remaining": "実認証と実iPhoneでの入口復帰・編集"
+    },
+    {
+      "id": "T-03",
+      "scenario": "日付の古い写真を後から追加 撮影日順に挿入される",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "登録・非公開作成・日付のSimulator/合成API証拠",
+      "remaining": "実認証と実iPhoneでの入口復帰・編集"
+    },
+    {
+      "id": "T-04",
+      "scenario": "撮影日が不明な写真を追加 推測せず不明のまま保存",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "登録・非公開作成・日付のSimulator/合成API証拠",
+      "remaining": "実認証と実iPhoneでの入口復帰・編集"
+    },
+    {
+      "id": "T-05",
+      "scenario": "30枚のうち一部アップロード失敗成功分を保持し失敗分だけ再送",
+      "overall": "not_verified",
+      "evidence": "ios-cloud-batch-final-summary.json",
+      "verified_scope": "部分再送/重複/容量の合成試験",
+      "remaining": "実写真30枚・通信断・端末容量不足"
+    },
+    {
+      "id": "T-06",
+      "scenario": "同じ写真を再追加 重複候補を案内し決定は本人",
+      "overall": "not_verified",
+      "evidence": "ios-cloud-batch-final-summary.json",
+      "verified_scope": "部分再送/重複/容量の合成試験",
+      "remaining": "実写真30枚・通信断・端末容量不足"
+    },
+    {
+      "id": "T-07",
+      "scenario": "Petの節目を記録 年齢不明でも記録可能",
+      "overall": "not_verified",
+      "evidence": "p1-cards-paging-server.json",
+      "verified_scope": "節目/比較/用途認可の実API部分証拠",
+      "remaining": "実iPhone写真保存/共有と権限"
+    },
+    {
+      "id": "T-08",
+      "scenario": "2枚の比較カードを作成 日付・切り抜きを確認し家族内保存",
+      "overall": "not_verified",
+      "evidence": "p1-cards-paging-server.json",
+      "verified_scope": "節目/比較/用途認可の実API部分証拠",
+      "remaining": "実iPhone写真保存/共有と権限"
+    },
+    {
+      "id": "T-09",
+      "scenario": "非公開2枚からカードを外部公開しよう とする 明示確認と同意確認なしでは失敗",
+      "overall": "not_verified",
+      "evidence": "p1-cards-paging-server.json",
+      "verified_scope": "節目/比較/用途認可の実API部分証拠",
+      "remaining": "実iPhone写真保存/共有と権限"
+    },
+    {
+      "id": "T-10",
+      "scenario": "管理者が家族を招待 7日内の1回承認で有効、再利用不可",
+      "overall": "not_verified",
+      "evidence": "p01-family-concurrency.json",
+      "verified_scope": "家族権限/競合の実API部分証拠",
+      "remaining": "正式招待HTTPSリンクと複数実iPhone"
+    },
+    {
+      "id": "T-11",
+      "scenario": "招待を取り消す 取り消しURLでは写真が見えない",
+      "overall": "not_verified",
+      "evidence": "p01-family-concurrency.json",
+      "verified_scope": "家族権限/競合の実API部分証拠",
+      "remaining": "正式招待HTTPSリンクと複数実iPhone"
+    },
+    {
+      "id": "T-12",
+      "scenario": "家族が写真を追加 家族内にのみ出現、外部には出ない",
+      "overall": "not_verified",
+      "evidence": "p01-family-concurrency.json",
+      "verified_scope": "家族権限/競合の実API部分証拠",
+      "remaining": "正式招待HTTPSリンクと複数実iPhone"
+    },
+    {
+      "id": "T-13",
+      "scenario": "家族が他人の写真を編集 権限拒否、元画像は不変",
+      "overall": "not_verified",
+      "evidence": "p01-family-concurrency.json",
+      "verified_scope": "家族権限/競合の実API部分証拠",
+      "remaining": "正式招待HTTPSリンクと複数実iPhone"
+    },
+    {
+      "id": "T-14",
+      "scenario": "家族提供写真を管理者が勝手に公開同意がなければAPIでも拒否",
+      "overall": "not_verified",
+      "evidence": "p01-family-concurrency.json",
+      "verified_scope": "家族権限/競合の実API部分証拠",
+      "remaining": "正式招待HTTPSリンクと複数実iPhone"
+    },
+    {
+      "id": "T-15",
+      "scenario": "提供者が公開許可を与え管理者が投稿指定された公開写真だけ表示",
+      "overall": "not_verified",
+      "evidence": "p01-family-concurrency.json",
+      "verified_scope": "家族権限/競合の実API部分証拠",
+      "remaining": "正式招待HTTPSリンクと複数実iPhone"
+    },
+    {
+      "id": "T-16",
+      "scenario": "家族が退出・解除 直後から画像URL・APIアクセス不可",
+      "overall": "not_verified",
+      "evidence": "p01-family-concurrency.json",
+      "verified_scope": "家族権限/競合の実API部分証拠",
+      "remaining": "正式招待HTTPSリンクと複数実iPhone"
+    },
+    {
+      "id": "T-17",
+      "scenario": "Twinsゲスト初回検索 登録せず結果閲覧、候補は最大3",
+      "overall": "not_verified",
+      "evidence": "p1-twins-shares-server.json",
+      "verified_scope": "デモ/候補/失効/共有の部分証拠",
+      "remaining": "許諾実写真の独立品質評価と実認証復帰"
+    },
+    {
+      "id": "T-18",
+      "scenario": "Twins画像が不鮮明 写真の問題として再選択を案内",
+      "overall": "not_verified",
+      "evidence": "p1-twins-shares-server.json",
+      "verified_scope": "デモ/候補/失効/共有の部分証拠",
+      "remaining": "許諾実写真の独立品質評価と実認証復帰"
+    },
+    {
+      "id": "T-19",
+      "scenario": "Twins候補不足 検索エラーではなく不足と表示",
+      "overall": "not_verified",
+      "evidence": "p1-twins-shares-server.json",
+      "verified_scope": "デモ/候補/失効/共有の部分証拠",
+      "remaining": "許諾実写真の独立品質評価と実認証復帰"
+    },
+    {
+      "id": "T-20",
+      "scenario": "Twins検索処理が失敗 同じ画像の再試行、二重課金・処理抑制",
+      "overall": "not_verified",
+      "evidence": "p1-twins-shares-server.json",
+      "verified_scope": "デモ/候補/失効/共有の部分証拠",
+      "remaining": "許諾実写真の独立品質評価と実認証復帰"
+    },
+    {
+      "id": "T-21",
+      "scenario": "Twins結果からログインしフォロー元結果・対象Petを復元しフォロー完了",
+      "overall": "not_verified",
+      "evidence": "p1-twins-shares-server.json",
+      "verified_scope": "デモ/候補/失効/共有の部分証拠",
+      "remaining": "許諾実写真の独立品質評価と実認証復帰"
+    },
+    {
+      "id": "T-22",
+      "scenario": "Twins候補の許可を取り消す 新規候補除外、過去共有画面で相手をマ スク",
+      "overall": "not_verified",
+      "evidence": "p1-twins-shares-server.json",
+      "verified_scope": "デモ/候補/失効/共有の部分証拠",
+      "remaining": "許諾実写真の独立品質評価と実認証復帰"
+    },
+    {
+      "id": "T-23",
+      "scenario": "未ログインで非公開PetのURLへアクセス情報・画像・存在の不要な露出なし",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-24",
+      "scenario": "投稿タブを開く 「アルバムに残す」が初期選択",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-25",
+      "scenario": "5枚の公開写真を選ぶ 最大4枚の制約を説明",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-26",
+      "scenario": "公開本文を501文字入力 500文字の制約が明確で、安全に修正可 能",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-27",
+      "scenario": "同じ投稿に2回いいね 二重カウントせず状態が切り替わる",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-28",
+      "scenario": "コメント返信を入れ子で増やす 返信1階層までの制約を維持",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-29",
+      "scenario": "発言名義として他人のPet IDを指定サーバー側で拒否",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-30",
+      "scenario": "Petの公開を停止 検索・ホーム・公開プロフィールから除 外",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-31",
+      "scenario": "公開済み素材の同意を撤回 投稿・カード・キャッシュ上の露出を停 止",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "認可/投稿/反応/撤回の部分証拠",
+      "remaining": "全対象の実機E2E対応"
+    },
+    {
+      "id": "T-32",
+      "scenario": "共有URLを失効 公開終了画面を表示し元画像を出さない",
+      "overall": "not_verified",
+      "evidence": "p01-share-http.json",
+      "verified_scope": "公開専用HTTPと失効の実確認",
+      "remaining": "正式HTTPSホスト/URL/OGP/Universal Links"
+    },
+    {
+      "id": "T-33",
+      "scenario": "AがBをブロック 相互の交流・表示・通知が仕様どおり停 止",
+      "overall": "not_verified",
+      "evidence": "p01-assignment-race.json",
+      "verified_scope": "ブロック/担当/処分の部分証拠",
+      "remaining": "人間運営MFA・正式窓口・総合シナリオ"
+    },
+    {
+      "id": "T-34",
+      "scenario": "同じ人が別Pet名義で接触を試みるブロックは全Pet名義に適用",
+      "overall": "not_verified",
+      "evidence": "p01-assignment-race.json",
+      "verified_scope": "ブロック/担当/処分の部分証拠",
+      "remaining": "人間運営MFA・正式窓口・総合シナリオ"
+    },
+    {
+      "id": "T-35",
+      "scenario": "不適切投稿を通報 管理画面に届き対応履歴を保存",
+      "overall": "not_verified",
+      "evidence": "p01-assignment-race.json",
+      "verified_scope": "ブロック/担当/処分の部分証拠",
+      "remaining": "人間運営MFA・正式窓口・総合シナリオ"
+    },
+    {
+      "id": "T-36",
+      "scenario": "権限のない人が管理APIを実行 拒否し必要な監査を記録",
+      "overall": "not_verified",
+      "evidence": "p01-assignment-race.json",
+      "verified_scope": "ブロック/担当/処分の部分証拠",
+      "remaining": "人間運営MFA・正式窓口・総合シナリオ"
+    },
+    {
+      "id": "T-37",
+      "scenario": "運営が投稿を非表示・アカウント停止当該表示と再投稿が正しく制限",
+      "overall": "not_verified",
+      "evidence": "p01-assignment-race.json",
+      "verified_scope": "ブロック/担当/処分の部分証拠",
+      "remaining": "人間運営MFA・正式窓口・総合シナリオ"
+    },
+    {
+      "id": "T-38",
+      "scenario": "アカウントを退会 関連Pet・家族・公開・通知が削除計画 に従う",
+      "overall": "not_verified",
+      "evidence": "p0-account-retirement-e2e.json",
+      "verified_scope": "合成Authで退会57条件",
+      "remaining": "人間Auth/Apple token失効・保持/常時処理"
+    },
+    {
+      "id": "T-39",
+      "scenario": "ゲスト画像の保持期限が過ぎる 原則24時間以内の削除を自動検証",
+      "overall": "not_verified",
+      "evidence": "p1-twins-shares-server.json",
+      "verified_scope": "入力10分消去/画面終了の部分証拠",
+      "remaining": "実機バックグラウンド/終了/期限跨ぎ"
+    },
+    {
+      "id": "T-40",
+      "scenario": "バックアップを復元 取消済み公開・削除済み権限が復活しな い",
+      "overall": "not_verified",
+      "evidence": null,
+      "verified_scope": "対応証拠未確定（合格ではない）",
+      "remaining": "実バックアップの隔離復元・削除台帳再適用・公開再開前確認"
+    },
+    {
+      "id": "T-41",
+      "scenario": "通信切断・復帰 破損・二重保存せず続行または再試行",
+      "overall": "not_verified",
+      "evidence": null,
+      "verified_scope": "対応証拠未確定（合格ではない）",
+      "remaining": "実通信断/復帰・同時アップロード"
+    },
+    {
+      "id": "T-42",
+      "scenario": "通知を拒否したiPhoneで使う 全主要機能が使え、通知を勝手に送らな い",
+      "overall": "not_verified",
+      "evidence": null,
+      "verified_scope": "対応証拠未確定（合格ではない）",
+      "remaining": "実iPhoneのAPNs拒否/設定復帰"
+    },
+    {
+      "id": "T-43",
+      "scenario": "スクリーンリーダーで主要導線操作ボタンと公開状態が理解できる",
+      "overall": "not_verified",
+      "evidence": "p2-accessibility-final-summary.json",
+      "verified_scope": "ホーム/Twins自動監査（44pt/説明/切れ/コントラスト）とTwins入力・履歴削除のSimulator2件成功。VoiceOver実操作は未実施",
+      "remaining": "実VoiceOver操作と全画面/端末サイズ"
+    },
+    {
+      "id": "T-44",
+      "scenario": "iPhoneの異なる表示サイズ 主要操作に欠け・重なりがない",
+      "overall": "not_verified",
+      "evidence": "p2-large-final-summary.json",
+      "verified_scope": "iPhone18ProMax Simulatorの5タブ・最大文字・監査3件成功。iPhone17と17eにも部分証拠あり。全画面/実端末を代用しない",
+      "remaining": "実VoiceOver操作と全画面/端末サイズ"
+    },
+    {
+      "id": "T-45",
+      "scenario": "デモ用Twins候補のみでテスト デモが本番Petのように一般公開されな い",
+      "overall": "not_verified",
+      "evidence": null,
+      "verified_scope": "対応証拠未確定（合格ではない）",
+      "remaining": "実写真HEIC/EXIF・Releaseへの混入防止"
+    },
+    {
+      "id": "T-46",
+      "scenario": "画像のEXIFに位置情報がある 公開配信画像には位置情報が残らない",
+      "overall": "not_verified",
+      "evidence": null,
+      "verified_scope": "対応証拠未確定（合格ではない）",
+      "remaining": "実写真HEIC/EXIF・Releaseへの混入防止"
+    },
+    {
+      "id": "T-47",
+      "scenario": "利用上限へ到達 新規操作を安全に制限し既存画像は保持",
+      "overall": "not_verified",
+      "evidence": "p01-final-integrated-summary.json",
+      "verified_scope": "写真/回数上限等の部分証拠",
+      "remaining": "保存枠/端末容量/本番レートの実境界"
+    },
+    {
+      "id": "T-48",
+      "scenario": "原本画像の削除 必要な派生画像・共有・索引も更新",
+      "overall": "not_verified",
+      "evidence": "p01-deletion-drain.json",
+      "verified_scope": "削除workerの合成素材処理",
+      "remaining": "常時処理/実権利データ・監視"
+    },
+    {
+      "id": "T-49",
+      "scenario": "ログ収集・分析 個人の写真・コメント本文等の不要情報 が入らない",
+      "overall": "not_verified",
+      "evidence": "p01-python.log",
+      "verified_scope": "ログを無効化/件数記録の実装と部分証拠",
+      "remaining": "本番全ログ・委託先ログ・保持期限の検証"
+    },
+    {
+      "id": "T-50",
+      "scenario": "ストア審査用ビルドと書類を点検実施済み / 未実施 / ユーザー待ちが明確",
+      "overall": "not_verified",
+      "evidence": "P01-COMPLETION.md",
+      "verified_scope": "実施/未実施の記録",
+      "remaining": "P3正式署名/審査資料"
+    },
+    {
+      "id": "T-51",
+      "scenario": "一般投稿が0件で新規ユーザーがホーム を見る 「見つける」に運営管理Petの投稿が通 常UIで表示され、空のSNSにならない",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-52",
+      "scenario": "運営管理Petをフォローしていない状態 で「フォロー中」を見る 未フォローのPet投稿を勝手に「フォ ロー中」へ混ぜない",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-53",
+      "scenario": "運営が投稿用Petを選んで投稿を作成・ 予約・公開 Pet別の表示名義・権限・時刻に従って 配信され二重投稿されない",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-54",
+      "scenario": "権利確認のない画像で運営準備投稿を公 開しようとする 管理画面/API双方で公開を拒否し、不足 情報を示す",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-55",
+      "scenario": "運営準備投稿の公開を停止、写真権利を 撤回 ホーム、検索、共有、画像配信、キャッ シュに停止が反映",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-56",
+      "scenario": "一般ユーザー投稿が増える 運営準備投稿の表示量を設定で下げら れ、一般投稿が発見できる",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-57",
+      "scenario": "運営準備投稿にいいね・保存・コメン ト・通報 本物のリアクションのみ記録し、通常投 稿と同じ制限と処理が働く",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-58",
+      "scenario": "本番にテスト用・無許諾の画像やTwins デモ候補を投入 公開を拒否し、運営の権利確認と内部出 典を監査できる",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-59",
+      "scenario": "同一運営準備投稿を繰り返し配信・再読 込 重複や配信回数水増し、無限スクロール の重複乱発がない",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-60",
+      "scenario": "運営管理権のないユーザーが投稿用管理 APIを利用 拒否し、変更履歴と権限を監査できる",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-61",
+      "scenario": "運営準備投稿しかない段階のユーザー行 動を分析 一般投稿と内部識別して閲覧・フォ ロー・再訪を集計できる",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-62",
+      "scenario": "10件の管理用Petプロフィールを運営画 面で一括登録 各Petへのメール・Apple・Google登録 なしに作成、重複検知、監査記録が残る",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-63",
+      "scenario": "運営担当者が1画面でPetを切り替え10件 予約投稿 正しいPet名義で公開し、ログアウト・ ログイン操作は不要",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-64",
+      "scenario": "管理用Petの公開プロフィールを一般Pet と比較 同じレイアウト、専用の公式バッジや運 営文言を強制表示しない",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-65",
+      "scenario": "管理者APIの認証を外した一括発行を試 行 禁止し、権限のない外部ユーザーがPet 量産・予約をできない",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-66",
+      "scenario": "一般ユーザーのWAU・UGC投稿を集計管理用Petや運営投稿は混入せず、実 ユーザーだけを集計する",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-67",
+      "scenario": "実在しない飼い主の実体験・偽反応・過 去投稿の作成を試みる 業務ルールで禁止し、管理上の確認・レ ビュー対象となる",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-68",
+      "scenario": "ヘルプ・規約から運営管理コンテンツの 説明を探す 利用者が確認できる説明があり、個別プ ロフィールに表記を強制しない",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    },
+    {
+      "id": "T-69",
+      "scenario": "プロフィールを一括停止・権利撤回・一 括復旧 投稿と画像が安全に無効化され、承認の ない再公開は防止される",
+      "overall": "not_verified",
+      "evidence": "p1-seed-server.json",
+      "verified_scope": "運営素材/配信の94条件・実運営画面の部分証拠",
+      "remaining": "正式権利在庫・人間運営/実ユーザー集計・正式試用"
+    }
+  ]
+}

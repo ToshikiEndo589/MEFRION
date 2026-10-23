@@ -1,0 +1,22 @@
+{
+  "manifest_records": 5221,
+  "verified_images": 5221,
+  "failures": [],
+  "checks": [
+    "dog/cat category only",
+    "unique source ID",
+    "unique normalized pixels",
+    "SHA-256",
+    "JPEG decode",
+    "RGB",
+    "dimensions",
+    "no EXIF",
+    "thumbnail decode",
+    "attribution",
+    "local path boundary",
+    "publication disabled",
+    "ground-truth disabled"
+  ],
+  "dog_cat_portrait_text_candidates": 1456,
+  "possible_person_or_hand_text_flags": 194
+}

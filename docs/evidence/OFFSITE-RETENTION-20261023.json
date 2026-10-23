@@ -1,0 +1,8 @@
+{
+  "retention_days": 7,
+  "expired_encrypted_test_files": 3,
+  "all_expired_files_deleted": true,
+  "customer_backup_keys_touched": false,
+  "scheduler_enabled": true,
+  "production_migration_count": 68
+}

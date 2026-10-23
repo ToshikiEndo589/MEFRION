@@ -1,0 +1,55 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "modelName" : "iPhone 17",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 6,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "MEFRION · Built with macOS 26.6",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1791467833.869,
+  "passedTests" : 6,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Invalid frame dimension (negative or non-finite)."
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791467615.018,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "failed: caught error: \"Error Domain=com.apple.Vision Code=9 \"Could not create inference context\" UserInfo={NSLocalizedDescription=Could not create inference context}\"",
+      "targetName" : "MEFRIONTests",
+      "testIdentifier" : 6,
+      "testIdentifierString" : "PrototypeTests/testVisionOwnedDemoSearchHasNoSelfAndAtMostThree()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONTests/PrototypeTests/testVisionOwnedDemoSearchHasNoSelfAndAtMostThree",
+      "testName" : "testVisionOwnedDemoSearchHasNoSelfAndAtMostThree()"
+    }
+  ],
+  "title" : "Test - MEFRION",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 7
+}

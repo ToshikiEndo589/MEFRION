@@ -1,0 +1,58 @@
+[
+  {
+    "test": "PrototypeUITests/testAccountRetirementRejectsDifferentIdentityAndAcceptsOwner()",
+    "image": "P0-account-retirement-native-receipt.png"
+  },
+  {
+    "test": "PrototypeUITests/testCloudCardReallyRendersNineBySixteen()",
+    "image": "P1-cloud-card-rendered-1080x1920.png"
+  },
+  {
+    "test": "PrototypeUITests/testCloudImportRequiresConfirmationAndAllowsUndo()",
+    "image": "P1-import-review-before-any-upload.png"
+  },
+  {
+    "test": "PrototypeUITests/testCloudProfileAndMilestoneScreensUseNormalAccount()",
+    "image": "P1-cloud-events-and-pet-notifications.png"
+  },
+  {
+    "test": "PrototypeUITests/testCloudProfileAndMilestoneScreensUseNormalAccount()",
+    "image": "P1-cloud-profile-saved.png"
+  },
+  {
+    "test": "PrototypeUITests/testCloudSavedJPEGCanBeRetrievedToDevice()",
+    "image": "P1-saved-JPEG-retrieved-with-fresh-family-auth.png"
+  },
+  {
+    "test": "PrototypeUITests/testCloudSessionRestoresFromIsolatedKeychainAfterRelaunch()",
+    "image": "P0-keychain-session-restored-after-relaunch.png"
+  },
+  {
+    "test": "PrototypeUITests/testGuestAuthenticationReturnsToOriginalPost()",
+    "image": "P0-authentication-original-post-restored.png"
+  },
+  {
+    "test": "PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit()",
+    "image": "P1-normal-cloud-twins-input-erased.png"
+  },
+  {
+    "test": "PrototypeUITests/testTwinsResultAndInputSurviveAuthentication()",
+    "image": "P0-twins-result-preserved-after-authentication.png"
+  },
+  {
+    "test": "PrototypeUITests/testUnifiedCloudHomeAndAccountSession()",
+    "image": "P0-unified-account-logged-out.png"
+  },
+  {
+    "test": "PrototypeUITests/testUnifiedCloudHomeAndAccountSession()",
+    "image": "P0-unified-private-first-composer.png"
+  },
+  {
+    "test": "PrototypeUITests/testUnifiedCloudHomeAndAccountSession()",
+    "image": "P0-unified-following-feed.png"
+  },
+  {
+    "test": "PrototypeUITests/testUnifiedCloudHomeAndAccountSession()",
+    "image": "P0-unified-cloud-post-detail.png"
+  }
+]

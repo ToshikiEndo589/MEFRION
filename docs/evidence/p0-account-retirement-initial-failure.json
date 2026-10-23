@@ -1,0 +1,136 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "check": "create-dedicated-synthetic-user",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "real-password-auth",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "actual-auth-user",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "anon-retirement-rejected",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "missing-explicit-confirmation-rejected",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "private-pet-created",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reserve-owned-synthetic-image",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "store-synthetic-original",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "finish-original",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "original-visible-before-retirement",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "third-party-direct-original-denied",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "provider-sns-consent",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "explicit-public-profile",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "publication-request",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "retirement-accepted",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "exact-retirement-retry",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "other-key-conflict",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "old-session-private-original-denied",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "old-session-family-access-false",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "old-session-private-album-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "old-session-pet-create-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "old-session-consent-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "old-session-profile-republish-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "retired-pet-absent-from-public-search",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "user-cannot-run-cleanup",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "user-cannot-ack-cleanup",
+      "status": 403,
+      "passed": true
+    }
+  ],
+  "failure": "not enough values to unpack (expected 2, got 1)"
+}

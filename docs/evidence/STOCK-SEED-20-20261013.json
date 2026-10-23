@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-10-13T02:07:00.554752+00:00",
+  "environment": "approved Supabase Free development project",
+  "asset_source": "existing Pexels dog/cat resemblance corpus",
+  "planned_count": 20,
+  "published_jobs": 20,
+  "anonymous_feed_visible": 20,
+  "public_images_downloaded_and_decoded": 20,
+  "image_bytes": 1317898,
+  "engagement": "all zero",
+  "rights_expiry": "approximately 48 hours after publication",
+  "initial_failed_attempts": "four prior attempts were stopped with rights withdrawn and public derivatives deleted",
+  "temporary_test_operator": "MFA factor and role removed after run",
+  "development_worker": "restarted after isolated test",
+  "app_store_submission": false,
+  "production_release": false
+}

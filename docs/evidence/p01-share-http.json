@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "path_type": "share",
+      "status": 200,
+      "content_type": "text/plain",
+      "cache_control": "private, no-store, max-age=0",
+      "passed": true
+    },
+    {
+      "path_type": "share",
+      "status": 404,
+      "content_type": "text/plain",
+      "cache_control": "private, no-store, max-age=0",
+      "passed": true
+    },
+    {
+      "path_type": "share",
+      "status": 405,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "private, no-store, max-age=0",
+      "passed": true
+    },
+    {
+      "path_type": "share",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "cache_control": "no-store, max-age=0",
+      "passed": true
+    },
+    {
+      "path_type": "boundary",
+      "status": 404,
+      "content_type": "text/plain",
+      "cache_control": "no-store, max-age=0",
+      "passed": true
+    },
+    {
+      "path_type": "boundary",
+      "status": 404,
+      "content_type": "text/plain",
+      "cache_control": "no-store, max-age=0",
+      "passed": true
+    },
+    {
+      "origin": "local",
+      "check": "after-exact-fixture-deletion-ended-no-images",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "origin": "external",
+      "check": "after-exact-fixture-deletion-ended-no-images",
+      "status": 404,
+      "passed": true
+    }
+  ],
+  "external_html_renderable": false,
+  "dedicated_local_html_renderable": true,
+  "pending": "selected HTTPS host/domain and native Universal Links",
+  "official_constraint": "https://supabase.com/docs/guides/functions/http-methods"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "D7F00FF7-6345-461F-BC64-9DC2CD915EFE.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase4-former-provider-deleted_0_93256A29-BC65-48A9-846E-FDE31DF2043D.png",
+        "timestamp" : 1791481474.836
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "052EDB6F-365C-41F1-A923-04AFE6D8BEF0.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase4-former-provider-consent-only_0_6298F52C-C5F2-4034-B41E-62C33FBB52EC.png",
+        "timestamp" : 1791481469.244
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testFormerProviderCanWithdrawAndDelete()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testFormerProviderCanWithdrawAndDelete"
+  }
+]

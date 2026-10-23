@@ -1,0 +1,52 @@
+[
+  {
+    "file": "01.jpg",
+    "sha256": "8cbb0e413c6f75c2921489aa24a35a2c6c65fbd72edf01beaf0053d91476ac9e",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "02.jpg",
+    "sha256": "1370313c097441ae8f16fcb0d70223f9da878e6e53c2dda35b9f94f05ea22e25",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "03.jpg",
+    "sha256": "259f5c454385f069df3b2450764fbaa66148042de199b1a7b10bbdd20ac95a48",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "04.jpg",
+    "sha256": "d91827c5795b68e26a5b2209282f30d9867ec7f7603a6028799a9e564f27f75a",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "05.jpg",
+    "sha256": "70589ec74e757ac68f4a8435a140875728dd1aa47e41ec89a8f46f39a6e11804",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "06.jpg",
+    "sha256": "7d2be80d88c5ddae380364697fbd96c833b03527f4d5168170f8ba0af021c4d7",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "07.jpg",
+    "sha256": "ad1b68d569114ca0d7c8207648fd948bc7c7f36bdab6e124ae95efdc0d49a557",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "08.jpg",
+    "sha256": "a426eea29c2e0dd52f62d81c9e2f261c2760a4f4c402f0b79d470d927ad9233a",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "09.jpg",
+    "sha256": "0fe7af6035a31720dafcbb676a95ff98f93107ba0110d13967c6a0fcf30b2a41",
+    "purpose": "UI reference only"
+  },
+  {
+    "file": "10.jpg",
+    "sha256": "f85cfcdaa1c74119477d7bc0fb5a1c19e00b534799d12c8f8e7235f81ae55608",
+    "purpose": "UI reference only"
+  }
+]

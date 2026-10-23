@@ -1,0 +1,763 @@
+{
+  "summary": {
+    "queries": 24,
+    "candidate_grades_per_arm": 72,
+    "maximum_points": 144,
+    "legacy_points": 81,
+    "new_points": 119,
+    "improved_queries": 18,
+    "tied_queries": 3,
+    "regressed_queries": 3,
+    "reviewer": "development agent, unblinded subjective visual review",
+    "independent_user_evaluation": false,
+    "same_photographer_as_query_excluded": true,
+    "new_results_one_per_credit": true,
+    "general_accuracy_claim": false
+  },
+  "queries": [
+    {
+      "query": "pexels-33677587",
+      "species": "dog",
+      "legacy": [
+        "pexels-13701758",
+        "pexels-40008193",
+        "pexels-12800442"
+      ],
+      "dino": [
+        "pexels-18267090",
+        "pexels-40052585",
+        "pexels-5617174"
+      ],
+      "dino_color": [
+        "pexels-18267090",
+        "pexels-5617174",
+        "pexels-40052585"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        1,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Small white curly-coated dog; older results include large retrievers."
+    },
+    {
+      "query": "pexels-2144292",
+      "species": "dog",
+      "legacy": [
+        "pexels-33219304",
+        "pexels-12211227",
+        "pexels-10451745"
+      ],
+      "dino": [
+        "pexels-28667119",
+        "pexels-36433580",
+        "pexels-27108456"
+      ],
+      "dino_color": [
+        "pexels-28667119",
+        "pexels-36433580",
+        "pexels-14399870"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        0,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        1
+      ],
+      "review_note": "Short muzzle and upright ears, white facial stripe."
+    },
+    {
+      "query": "pexels-30714411",
+      "species": "dog",
+      "legacy": [
+        "pexels-11218187",
+        "pexels-11700750",
+        "pexels-13107274"
+      ],
+      "dino": [
+        "pexels-23489593",
+        "pexels-16337792",
+        "pexels-9321376"
+      ],
+      "dino_color": [
+        "pexels-23489593",
+        "pexels-16337792",
+        "pexels-9321376"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        2,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Long-coated black/tan shepherd appearance."
+    },
+    {
+      "query": "pexels-8563042",
+      "species": "dog",
+      "legacy": [
+        "pexels-18790693",
+        "pexels-26793958",
+        "pexels-10477161"
+      ],
+      "dino": [
+        "pexels-22898826",
+        "pexels-4588000",
+        "pexels-23427659"
+      ],
+      "dino_color": [
+        "pexels-22898826",
+        "pexels-23427659",
+        "pexels-11043700"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        2,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Tan/white spitz face; corgi-like old result differs."
+    },
+    {
+      "query": "pexels-21419131",
+      "species": "dog",
+      "legacy": [
+        "pexels-36354725",
+        "pexels-36134311",
+        "pexels-11401020"
+      ],
+      "dino": [
+        "pexels-34754503",
+        "pexels-33802186",
+        "pexels-37568392"
+      ],
+      "dino_color": [
+        "pexels-34754503",
+        "pexels-33802186",
+        "pexels-37568392"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        1,
+        1
+      ],
+      "new_grades": [
+        1,
+        2,
+        1
+      ],
+      "review_note": "White/cream folded-ear side profile; only one clearly close new result."
+    },
+    {
+      "query": "pexels-37460087",
+      "species": "dog",
+      "legacy": [
+        "pexels-9428216",
+        "pexels-31131477",
+        "pexels-5731846"
+      ],
+      "dino": [
+        "pexels-11474942",
+        "pexels-8903027",
+        "pexels-8563053"
+      ],
+      "dino_color": [
+        "pexels-8903027",
+        "pexels-11474942",
+        "pexels-38142122"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        1,
+        0
+      ],
+      "new_grades": [
+        1,
+        2,
+        2
+      ],
+      "review_note": "Human and small white fluffy dog; face visibility limited."
+    },
+    {
+      "query": "pexels-16786406",
+      "species": "dog",
+      "legacy": [
+        "pexels-15551551",
+        "pexels-10849259",
+        "pexels-6907078"
+      ],
+      "dino": [
+        "pexels-36620863",
+        "pexels-29388772",
+        "pexels-36607071"
+      ],
+      "dino_color": [
+        "pexels-36620863",
+        "pexels-29388772",
+        "pexels-32125047"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        2,
+        2
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Black/tan shepherd face and coat."
+    },
+    {
+      "query": "pexels-9632589",
+      "species": "dog",
+      "legacy": [
+        "pexels-32417775",
+        "pexels-29093130",
+        "pexels-2829944"
+      ],
+      "dino": [
+        "pexels-17950258",
+        "pexels-17950242",
+        "pexels-2402799"
+      ],
+      "dino_color": [
+        "pexels-17950258",
+        "pexels-17851002",
+        "pexels-7046354"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        0,
+        1,
+        0
+      ],
+      "new_grades": [
+        2,
+        2,
+        1
+      ],
+      "review_note": "Small subject with person; white/gray erect-ear dog."
+    },
+    {
+      "query": "pexels-31870549",
+      "species": "dog",
+      "legacy": [
+        "pexels-27347656",
+        "pexels-4626495",
+        "pexels-27347655"
+      ],
+      "dino": [
+        "pexels-21038919",
+        "pexels-37451819",
+        "pexels-18008195"
+      ],
+      "dino_color": [
+        "pexels-37451819",
+        "pexels-36689406",
+        "pexels-21038919"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        2,
+        2,
+        2
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Curly cream coat; both approaches broadly agree."
+    },
+    {
+      "query": "pexels-35453235",
+      "species": "dog",
+      "legacy": [
+        "pexels-33334347",
+        "pexels-33536023",
+        "pexels-40125061"
+      ],
+      "dino": [
+        "pexels-39447296",
+        "pexels-40125061",
+        "pexels-15794971"
+      ],
+      "dino_color": [
+        "pexels-40125061",
+        "pexels-39447296",
+        "pexels-15794971"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        2,
+        2,
+        1
+      ],
+      "new_grades": [
+        1,
+        1,
+        2
+      ],
+      "review_note": "Small tricolor erect-ear dog; new black/white results lose tan markings."
+    },
+    {
+      "query": "pexels-8081417",
+      "species": "dog",
+      "legacy": [
+        "pexels-4453094",
+        "pexels-38971366",
+        "pexels-17845133"
+      ],
+      "dino": [
+        "pexels-35338573",
+        "pexels-39609542",
+        "pexels-16783969"
+      ],
+      "dino_color": [
+        "pexels-35338573",
+        "pexels-39609542",
+        "pexels-17845133"
+      ],
+      "kind": "head",
+      "legacy_grades": [
+        1,
+        1,
+        1
+      ],
+      "new_grades": [
+        1,
+        1,
+        1
+      ],
+      "review_note": "Curly tan dog; age/coat/muzzle still vary in both."
+    },
+    {
+      "query": "pexels-12205353",
+      "species": "dog",
+      "legacy": [
+        "pexels-38390637",
+        "pexels-16333690",
+        "pexels-1322738"
+      ],
+      "dino": [
+        "pexels-37401881",
+        "pexels-32329252",
+        "pexels-4075969"
+      ],
+      "dino_color": [
+        "pexels-37401881",
+        "pexels-4075969",
+        "pexels-32329252"
+      ],
+      "kind": "head",
+      "legacy_grades": [
+        1,
+        1,
+        1
+      ],
+      "new_grades": [
+        1,
+        1,
+        1
+      ],
+      "review_note": "Monochrome reclining dog; color cannot be evaluated, shape similarity limited."
+    },
+    {
+      "query": "pexels-29125021",
+      "species": "cat",
+      "legacy": [
+        "pexels-38706934",
+        "pexels-9019950",
+        "pexels-4171825"
+      ],
+      "dino": [
+        "pexels-32930461",
+        "pexels-38921529",
+        "pexels-39282145"
+      ],
+      "dino_color": [
+        "pexels-32930461",
+        "pexels-38921529",
+        "pexels-38467743"
+      ],
+      "kind": "head",
+      "legacy_grades": [
+        1,
+        2,
+        2
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Brown/gray striped short-haired cat."
+    },
+    {
+      "query": "pexels-16761425",
+      "species": "cat",
+      "legacy": [
+        "pexels-28321205",
+        "pexels-36256363",
+        "pexels-50566"
+      ],
+      "dino": [
+        "pexels-31231397",
+        "pexels-15802496",
+        "pexels-35424844"
+      ],
+      "dino_color": [
+        "pexels-31231397",
+        "pexels-15802496",
+        "pexels-35424844"
+      ],
+      "kind": "head",
+      "legacy_grades": [
+        1,
+        1,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Spotted Bengal-like coat; older generic striped cats weaker."
+    },
+    {
+      "query": "pexels-35272018",
+      "species": "cat",
+      "legacy": [
+        "pexels-9840055",
+        "pexels-17685208",
+        "pexels-34791616"
+      ],
+      "dino": [
+        "pexels-31764485",
+        "pexels-18948275",
+        "pexels-15396382"
+      ],
+      "dino_color": [
+        "pexels-31764485",
+        "pexels-16817450",
+        "pexels-6946682"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        2,
+        1,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "White/chest calico-like long-haired coat."
+    },
+    {
+      "query": "pexels-35367585",
+      "species": "cat",
+      "legacy": [
+        "pexels-39705294",
+        "pexels-39922119",
+        "pexels-39705289"
+      ],
+      "dino": [
+        "pexels-35246535",
+        "pexels-38793414",
+        "pexels-38793412"
+      ],
+      "dino_color": [
+        "pexels-35246535",
+        "pexels-28947519",
+        "pexels-35759199"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        2,
+        1,
+        1
+      ],
+      "new_grades": [
+        1,
+        2,
+        2
+      ],
+      "review_note": "Orange fluffy rear/side view; face cannot be judged."
+    },
+    {
+      "query": "pexels-18338485",
+      "species": "cat",
+      "legacy": [
+        "pexels-208773",
+        "pexels-35416551",
+        "pexels-38706902"
+      ],
+      "dino": [
+        "pexels-28128245",
+        "pexels-4383733",
+        "pexels-32070876"
+      ],
+      "dino_color": [
+        "pexels-28452353",
+        "pexels-4383733",
+        "pexels-32070876"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        1,
+        0
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Short-haired colorpoint cat; older fluffy/plain coats differ."
+    },
+    {
+      "query": "pexels-14653800",
+      "species": "cat",
+      "legacy": [
+        "pexels-39016047",
+        "pexels-8912572",
+        "pexels-33937059"
+      ],
+      "dino": [
+        "pexels-34060028",
+        "pexels-14976640",
+        "pexels-27488667"
+      ],
+      "dino_color": [
+        "pexels-34060028",
+        "pexels-17435097",
+        "pexels-27488667"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        0,
+        1,
+        1
+      ],
+      "new_grades": [
+        1,
+        2,
+        2
+      ],
+      "review_note": "Mostly white cat, facial marking; older framing/background dominates."
+    },
+    {
+      "query": "pexels-16612230",
+      "species": "cat",
+      "legacy": [
+        "pexels-29221835",
+        "pexels-33871746",
+        "pexels-28914762"
+      ],
+      "dino": [
+        "pexels-34714196",
+        "pexels-35246535",
+        "pexels-6727207"
+      ],
+      "dino_color": [
+        "pexels-34714196",
+        "pexels-32024675",
+        "pexels-6727207"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        1,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        1
+      ],
+      "review_note": "Light fluffy side profile; limited face detail."
+    },
+    {
+      "query": "pexels-30435970",
+      "species": "cat",
+      "legacy": [
+        "pexels-30479254",
+        "pexels-15529516",
+        "pexels-29322362"
+      ],
+      "dino": [
+        "pexels-15379284",
+        "pexels-32852977",
+        "pexels-18196893"
+      ],
+      "dino_color": [
+        "pexels-15379284",
+        "pexels-12969011",
+        "pexels-32852977"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        2,
+        2
+      ],
+      "new_grades": [
+        1,
+        1,
+        2
+      ],
+      "review_note": "Fluffy light/gray round-faced cat; new results include slimmer faces."
+    },
+    {
+      "query": "pexels-9860914",
+      "species": "cat",
+      "legacy": [
+        "pexels-20548788",
+        "pexels-29434279",
+        "pexels-32762933"
+      ],
+      "dino": [
+        "pexels-31222310",
+        "pexels-12699489",
+        "pexels-11399468"
+      ],
+      "dino_color": [
+        "pexels-31222310",
+        "pexels-20943699",
+        "pexels-12699489"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        1,
+        1,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        1
+      ],
+      "review_note": "Long-haired brown tabby with white chest."
+    },
+    {
+      "query": "pexels-13693652",
+      "species": "cat",
+      "legacy": [
+        "pexels-31954981",
+        "pexels-34285318",
+        "pexels-39495633"
+      ],
+      "dino": [
+        "pexels-11613349",
+        "pexels-25309972",
+        "pexels-35129783"
+      ],
+      "dino_color": [
+        "pexels-11613349",
+        "pexels-17138081",
+        "pexels-25309972"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        0,
+        1,
+        1
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Orange striped sleeping cat; old fur colors vary."
+    },
+    {
+      "query": "pexels-3950658",
+      "species": "cat",
+      "legacy": [
+        "pexels-34493876",
+        "pexels-39495643",
+        "pexels-35316213"
+      ],
+      "dino": [
+        "pexels-17614410",
+        "pexels-29086470",
+        "pexels-14854518"
+      ],
+      "dino_color": [
+        "pexels-17614410",
+        "pexels-33676334",
+        "pexels-29086470"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        2,
+        1,
+        2
+      ],
+      "new_grades": [
+        2,
+        2,
+        2
+      ],
+      "review_note": "Short-haired brown/gray tabby side profile."
+    },
+    {
+      "query": "pexels-2928157",
+      "species": "cat",
+      "legacy": [
+        "pexels-33882576",
+        "pexels-39705295",
+        "pexels-28299798"
+      ],
+      "dino": [
+        "pexels-33888930",
+        "pexels-11445088",
+        "pexels-38103896"
+      ],
+      "dino_color": [
+        "pexels-33888930",
+        "pexels-11445088",
+        "pexels-38103896"
+      ],
+      "kind": "animal",
+      "legacy_grades": [
+        2,
+        0,
+        0
+      ],
+      "new_grades": [
+        0,
+        0,
+        0
+      ],
+      "review_note": "Tortoiseshell markings; new results miss the distinctive pattern."
+    }
+  ]
+}

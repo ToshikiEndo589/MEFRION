@@ -1,0 +1,32 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "0E15001C-14FF-4CB9-902B-01903A725047.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-cloud-card-rendered-1080x1920_0_A33E54A4-B6FA-4456-92F6-6BB5C2D53768.png",
+        "timestamp" : 1791539969.08
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudCardReallyRendersNineBySixteen()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudCardReallyRendersNineBySixteen"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "E7D96537-E2C3-40F9-B494-EFEA912C4C8E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-normal-cloud-twins-input-erased_0_53EDD8AF-B670-4C17-B16F-A19A92B81ADE.png",
+        "timestamp" : 1791539985.384
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit"
+  }
+]

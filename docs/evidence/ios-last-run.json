@@ -1,0 +1,22 @@
+{
+  "command": [
+    "xcodebuild",
+    "-project",
+    "ios/MEFRION.xcodeproj",
+    "-scheme",
+    "MEFRION",
+    "-destination",
+    "id=4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+    "CODE_SIGNING_ALLOWED=NO",
+    "-parallel-testing-enabled",
+    "NO",
+    "-resultBundlePath",
+    "/Users/toshiki/Documents/ChatGPT/MEFRION/docs/evidence/ios-phase01-20261008-225332.xcresult",
+    "test-without-building"
+  ],
+  "exit_code": 65,
+  "result_bundle": "/Users/toshiki/Documents/ChatGPT/MEFRION/docs/evidence/ios-phase01-20261008-225332.xcresult",
+  "device": "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+  "runtime": "iOS 27.0",
+  "status": "executed_failure"
+}

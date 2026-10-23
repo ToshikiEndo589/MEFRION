@@ -1,0 +1,8 @@
+{
+  "removed_reserved_runner_fixtures": [
+    "cloud-safety-fixture.json",
+    "retirement-fixture.json",
+    "cloud-fixture.json"
+  ],
+  "scope": "reserved synthetic XCTest credentials only"
+}

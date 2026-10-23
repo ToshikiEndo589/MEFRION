@@ -1,0 +1,207 @@
+{
+  "passed": true,
+  "scope": "real Auth / synthetic JPEG / family storage gateway",
+  "checks": [
+    {
+      "check": "create-synthetic-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "create-synthetic-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "create-synthetic-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "real-password-sign-in-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "auth-get-user-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "real-password-sign-in-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "auth-get-user-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "real-password-sign-in-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "auth-get-user-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "private-pet-create",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-cannot-read-album",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "owner-single-use-invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-invite-scope-required",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "family-accept-invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "invite-token-cannot-be-reused",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "family-reserve-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "photo-reservation-retry-idempotent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "photo-completion-before-upload-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "third-party-upload-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "family-upload-synthetic-image",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-complete-upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-album-contains-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-image-gateway",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owner-image-gateway",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-image-gateway-denied",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "anonymous-image-gateway-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "authenticated-direct-original-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "anonymous-public-original-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "authenticated-signed-url-creation-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "owner-cannot-grant-provider-consent",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "provider-grants-specific-purpose",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owner-removes-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "removed-family-album-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "removed-family-image-denied",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "removed-provider-can-withdraw-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "removed-provider-cannot-grant-consent",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "owner-deletes-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "deleted-image-denied-to-owner",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "delete-retry-idempotent",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "remaining": [
+    "native family E2E",
+    "deletion outbox object purge",
+    "real human email/Apple/Google",
+    "production QA"
+  ]
+}

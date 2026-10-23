@@ -1,0 +1,14 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEFRION ローカル試作</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script><body>
+<header><span>MEFRION</span><a href="/admin">管理デモ</a></header>
+<p class="notice">ローカル開発用・iPhone画面の代替検証ではありません。実写真を送信しないでください。</p>
+<main><section><p class="eyebrow">犬猫の思い出を、家族で育てる。</p><h1>今日の一枚から、<br>いつかの宝物へ。</h1><p>家族内の記録は非公開。公開は、別の明示操作で。</p></section>
+<nav aria-label="試作の画面"><button data-tab="home">ホーム</button><button data-tab="twins">そっくり</button><button data-tab="album">投稿・アルバム</button></nav>
+<section id="home"><h2>見つける</h2><p>権利を持つ自作イラスト10Petの開発デモ。反応数は0です。運営制作・管理のコンテンツが含まれる場合があります。</p><div id="feed" class="grid"></div></section>
+<section id="album" hidden><h2>家族内アルバム</h2><p>API認証は固定デモです。本物のApple/Google/メール認証ではありません。</p>
+<form id="pet-form"><label>Pet名（必須）<input id="pet-name" maxlength="40" required placeholder="こむぎ"></label><label>犬または猫<select id="pet-species"><option value="dog">犬</option><option value="cat">猫</option></select></label><button>非公開でPetを作成</button></form>
+<label>記録するPet<select id="pet-list"></select></label>
+<form id="photo-form"><label>所有テスト素材<select id="asset-list"></select></label><label>撮影時期<input id="captured" placeholder="2020 / 2020-10 / 2020-10-08 / 空欄は不明"></label><label><input id="duplicate" type="checkbox">同じ画像の追加を確認する</label><button>アルバムに残す（非公開）</button></form>
+<p>日付と写真を確認してから保存。2枚を選択すると比較カードを作れます。</p><div id="album-photos" class="grid"></div><button id="compare">選択した2枚を家族内で比較</button><div id="comparison"></div></section>
+<section id="twins" hidden><h2>Twinsを試す</h2><p>fixture検索です。画像認識・類似検索は未接続で、実際の検索品質を表しません。入力画像の外部送信はありません。</p>
+<form id="twins-form"><label>対象<select id="twins-species"><option value="dog">犬</option><option value="cat">猫</option></select></label><label>確認する状態<select id="scenario"><option value="results">結果</option><option value="insufficient">候補不足</option><option value="poor_photo">写真不良</option><option value="failure">処理失敗</option></select></label><button>デモ検索・再試行</button></form><div id="twins-result"></div></section>
+<p id="status" role="status" aria-live="polite"></p><footer>Phase 0・1試作 / 共有Webの公開機能は未実装 / 本番配信禁止</footer></main></body></html>

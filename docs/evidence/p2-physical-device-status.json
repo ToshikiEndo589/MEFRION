@@ -1,0 +1,41 @@
+{
+  "scope": "devicectl inventory includes simulator records; identifying fields omitted",
+  "devices": [
+    {
+      "platform": "iOS",
+      "deviceType": "iPhone",
+      "reality": "simulated",
+      "connection": "connected",
+      "transport": "sameMachine"
+    },
+    {
+      "platform": "iOS",
+      "deviceType": "iPhone",
+      "reality": "physical",
+      "connection": "unavailable",
+      "transport": null
+    },
+    {
+      "platform": "iOS",
+      "deviceType": "iPhone",
+      "reality": "simulated",
+      "connection": "disconnected",
+      "transport": "sameMachine"
+    },
+    {
+      "platform": "iOS",
+      "deviceType": "iPhone",
+      "reality": "simulated",
+      "connection": "connected",
+      "transport": "sameMachine"
+    },
+    {
+      "platform": "iOS",
+      "deviceType": "iPhone",
+      "reality": "simulated",
+      "connection": "disconnected",
+      "transport": "sameMachine"
+    }
+  ],
+  "real_device_tests_executed": false
+}

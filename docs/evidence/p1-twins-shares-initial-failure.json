@@ -1,0 +1,101 @@
+{
+  "passed": false,
+  "failure": "explicit-enroll failed",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-profile-explicit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-owned-jpeg",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-private",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-owned-jpeg",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-private",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "twins-without-provider-purpose-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "provider-twins-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "implicit-enrollment-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "outsider-enrollment-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "explicit-enroll",
+      "passed": false,
+      "status": 404
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "action": "setup",
+  "scope": "MEFRION production; dedicated synthetic fixtures only; bounded requests",
+  "passed": true,
+  "checks": [
+    {
+      "check": "create_pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "invite-explicit-scope-required",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "accept_invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "invite-replay-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "begin_photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-upload-0",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish_photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "begin_photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-upload-1",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish_photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "begin_video",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-upload-2",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-poster-upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish_video",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "set_public_profile",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "request_publication",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "save_card",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "share_card",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "failed_checks": []
+}

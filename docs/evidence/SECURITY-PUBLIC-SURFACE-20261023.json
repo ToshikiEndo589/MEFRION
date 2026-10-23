@@ -1,0 +1,86 @@
+{
+  "scope": "public MEFRION site only; no successful mutation attempted",
+  "passed": true,
+  "checks": [
+    {
+      "check": "site-health",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "security-headers-/privacy",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "security-headers-/terms",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "security-headers-/console/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "console-public-config-has-no-secret",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "path-hidden-/.env",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "path-hidden-/.git/config",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "path-hidden-/cloud-shared/not-a-uuid",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "path-hidden-/cloud-shared/../../internal-backup/catalog",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "encrypted-backup-unauthorized-/internal-backup/health",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "encrypted-backup-wrong-token-/internal-backup/health",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "encrypted-backup-unauthorized-/internal-backup/catalog",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "encrypted-backup-wrong-token-/internal-backup/catalog",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "encrypted-backup-unauthorized-/internal-backup/production/manifests/00000000-0000-0000-0000-000000000000.bin",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "encrypted-backup-wrong-token-/internal-backup/production/manifests/00000000-0000-0000-0000-000000000000.bin",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "site-rejects-unexpected-write",
+      "status": 405,
+      "passed": true
+    }
+  ]
+}

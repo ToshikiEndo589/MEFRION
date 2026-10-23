@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "not_started",
+  "scope": "consenting adult testers and permitted photos only",
+  "participants": [],
+  "device_checks": [],
+  "acceptance_records": [],
+  "twins_quality": {
+    "evaluation_set_separate_from_tuning": null,
+    "permitted_dog_photos": 0,
+    "permitted_cat_photos": 0,
+    "queries": 0,
+    "human_ratings": [],
+    "passed": false
+  },
+  "incident_records": [],
+  "acceptance_record_fields": [
+    "scenario_id",
+    "anonymous_tester_id",
+    "device_model",
+    "ios_version",
+    "build",
+    "timestamp",
+    "expected",
+    "actual",
+    "evidence_path",
+    "result",
+    "retest_evidence"
+  ],
+  "release_approval": false
+}

@@ -1,0 +1,136 @@
+{
+  "passed": true,
+  "scope": "actual two concurrent single-use joins and membership removal/write race",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "private-race-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "single-use-invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "single-invite-one-committed-member",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "only-owner-and-one-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owner-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "winner-private-read-before-exit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "concurrent-exit-committed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "concurrent-add-authorized-before-exit-or-rejected",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "pending-photo-cannot-finish-after-exit",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "post-commit-old-member-album-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "post-commit-old-member-photo-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "post-commit-old-member-image-denied",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "anonymous-private-image-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "expired-member-cannot-consent-owner-photo",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "cleanup-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "keep-race-pet-private",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

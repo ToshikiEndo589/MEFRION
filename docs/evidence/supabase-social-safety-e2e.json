@@ -1,0 +1,381 @@
+{
+  "passed": true,
+  "scope": "actual Auth / synthetic images / blocks / reports / moderation / appeals",
+  "checks": [
+    {
+      "check": "synthetic-login-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "synthetic-login-family",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "synthetic-login-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "list-owner-private-pets",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "list-outsider-private-pets",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "enable-synthetic-profile-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "enable-synthetic-profile-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "enable-synthetic-profile-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reserve-synthetic-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "upload-synthetic-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "finish-synthetic-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "provider-purpose-sns",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "request-synthetic-public-post",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reserve-synthetic-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "upload-synthetic-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "finish-synthetic-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "provider-purpose-sns",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "request-synthetic-public-post",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "outsider-sees-two-owner-pets",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "visible-derived-image",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "registered-report-intake",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "report-idempotent-retry",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "report-key-conflict",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "anonymous-report-denied",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "ordinary-owner-cannot-read-intake",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "service-intake-safe-projection",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "anonymous-block-denied",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "self-block-denied",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "outsider-block-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "all-owner-pet-names-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "blocked-derived-image-denied",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "anonymous-public-image-still-public",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "block-list-has-no-human-id",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "unblock-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "unblocked-two-pets-visible",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "owner-blocks-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reciprocal-all-pets-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reciprocal-image-denied",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "unblock-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-invite",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-explicit-join",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-blocks-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "social-block-retains-private-family-role",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "blocked-family-public-feed-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "ordinary-owner-cannot-review",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "anonymous-cannot-review",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "service-hide-post",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "review-idempotency",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "review-key-conflict",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "hidden-post-removed-other-pet-retained",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "hidden-image-before-purge-denied",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "service-suspend-all-pets",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "suspended-all-pets-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "suspended-other-pet-publication-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "suspended-new-public-post-denied",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "suspended-private-album-retained",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "suspended-provider-can-withdraw",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "target-moderation-history-safe",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reporter-cannot-see-target-actions",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "affected-owner-can-appeal",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "appeal-idempotency",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reporter-cannot-appeal-for-owner",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "appeal-edit-conflict",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "service-history-appeal-intake",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "service-restores-account",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "restoration-does-not-republish",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "restored-owner-can-explicitly-enable",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "old-stopped-post-still-hidden-after-reenable",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "cleanup-synthetic-block",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "cleanup-synthetic-family-membership",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "return-synthetic-profile-private",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "return-synthetic-profile-private",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "return-synthetic-profile-private",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "delete-synthetic-original",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "delete-synthetic-original",
+      "status": 200,
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "E0DBEE05-5294-48D2-A5EA-14F77FDA601B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-import-review-before-any-upload_0_F6CAF840-DFE7-4C60-9FB0-3DA3BCCF4709.png",
+        "timestamp" : 1791541192.285
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudImportRequiresConfirmationAndAllowsUndo()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudImportRequiresConfirmationAndAllowsUndo"
+  }
+]

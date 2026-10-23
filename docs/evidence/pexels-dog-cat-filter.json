@@ -1,0 +1,13 @@
+{
+  "original_manifest_count": 6311,
+  "dog_cat_candidates": 5221,
+  "excluded_count": 1090,
+  "species_query_hints": {
+    "dog": 3073,
+    "cat": 2148
+  },
+  "classification_method": "query category plus conservative description filter",
+  "all_visually_verified": false,
+  "api_requests": 0,
+  "original_backup": "/Users/toshiki/Documents/ChatGPT/MEFRION/.local/pexels-before-dog-cat-filter"
+}

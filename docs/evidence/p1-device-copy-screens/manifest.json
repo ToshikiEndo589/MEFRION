@@ -1,0 +1,47 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "797E00A2-3C68-49AC-A653-340FF4E62E1C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-cloud-card-rendered-1080x1920_0_928D01DE-0A9B-449B-822D-CA4608A6B233.png",
+        "timestamp" : 1791542076.439
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudCardReallyRendersNineBySixteen()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudCardReallyRendersNineBySixteen"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "3E7C54E6-FC4D-48E4-A810-BF62EFE0CB2A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-saved-JPEG-retrieved-with-fresh-family-auth_0_4C8C7AF3-138E-4351-8ED9-CAD044FB16A3.png",
+        "timestamp" : 1791542095.612
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudSavedJPEGCanBeRetrievedToDevice()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudSavedJPEGCanBeRetrievedToDevice"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "7836799A-CC12-49A5-AE0D-CCCD18E724B4.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-normal-cloud-twins-input-erased_0_D7BB5417-DD58-40B0-8E11-59083D93FAD9.png",
+        "timestamp" : 1791542113.095
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit"
+  }
+]

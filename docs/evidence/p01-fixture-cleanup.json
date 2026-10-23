@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-target-login",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "restore-completed-before-retirement",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "retire-exact-disposable-target",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "remove-exact-owned-moderation-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "remove-exact-owned-card-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "remove-exact-owned-card-photo",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "retirement_cleanup": [
+    {
+      "scope": "exact synthetic user",
+      "processed": 1,
+      "storage_paths_removed": 0,
+      "auth_soft_erased": true,
+      "backup_retention_finalized": false
+    },
+    {
+      "scope": "exact synthetic user",
+      "processed": 1,
+      "storage_paths_removed": 0,
+      "auth_soft_erased": true,
+      "backup_retention_finalized": false
+    }
+  ],
+  "scope": "exact task-owned synthetic fixtures; normal Keychain and device photo library untouched"
+}

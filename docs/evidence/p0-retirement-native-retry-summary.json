@@ -1,0 +1,55 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "modelName" : "iPhone 17",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "MEFRION · Built with macOS 26.6",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1791519546.467,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Invalid frame dimension (negative or non-finite)."
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791519416.815,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Asynchronous wait failed: Exceeded timeout of 30 seconds, with unfulfilled expectations: \"Expect predicate `enabled == 1` for object \"account-retirement-submit\" Button\".",
+      "targetName" : "MEFRIONUITests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "PrototypeUITests/testAccountRetirementRejectsDifferentIdentityAndAcceptsOwner()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testAccountRetirementRejectsDifferentIdentityAndAcceptsOwner",
+      "testName" : "testAccountRetirementRejectsDifferentIdentityAndAcceptsOwner()"
+    }
+  ],
+  "title" : "Test - MEFRION",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 1
+}

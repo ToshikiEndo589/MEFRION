@@ -1,0 +1,8 @@
+# One-time deployment/import tools. Neither package is required on a customer's
+# iPhone or on the server after the Supabase functions have been deployed.
+pg8000==1.31.5
+Pillow==13.0.0
+
+# Offline recovery and independent restore drill only.
+cryptography==50.0.2
+PGPy==0.6.0

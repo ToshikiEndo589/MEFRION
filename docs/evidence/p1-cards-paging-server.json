@@ -1,0 +1,356 @@
+{
+  "passed": true,
+  "scope": "synthetic family cards/export purposes/new activity/public keyset pages",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "members",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-family-join",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "mark-family-read",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-new-three",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-mark-read",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-new-zero",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-new-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "family-activity-no-identities-or-originals",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "save-family-card",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "card-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "card-key-conflict",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "card-invalid-crop-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "card-cross-pet-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "family-card-visible",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-card-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-card-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "no-implicit-export",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "no-export-without-provider-purpose",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "provide-export-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "provide-export-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-authorized-export",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-cannot-export-owner-card",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "withdraw-export-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdrawn-export-rejected",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "private-card-retained-after-public-withdrawal",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-profile-explicit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "provide-sns",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "request-post",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "provide-sns",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "request-post",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "provide-sns",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "request-post",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "first-keyset-page",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "next-keyset-page",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "next-keyset-page",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "pages-find-all-three",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cat-filter-excludes-dogs",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reset-reserved-fixture-follow",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "unfollowed-feed-excludes-seeds",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "anonymous-following-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "invalid-cursor-pair-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "hide-breed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "search-does-not-match-private-breed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "feed-does-not-return-private-breed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "stop-one-public-post",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "known-page-rechecks-withdrawal",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-card-source",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "source-deletion-removes-card",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "restore-profile",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "keep-private",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-family-membership",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

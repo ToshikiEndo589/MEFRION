@@ -1,0 +1,61 @@
+{
+  "passed": false,
+  "failure": "metrics-before failed",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "grant-synthetic-admin",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "register-reserved-publisher",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "metrics-before",
+      "passed": false,
+      "status": 405
+    },
+    {
+      "check": "cleanup-synthetic-admin-role",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

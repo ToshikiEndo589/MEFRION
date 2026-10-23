@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "mode": "appeal",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "target-login",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "target-identity",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "own-moderation-notices",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "suspended-user-comment-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "submit-own-appeal",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "ordinary-owner-claim-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-claim-denied",
+      "passed": true,
+      "status": 401
+    }
+  ],
+  "scope": "reserved synthetic user and this task report only",
+  "internal_reason_and_reporter_absent": true
+}

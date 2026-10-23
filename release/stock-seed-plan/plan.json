@@ -1,0 +1,11 @@
+{
+  "source": "/Users/toshiki/Documents/ChatGPT/MEFRION/.local/resemblance/catalog.json",
+  "source_sha256": "ccbce2283b95ee1b243d61cea1d22f819f481513d6e47214fb492835e452a528",
+  "initial_count": 100,
+  "daily_count": 30,
+  "days_prepared": 365,
+  "first_date": "2026-10-13",
+  "last_date": "2027-10-13",
+  "status": "offline_plan_only_not_approved_or_published",
+  "policy": "One managed Pet profile per photo. No real owner claim, invented biography, likes or comments."
+}

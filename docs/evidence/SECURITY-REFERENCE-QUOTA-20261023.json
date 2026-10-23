@@ -1,0 +1,27 @@
+{
+  "guest_search_works": true,
+  "raw_ip_not_stored": true,
+  "checks": [
+    {
+      "check": "rotated-client-id",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "forged-x-forwarded-for",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "forged-cf-connecting-ip",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "both-ip-headers-forged",
+      "status": 403,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

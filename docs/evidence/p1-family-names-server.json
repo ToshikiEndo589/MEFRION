@@ -1,0 +1,140 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "original-members",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "invite",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-join",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "guest-alias-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-alias-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "overlong-alias-rejected",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "foreign-user-parameter-not-supported",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "owner-selects-private-alias",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-selects-own-alias",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-names-visible-only-in-members",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-member-list-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "private-activity-no-email-no-full-actor-id",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-activity-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "album-provider-name-only",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "clear-family-private-name",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleared-name-default",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-exit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "exited-alias-change-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "exited-activity-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "exited-notifications-omit-pet",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

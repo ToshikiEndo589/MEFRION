@@ -1,0 +1,52 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "modelName" : "iPhone 17",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 1,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "MEFRION · Built with macOS 26.6",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1791539986.167,
+  "passedTests" : 1,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791539902,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertEqual failed: (\"1,080 × 1,920\") is not equal to (\"1080 × 1920\")",
+      "targetName" : "MEFRIONUITests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "PrototypeUITests/testCloudCardReallyRendersNineBySixteen()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudCardReallyRendersNineBySixteen",
+      "testName" : "testCloudCardReallyRendersNineBySixteen()"
+    }
+  ],
+  "title" : "Test - MEFRION",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 2
+}

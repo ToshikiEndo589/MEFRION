@@ -1,0 +1,236 @@
+{
+  "ok": true,
+  "command": "projects search",
+  "version": "0.1",
+  "data": {
+    "last_updated": "2026-10-08T14:59:40.372Z",
+    "query": "supabase",
+    "result_count": 3,
+    "services": [
+      {
+        "id": "prvsvc_61UW7A5bzEOawXq9o5Cgq",
+        "object": "v2.provisioning.provider_service_detail",
+        "allowed_updates": [],
+        "availability": "available",
+        "categories": [
+          "database",
+          "auth",
+          "storage"
+        ],
+        "configuration_schema": {
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "region": {
+              "type": "string",
+              "enum": [
+                "americas",
+                "emea",
+                "apac"
+              ],
+              "default": "americas"
+            }
+          },
+          "type": "object",
+          "required": []
+        },
+        "constraints": [],
+        "created": null,
+        "description": "A Supabase project with database, auth, and storage",
+        "development": false,
+        "group": null,
+        "kind": "deployable",
+        "llm_context": null,
+        "pricing": {
+          "component": {
+            "options": [
+              {
+                "is_default": null,
+                "paid": null,
+                "parent_services": [
+                  "free"
+                ],
+                "type": "free"
+              },
+              {
+                "is_default": null,
+                "paid": {
+                  "description": null,
+                  "freeform": "$10 per project (first project on Micro compute free)",
+                  "type": "freeform"
+                },
+                "parent_services": [
+                  "pro",
+                  "team"
+                ],
+                "type": "paid"
+              }
+            ]
+          },
+          "paid": null,
+          "paid_pricing": [],
+          "type": "component"
+        },
+        "provider": "prvdr_61UIXYHdsyF69pZbG52n2",
+        "provider_name": "Supabase",
+        "scope": "project",
+        "service_id": "project",
+        "updateable_to": [
+          "project"
+        ],
+        "livemode": true,
+        "provider_configuration_schema": {}
+      },
+      {
+        "id": "prvsvc_61UlsuY5RlLAusyo45VRY",
+        "object": "v2.provisioning.provider_service_detail",
+        "allowed_updates": [],
+        "availability": "available",
+        "categories": [
+          "database"
+        ],
+        "configuration_schema": {
+          "additionalProperties": false,
+          "required": [
+            "region"
+          ],
+          "type": "object",
+          "properties": {
+            "region": {
+              "type": "string",
+              "description": "Prisma Postgres region identifier (Defaults to \"us-east-1\").",
+              "enum": [
+                "us-east-1",
+                "us-west-1",
+                "eu-west-3",
+                "eu-central-1",
+                "ap-northeast-1",
+                "ap-southeast-1"
+              ],
+              "default": "us-east-1"
+            }
+          }
+        },
+        "constraints": [],
+        "created": null,
+        "description": "Prisma Postgres — managed Postgres for Stripe Projects.",
+        "development": false,
+        "group": "postgresql",
+        "kind": "deployable",
+        "llm_context": null,
+        "pricing": {
+          "component": {
+            "options": [
+              {
+                "is_default": null,
+                "paid": null,
+                "parent_services": [
+                  "free",
+                  "pro",
+                  "starter",
+                  "business"
+                ],
+                "type": "free"
+              }
+            ]
+          },
+          "paid": null,
+          "paid_pricing": [],
+          "type": "component"
+        },
+        "provider": "prvdr_61Ulq2NBoEkAzhMKC50vA",
+        "provider_name": "Prisma",
+        "scope": "project",
+        "service_id": "database",
+        "updateable_to": [
+          "database"
+        ],
+        "livemode": true,
+        "provider_configuration_schema": {}
+      },
+      {
+        "id": "prvsvc_61UIcgOCvxFAl8M8w56UC",
+        "object": "v2.provisioning.provider_service_detail",
+        "allowed_updates": [],
+        "availability": "available",
+        "categories": [
+          "database"
+        ],
+        "configuration_schema": {
+          "properties": {
+            "location": {
+              "description": "Primary location (e.g. aws-us-east-1, aws-eu-west-1)",
+              "enum": [
+                "aws-us-east-1",
+                "aws-us-east-2",
+                "aws-us-west-2",
+                "aws-eu-west-1",
+                "aws-ap-south-1",
+                "aws-ap-northeast-1"
+              ],
+              "type": "string"
+            },
+            "name": {
+              "description": "Database name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "location"
+          ],
+          "type": "object"
+        },
+        "constraints": [],
+        "created": null,
+        "description": "Free SQLite-based database that's always on: no cold starts. Instant response every time. Concurrent writes. Unlimited databases.",
+        "development": false,
+        "group": null,
+        "kind": "deployable",
+        "llm_context": null,
+        "pricing": {
+          "component": {
+            "options": [
+              {
+                "is_default": null,
+                "paid": null,
+                "parent_services": [
+                  "pro",
+                  "scaler_overages",
+                  "pro_overages",
+                  "scaler",
+                  "starter",
+                  "developer_overages",
+                  "developer"
+                ],
+                "type": "free"
+              }
+            ]
+          },
+          "paid": null,
+          "paid_pricing": [],
+          "type": "component"
+        },
+        "provider": "prvdr_61UGLtrGjcXK8rTq15RWq",
+        "provider_name": "Turso",
+        "scope": "project",
+        "service_id": "database",
+        "updateable_to": [
+          "database"
+        ],
+        "livemode": true,
+        "provider_configuration_schema": {}
+      }
+    ],
+    "source": "api"
+  },
+  "warnings": [],
+  "next_steps": [],
+  "meta": {
+    "authenticated": false,
+    "project_initialized": false
+  }
+}

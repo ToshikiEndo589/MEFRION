@@ -1,0 +1,15 @@
+{
+  "release_unsigned_build": true,
+  "privacy_manifest_in_bundle": [
+    {
+      "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+      "NSPrivacyAccessedAPITypeReasons": [
+        "CA92.1"
+      ]
+    }
+  ],
+  "tracking": false,
+  "app_icon_in_bundle": "AppIcon",
+  "release_cloud_enabled": false,
+  "archive_signed": false
+}

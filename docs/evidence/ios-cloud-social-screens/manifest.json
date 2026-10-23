@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "5E783552-072B-4FFB-B917-19AF30ADB5B8.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase3-cloud-comment-deleted_0_933D8FC5-5F0F-4F6D-8216-D2319FBA60D9.png",
+        "timestamp" : 1791501443.553
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "CED5FB2B-D9EB-44BA-8603-1979631A6547.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase3-real-cloud-comment_0_11CB05DB-87BE-4AB5-B3BA-07563095B760.png",
+        "timestamp" : 1791501440.935
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudLikeSaveFollowCommentAndDelete()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudLikeSaveFollowCommentAndDelete"
+  }
+]

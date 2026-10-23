@@ -1,0 +1,9 @@
+{
+  "scope": "iPhone17e / iOS27 Simulator, 3 launch iterations; not physical iPhone",
+  "metrics": [
+    {
+      "metric": "Duration (AppLaunch), s",
+      "average": 7.318
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "action": "cleanup",
+  "scope": "MEFRION production; dedicated synthetic fixtures only; bounded requests",
+  "passed": false,
+  "checks": [
+    {
+      "check": "update_pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "edit_photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "request_retirement",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "retired-session-denied-family",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "request_retirement",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "retired-session-denied-outsider",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "request_retirement",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "retired-session-denied-owner",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "retirement-private-text-erased",
+      "passed": false,
+      "status": 200
+    }
+  ],
+  "failed_checks": [
+    "retirement-private-text-erased"
+  ]
+}

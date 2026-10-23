@@ -1,0 +1,23 @@
+{
+  "scope": "iPhone17 / iOS27 Simulator, 30 sequential owned synthetic 4000x3000 JPEGs; actual codec contains autoreleasepool; not real photos/full upload",
+  "metrics": [
+    {
+      "metric": "Memory Peak Physical, kB",
+      "average": 236074.307,
+      "iterations": 3
+    },
+    {
+      "metric": "Memory Physical, kB",
+      "average": -32.768,
+      "iterations": 3
+    },
+    {
+      "metric": "Clock Monotonic Time, s",
+      "average": 1.775,
+      "iterations": 3
+    }
+  ],
+  "physical_memory_unit": "kB as reported by XCTest; includes test process/source generation",
+  "production_cost_measured": false,
+  "source": "p2-final-corrected.log"
+}

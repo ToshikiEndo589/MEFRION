@@ -1,0 +1,27 @@
+{
+  "build": "Debug signed iPhone",
+  "app_bytes": 19068129,
+  "bundled_reference_index_exists": false,
+  "device_install": "success: iPhone (59), existing bundle updated without uninstall",
+  "server_search": true,
+  "device_probe": {
+    "dog": {
+      "corpus": 9188,
+      "feature_elements": 768,
+      "candidates": 3,
+      "self_excluded": true
+    },
+    "cat": {
+      "corpus": 5726,
+      "feature_elements": 768,
+      "candidates": 3,
+      "self_excluded": true
+    },
+    "complete": "PASS",
+    "initial_attempt": "cancelled/incomplete; retried",
+    "retry": "initial cancelled task followed by complete dog/cat PASS",
+    "method": "Debug stock-photo probe on connected physical iPhone; not physical XCTest"
+  },
+  "normal_app_relaunch": "success; probe terminated intentionally after PASS",
+  "verified_date": "2026-10-11"
+}

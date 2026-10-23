@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "6154AB2F-EC8A-41EB-B29E-2476FD0CC946.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase4-cloud-unblocked-feed_0_1090913D-EDA7-49AD-82B4-E8C35D1941F4.png",
+        "timestamp" : 1791480708.728
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "65F20B71-79C4-4A67-8149-20E75A5E7C68.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase4-cloud-blocked-feed_0_0674CE4D-2E77-48D0-8BFD-B10D64F00CF7.png",
+        "timestamp" : 1791480702.633
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "37574E40-AB24-4040-A420-92A717B654C6.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase4-cloud-report-received_0_A3EAA36F-8941-49DC-8DCC-BB2A3869D471.png",
+        "timestamp" : 1791480698.87
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "21F19F93-15C8-4785-9F9D-6BDF041C3CBC.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase4-real-cloud-public-derivative_0_50457E17-39BB-4F01-944D-94F3E3CC698D.png",
+        "timestamp" : 1791480695.124
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudPublicImageReportBlockAndUnblock()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudPublicImageReportBlockAndUnblock"
+  }
+]

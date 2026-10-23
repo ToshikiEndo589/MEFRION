@@ -1,0 +1,11 @@
+**
+!deploy/
+!deploy/share/
+!deploy/share/Dockerfile
+!deploy/share/requirements.txt
+!backend/
+!backend/__init__.py
+!backend/cloud_shares.py
+!backend/shared_wsgi.py
+!web/
+!web/shared.css

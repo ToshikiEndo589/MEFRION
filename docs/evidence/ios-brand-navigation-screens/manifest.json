@@ -1,0 +1,59 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "E51187F0-673B-42B6-80B4-2228E928838B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-twins-on-device-demo_0_2538DC66-BC54-46AA-A353-CA2B89629818.png",
+        "timestamp" : 1791472279.911
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "5D84E086-3C6F-4476-AF99-68321F79666F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-private-card_0_6439AC1A-4CBC-4D4A-81C9-3F8DDCA0C0BB.png",
+        "timestamp" : 1791472271.344
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "205CA21A-8284-4594-A8C5-CAD476B6C5C5.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-private-album_0_040B31B4-7B2E-4125-B21D-93C676065A65.png",
+        "timestamp" : 1791472263.788
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "074966A2-7C5D-4823-9C95-CB9CA0D2EB4A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase0-home-four-tabs_0_82A9E704-C370-4684-8036-D974214565DE.png",
+        "timestamp" : 1791472242.272
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testFourTabsPrivateAlbumComparisonAndTwinsStates()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testFourTabsPrivateAlbumComparisonAndTwinsStates"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "379864D0-38A2-4769-9114-D0383F1D4894.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase3-actual-api-comment_0_0E63A75C-3863-4FA6-8226-633B201043B8.png",
+        "timestamp" : 1791472310.012
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testLocalSocialLikeAndCommentThroughAPI()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testLocalSocialLikeAndCommentThroughAPI"
+  }
+]

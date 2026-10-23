@@ -1,0 +1,23 @@
+{
+  "repository": "facebook/dinov2-small",
+  "revision": "ed25f3a31f01632728cabb09d1542f84ab7b0056",
+  "license": "Apache-2.0",
+  "input": "RGB 224x224, stretch subject crop, ImageNet mean/std",
+  "output": "L2-normalized CLS, 384 floats",
+  "algorithm": "dinov2-small-subject-v1",
+  "conversion_cosine": 0.9999176263809204,
+  "torch_version": "2.8.0",
+  "coremltools_version": "9.0",
+  "files_sha256": {
+    "Manifest.json": "1bf5a3a016fb5cc570a62b5abfae6adf0cb4612bbe2664e7895d8e8bb4c4ba1b",
+    "Data/com.apple.CoreML/model.mlmodel": "efe22a48211aee0f3eb791c20aba769b884dcb408e30c7575e49120e3c27569f",
+    "Data/com.apple.CoreML/weights/weight.bin": "8e79f262355bdfa4e5ee7f7f09f82b2c6fb8a94d82e616fb222e7389c9595337"
+  },
+  "indexed": 14907,
+  "active": 14906,
+  "active_dog": 9185,
+  "active_cat": 5721,
+  "active_head_crops": 2281,
+  "database_size": "218 MB",
+  "original_query_images_uploaded": false
+}

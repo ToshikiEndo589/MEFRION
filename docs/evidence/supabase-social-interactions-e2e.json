@@ -1,0 +1,451 @@
+{
+  "passed": true,
+  "scope": "Actual Auth/RPC social interactions and privacy; synthetic data only",
+  "checks": [
+    {
+      "check": "synthetic-login-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "synthetic-login-family",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "synthetic-login-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reuse-private-outsider-pet",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "enable-test-profile-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "enable-test-profile-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "explicit-public-nickname-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "explicit-public-nickname-family",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "explicit-public-nickname-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reserve-synthetic-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "upload-synthetic-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "finish-photo",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "sns-purpose-only",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "request-explicit-public-post",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "read-current-feed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "anon-like-denied",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "like",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "like-exact-retry",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "read-current-feed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "read-current-feed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "save",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "private-saved-feed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "different-account-cannot-see-saves",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "follow",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "follow-retry",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "following-feed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "self-follow-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "public-search",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "registered-root-comment",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "comment-retry",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "comment-conflict",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "cannot-impersonate-owner-pet",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "owned-public-pet-alias",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "own-last-speaker-remembered",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "one-level-reply",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "second-level-reply-denied",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "public-comments-no-human-identifiers",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "owner-safe-notifications",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reply-recipient-notification",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "unrelated-notifications-empty",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "non-author-delete-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "author-delete",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "deleted-root-placeholder-reply-retained",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "comment-report",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "report-retry",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "ordinary-user-cannot-moderate",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "service-hide-comment",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "hidden-comment-body-removed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "target-fixed-notice-no-internal-note",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "target-comment-appeal",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "suspension-root-comment",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "suspension-root-reply",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "suspension-comment-report",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "service-suspend-comment-author",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "suspended-comments-and-child-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "suspended-new-comment-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "suspended-like-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "suspended-unlike-allowed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "service-restore-comment-author",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "restore-does-not-unhide-comments",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "privacy-public-alias-root",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "privacy-public-alias-reply",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "public-speakers-owned-only",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "withdraw-speaker-public-profile",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "private-speaker-not-selectable",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "private-last-speaker-cleared",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "private-alias-and-reply-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "private-alias-report-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "private-alias-reply-denied",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "private-alias-notification-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "explicitly-reenable-speaker",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reenable-does-not-republish-alias",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "block-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "blocked-comments-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "blocked-reaction-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "blocked-saved-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "blocked-notifications-cleared",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "unblock",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "follow-not-restored",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "withdraw-public-purpose",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "withdrawn-comments-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "withdrawn-saved-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "withdrawn-notifications-hidden",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "withdrawn-new-comment-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "unlike-stopped-post-allowed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "unsave-stopped-post-allowed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "return-test-profile-private",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "return-test-profile-private",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "remove-test-original",
+      "status": 200,
+      "passed": true
+    }
+  ]
+}

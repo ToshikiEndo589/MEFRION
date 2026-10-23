@@ -1,0 +1,31 @@
+{
+  "baseline": {
+    "public_post_images": 4,
+    "public_post_characters": 500,
+    "comment_reply_depth": 1,
+    "twins_candidates": 3
+  },
+  "provisional": {
+    "minimum_age": 18,
+    "pets_per_account": 5,
+    "album_batch": 30,
+    "image_megabytes": 20,
+    "storage_gigabytes": 1,
+    "pending_invitations": 5,
+    "invite_days": 7,
+    "invite_acceptances": 1,
+    "guest_twins_searches": 1,
+    "registered_twins_per_day": 5,
+    "guest_retention_hours_goal": 24,
+    "monthly_budget_yen": 50000,
+    "budget_warning_ratio": 0.7
+  },
+  "prototype": {
+    "pet_name_characters": 40,
+    "comparison_text_characters": 100,
+    "thumbnail_pixels": 1600,
+    "twins_minimum_pixels": 128,
+    "twins_maximum_distance": 1.2,
+    "twins_duplicate_distance": 0.001
+  }
+}

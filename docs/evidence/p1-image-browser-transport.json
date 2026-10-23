@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "exact-loopback-preflight",
+      "passed": true,
+      "status": 204
+    },
+    {
+      "check": "unlisted-origin-preflight-rejected",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "browser-get-still-needs-login",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-invalid-photo-not-readable",
+      "passed": true,
+      "status": 404
+    }
+  ]
+}

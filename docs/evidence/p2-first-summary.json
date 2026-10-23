@@ -1,0 +1,77 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "modelName" : "iPhone 17",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 32,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "MEFRION · Built with macOS 26.6",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1791596310.13,
+  "passedTests" : 32,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791596213.765,
+  "statistics" : [
+    {
+      "subtitle" : "1 test run",
+      "title" : "1 test collected performance metrics"
+    }
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Hit area is too small",
+      "targetName" : "MEFRIONUITests",
+      "testIdentifier" : 33,
+      "testIdentifierString" : "PrototypeUITests/testP2HomeAccessibilityAndLargeText()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testP2HomeAccessibilityAndLargeText",
+      "testName" : "testP2HomeAccessibilityAndLargeText()"
+    },
+    {
+      "failureText" : "XCTAssertFalse failed - 猫の投稿は検索の犬フィルターで表示しない",
+      "targetName" : "MEFRIONUITests",
+      "testIdentifier" : 34,
+      "testIdentifierString" : "PrototypeUITests/testReferenceHomeFiltersAndProfileNavigation()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testReferenceHomeFiltersAndProfileNavigation",
+      "testName" : "testReferenceHomeFiltersAndProfileNavigation()"
+    }
+  ],
+  "title" : "Test - MEFRION",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "10 runs of 1 test failed with Element has no description"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "6 runs of 1 test failed with Hit area is too small"
+    },
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "93% of duration",
+      "text" : "1 longest test run with outlier durations exceeding 3.95s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 34
+}

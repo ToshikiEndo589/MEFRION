@@ -1,0 +1,2 @@
+# Official release verified 2026-10-11: https://pypi.org/project/gunicorn/
+gunicorn==26.2.0

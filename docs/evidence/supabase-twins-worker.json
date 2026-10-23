@@ -1,0 +1,9 @@
+{
+  "scope": "synthetic development only",
+  "processed": 0,
+  "stopped": 0,
+  "failed": 0,
+  "automatic_worker": false,
+  "metadata_stripped": true,
+  "max_dimension": 1200
+}

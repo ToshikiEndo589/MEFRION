@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "F6E7787D-768B-4CA3-862B-4ABCA8F15412.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase2-real-server-deleted-photo_0_3E15D193-280D-448A-8F93-24437E94307F.png",
+        "timestamp" : 1791475013.309
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "FEB99A1E-D519-42B5-85B9-D912AE41081E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase2-real-server-private-photo_0_3C5C2EC0-053F-48F7-B49E-AD6EFEBAD1B1.png",
+        "timestamp" : 1791475008.524
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testRealCloudFamilyLoginUploadAndDelete()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testRealCloudFamilyLoginUploadAndDelete"
+  }
+]

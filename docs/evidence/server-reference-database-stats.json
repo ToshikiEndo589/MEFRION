@@ -1,0 +1,10 @@
+{
+  "source": "Supabase SQL Editor observed query result",
+  "species": {
+    "dog": 9188,
+    "cat": 5726
+  },
+  "reference_table_and_indexes_pg_size_pretty": "123 MB",
+  "development_database_pg_size_pretty": "159 MB",
+  "query_payload_guard_applied": true
+}

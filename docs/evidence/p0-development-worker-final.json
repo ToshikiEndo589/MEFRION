@@ -1,0 +1,21 @@
+{
+  "timestamp": 1791520915,
+  "scope": "approved development project",
+  "retirements_processed": 0,
+  "failures": 0,
+  "automatic_local": false,
+  "cloud_schedule": false,
+  "process_publication_outbox": {
+    "processed": 0,
+    "failed": 0,
+    "stopped": 0
+  },
+  "process_deletion_outbox": {
+    "processed": 6,
+    "failed": 0,
+    "stopped": 0
+  },
+  "retirements_pending_before": 0,
+  "retirements_pending_after": 0,
+  "local_schedule_status": "removed: Documents access blocked"
+}

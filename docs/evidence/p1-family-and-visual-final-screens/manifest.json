@@ -1,0 +1,62 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "E179E36F-1C48-43AE-AF36-6D4737A7A591.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-cloud-card-rendered-1080x1920_0_80118F81-8202-41EF-8E67-0DAA366E5749.png",
+        "timestamp" : 1791542703.558
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudCardReallyRendersNineBySixteen()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudCardReallyRendersNineBySixteen"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "B7A55EC4-C025-44E9-ABDE-C6F922189ED1.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-import-review-before-any-upload_0_067069C6-F724-4D56-B989-4C55A4C9F1F1.png",
+        "timestamp" : 1791542723.885
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudImportRequiresConfirmationAndAllowsUndo()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudImportRequiresConfirmationAndAllowsUndo"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "79007D57-B1E0-4433-8C5C-62D151E456EB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-saved-JPEG-retrieved-with-fresh-family-auth_0_4CB144D0-4011-4952-8192-5B5D0F016CE6.png",
+        "timestamp" : 1791542745.981
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudSavedJPEGCanBeRetrievedToDevice()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudSavedJPEGCanBeRetrievedToDevice"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "22FECEEE-7779-4DB7-B9E5-4991B912FA48.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-normal-cloud-twins-input-erased_0_1D5667AA-E1FB-4B84-8D5B-0A8A2DAB5874.png",
+        "timestamp" : 1791542760.724
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit"
+  }
+]

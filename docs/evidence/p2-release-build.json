@@ -1,0 +1,8 @@
+{
+  "configuration": "Release",
+  "destination": "generic iOS device",
+  "signed": false,
+  "build_succeeded": true,
+  "debug_gallery_marker_matches": [],
+  "scope": "compile and binary marker check only; no archive, installation, TestFlight, APNs, submission or release"
+}

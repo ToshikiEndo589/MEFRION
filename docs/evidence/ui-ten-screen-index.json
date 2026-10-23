@@ -1,0 +1,152 @@
+[
+  {
+    "route": "01-auth",
+    "file": "A5EC235B-88E4-4520-8BD7-C8F6AF0F089A.png",
+    "group": "01"
+  },
+  {
+    "route": "01-intro",
+    "file": "564394B2-888D-4C67-A909-42F9B4A979AC.png",
+    "group": "01"
+  },
+  {
+    "route": "01-invitation",
+    "file": "41B5DB01-A333-4412-BB1B-4E23721280FD.png",
+    "group": "01"
+  },
+  {
+    "route": "02-detail",
+    "file": "3936EAE8-F201-4478-959C-4144FC4FD4DC.png",
+    "group": "02"
+  },
+  {
+    "route": "02-home",
+    "file": "2D88879B-C683-475E-8575-7A5A3274BF6B.png",
+    "group": "02"
+  },
+  {
+    "route": "03-create-pet",
+    "file": "A8530C55-ADA0-42CF-8594-05B5221DC046.png",
+    "group": "03"
+  },
+  {
+    "route": "03-edit-pet",
+    "file": "DFC45B29-10CE-4470-86FB-AE092D30F82C.png",
+    "group": "03"
+  },
+  {
+    "route": "03-public-profile",
+    "file": "E79D0EA2-2CCF-4C12-93A8-8E4C0CCEA0C6.png",
+    "group": "03"
+  },
+  {
+    "route": "03-public-settings",
+    "file": "A9C0EFC5-C5C1-4401-A48C-483A5144132F.png",
+    "group": "03"
+  },
+  {
+    "route": "04-add-photos",
+    "file": "6848592E-7870-4FF1-A01E-B415A10E543E.png",
+    "group": "04"
+  },
+  {
+    "route": "04-album",
+    "file": "DAEFFAD0-830F-425F-B717-B4F4C0705D22.png",
+    "group": "04"
+  },
+  {
+    "route": "04-event",
+    "file": "40BC2759-9683-4C7D-822D-E59C8B6DFEBB.png",
+    "group": "04"
+  },
+  {
+    "route": "05-activity",
+    "file": "7693D412-00D4-4693-9D07-B6839CCCF76F.png",
+    "group": "05"
+  },
+  {
+    "route": "05-invite",
+    "file": "846C0B89-1EAA-4AB0-8592-6BAAAF593FA3.png",
+    "group": "05"
+  },
+  {
+    "route": "05-members",
+    "file": "CBD5F62D-F4AF-4858-8E7D-9637B5059697.png",
+    "group": "05"
+  },
+  {
+    "route": "06-card",
+    "file": "C7AA88A6-B2D2-4175-88DA-8966A815F00E.png",
+    "group": "06"
+  },
+  {
+    "route": "06-memories",
+    "file": "C8AA998B-4790-4FD3-A92C-5385E953A4F5.png",
+    "group": "06"
+  },
+  {
+    "route": "07-comments",
+    "file": "D88ED8C2-7B66-408F-8A58-23C86624ABBA.png",
+    "group": "07"
+  },
+  {
+    "route": "07-confirm",
+    "file": "ADFB40D5-D2F0-4284-B22A-FA51C833C29E.png",
+    "group": "07"
+  },
+  {
+    "route": "07-post",
+    "file": "E060629E-26DB-4F98-9853-0514CF51945E.png",
+    "group": "07"
+  },
+  {
+    "route": "08-crop",
+    "file": "675E6B84-8305-49C0-9757-1166E16A0ADB.png",
+    "group": "08"
+  },
+  {
+    "route": "08-empty",
+    "file": "E88B3A0A-599B-4C8C-B3AF-F5C55E47AD01.png",
+    "group": "08"
+  },
+  {
+    "route": "08-history",
+    "file": "6F28CB8B-76B2-479B-AAD7-F66914C27DF3.png",
+    "group": "08"
+  },
+  {
+    "route": "08-results",
+    "file": "0AB07520-9485-40E4-992D-E30F917D6AF6.png",
+    "group": "08"
+  },
+  {
+    "route": "08-twins",
+    "file": "7CD17952-DDCA-4F75-BD50-95AD73569875.png",
+    "group": "08"
+  },
+  {
+    "route": "09-notifications",
+    "file": "2547A241-FFA9-4A0A-8B37-D91846AE8C2C.png",
+    "group": "09"
+  },
+  {
+    "route": "09-search",
+    "file": "57A9124B-25AE-45DE-B457-E3F4DF00D322.png",
+    "group": "09"
+  },
+  {
+    "route": "10-owner",
+    "file": "FA14A9F6-3477-4339-A5BE-E1AD88F255CA.png",
+    "group": "10"
+  },
+  {
+    "route": "10-settings",
+    "file": "F1269BF7-EFC8-4905-92B2-5A069D57D841.png",
+    "group": "10"
+  },
+  {
+    "route": "10-viewer",
+    "file": "870ECCCB-D780-43D8-B827-63333C9DEBB2.png",
+    "group": "10"
+  }
+]

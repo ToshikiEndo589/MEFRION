@@ -1,0 +1,106 @@
+{
+  "passed": false,
+  "failure": "withdrawn-public-profile-denied failed",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "private-pets",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "full-private-profile-update",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "profile-roundtrip",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-profile-edit-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "family-profile-edit-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-profile-edit-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "invalid-birthday-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "unknown-public-field-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "cross-pet-profile-photo-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "public-profile-explicit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-fields-exclude-family-metadata",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-field-selected",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-field-projection",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "profile-withdraw",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdrawn-public-profile-denied",
+      "passed": false,
+      "status": 401
+    },
+    {
+      "check": "restore-private-profile",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "keep-profile-private",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

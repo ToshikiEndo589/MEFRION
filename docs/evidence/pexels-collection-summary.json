@@ -1,0 +1,20 @@
+{
+  "requested_target": 6000,
+  "candidate_ids": 6312,
+  "collected_unique_images": 6311,
+  "exact_duplicates_excluded": 1,
+  "failures": [],
+  "species_query_hints": {
+    "dog": 3099,
+    "cat": 2154,
+    "bird": 453,
+    "guinea_pig": 235,
+    "hamster": 130,
+    "rabbit": 240
+  },
+  "search_requests_this_run": 53,
+  "all_pending_visual_review": true,
+  "published": false,
+  "bytes_on_disk": 539455769,
+  "cached_response_pages": 109
+}

@@ -1,0 +1,17 @@
+{
+  "release_device_build_success": true,
+  "code_signed": false,
+  "bundle_id": "dev.local.mefrion.prototype",
+  "minimum_ios": "17.0",
+  "display_name": "MEFRION",
+  "privacy_manifest_present": true,
+  "model_notices_present": true,
+  "coreml_model_present": true,
+  "development_public_config_bundled": false,
+  "all_reference_data_bundled": false,
+  "app_bytes": 55120599,
+  "release_cloud_connectivity": "disabled_by_compile_time_throw",
+  "app_store_upload_ready": false,
+  "debug_public_config_bundled": true,
+  "release_build_after_debug_config_exclusion": "BUILD SUCCEEDED"
+}

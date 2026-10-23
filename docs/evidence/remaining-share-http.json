@@ -1,0 +1,30 @@
+[
+  {
+    "route_kind": "/healthz",
+    "status": 200,
+    "content_type": "application/json",
+    "cache": "no-store, max-age=0",
+    "body_bytes": 19
+  },
+  {
+    "route_kind": "/admin",
+    "status": 404,
+    "content_type": "text/plain; charset=utf-8",
+    "cache": "no-store, max-age=0",
+    "body_bytes": 9
+  },
+  {
+    "route_kind": "/auth/v1/user",
+    "status": 404,
+    "content_type": "text/plain; charset=utf-8",
+    "cache": "no-store, max-age=0",
+    "body_bytes": 9
+  },
+  {
+    "route_kind": "public_card",
+    "status": 404,
+    "content_type": "text/html; charset=utf-8",
+    "cache": "no-store, max-age=0",
+    "body_bytes": 300
+  }
+]

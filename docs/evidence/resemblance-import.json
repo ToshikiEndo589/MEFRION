@@ -1,0 +1,7 @@
+{
+  "algorithm": "dinov2-small-subject-v1",
+  "descriptors": 14907,
+  "vector_bytes": 22897152,
+  "active_flags_changed": false,
+  "original_photos_uploaded": false
+}

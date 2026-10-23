@@ -1,0 +1,3 @@
+# Preserve source extractions and raw tool logs without rewriting evidence.
+docs/spec/*.txt -whitespace
+docs/evidence/*.log -whitespace

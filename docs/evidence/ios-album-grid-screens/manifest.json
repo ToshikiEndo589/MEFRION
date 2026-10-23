@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "5CFFB4A5-DBE9-422E-AA25-F3A766457E14.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-twins-on-device-demo_0_D661DA7A-B579-4370-ADA9-A7A3C32DD025.png",
+        "timestamp" : 1791477171.098
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "F10FF276-5C78-4CB5-A70B-71365323B49B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-private-card_0_2E6C99EA-81B8-43E7-8DB7-6DC3A8D014F0.png",
+        "timestamp" : 1791477163.927
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "8356B764-849A-4A8F-A789-0F2C7C3F15EB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-private-album_0_B3C6E16A-6202-4EAE-A1A4-7BA4BB58C831.png",
+        "timestamp" : 1791477158.036
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "8070C720-1153-494E-95D4-1201240FE062.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase0-home-four-tabs_0_66935AA3-022F-4F9E-89B4-7756A6C9ED8E.png",
+        "timestamp" : 1791477139.169
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testFourTabsPrivateAlbumComparisonAndTwinsStates()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testFourTabsPrivateAlbumComparisonAndTwinsStates"
+  }
+]

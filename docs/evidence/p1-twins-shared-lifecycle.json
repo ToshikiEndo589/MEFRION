@@ -1,0 +1,291 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-pets",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-public-profile-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-public-profile-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "candidate-twins-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "candidate-enrol",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "member-search",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "candidate-result",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "demo-only-labelled",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-pet-current",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "recent-posts-projection",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "own-feedback",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "feedback-idempotent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "feedback-change",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "foreign-feedback-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "guest-feedback-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "owned-cat-fixture-list",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owned-cat-profile",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owned-cat-query-reserve",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owned-cat-query-upload",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owned-cat-query-ready",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cross-species-query-cannot-share-dog-result",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "both-purposes-required",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "provider-external-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "provider-external-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "provider-external-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "implicit-share-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "foreign-result-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "share-own-result",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "retry-same-share",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "pending-projection-hidden",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "shared-derivative-projection",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "shared-image",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "shared-image",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "other-provider-withdraw",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "other-masked-query-retained",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "other-image-immediate-denial",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "query-image-still-allowed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "external-share-withdrawal-keeps-twins-feedback-purpose-separate",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "other-regrant",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "old-share-not-resurrected",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "foreign-stop-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "query-provider-withdraw",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "whole-share-ended",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "query-image-ended",
+      "passed": true,
+      "status": 404
+    }
+  ],
+  "scope": "actual dev RPC/derivative lifecycle; owned synthetic illustrations only"
+}

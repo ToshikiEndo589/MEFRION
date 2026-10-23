@@ -1,0 +1,294 @@
+{
+  "counts": {
+    "dog": 9188,
+    "cat": 5726
+  },
+  "checks": [
+    {
+      "check": "count-dog",
+      "status": 200,
+      "seconds": 1.0578,
+      "passed": true
+    },
+    {
+      "check": "stock-image-dog",
+      "status": 200,
+      "seconds": 0.9355,
+      "passed": true
+    },
+    {
+      "check": "count-cat",
+      "status": 200,
+      "seconds": 0.078,
+      "passed": true
+    },
+    {
+      "check": "stock-image-cat",
+      "status": 200,
+      "seconds": 0.5329,
+      "passed": true
+    },
+    {
+      "check": "vectors-not-public",
+      "status": 401,
+      "seconds": 0.5209,
+      "passed": true
+    },
+    {
+      "check": "usage-not-public",
+      "status": 401,
+      "seconds": 1.7907,
+      "passed": true
+    },
+    {
+      "check": "anonymous-cannot-activate",
+      "status": 401,
+      "seconds": 1.241,
+      "passed": true
+    },
+    {
+      "check": "bucket-is-private",
+      "status": 400,
+      "seconds": 0.3195,
+      "passed": true
+    },
+    {
+      "check": "unknown-image-hidden",
+      "status": 404,
+      "seconds": 0.2302,
+      "passed": true
+    },
+    {
+      "check": "mixed-image-parameters-rejected",
+      "status": 404,
+      "seconds": 0.19,
+      "passed": true
+    },
+    {
+      "check": "old-public-image-input-guard",
+      "status": 404,
+      "seconds": 0.1494,
+      "passed": true
+    },
+    {
+      "check": "rank-dog",
+      "status": 200,
+      "seconds": 0.9206,
+      "passed": true
+    },
+    {
+      "check": "idempotent-dog",
+      "status": 200,
+      "seconds": 0.3082,
+      "passed": true
+    },
+    {
+      "check": "rank-cat",
+      "status": 200,
+      "seconds": 0.8242,
+      "passed": true
+    },
+    {
+      "check": "idempotent-cat",
+      "status": 200,
+      "seconds": 0.0963,
+      "passed": true
+    },
+    {
+      "check": "reject-p_consent-False",
+      "status": 400,
+      "seconds": 0.0899,
+      "passed": true
+    },
+    {
+      "check": "reject-p_revision-1",
+      "status": 400,
+      "seconds": 0.1,
+      "passed": true
+    },
+    {
+      "check": "reject-p_species-bird",
+      "status": 400,
+      "seconds": 0.1415,
+      "passed": true
+    },
+    {
+      "check": "reject-p_fingerprint-1",
+      "status": 400,
+      "seconds": 0.1106,
+      "passed": true
+    },
+    {
+      "check": "reject-p_query-[1,2]",
+      "status": 400,
+      "seconds": 0.0776,
+      "passed": true
+    },
+    {
+      "check": "reject-p_query-xxxxxxxxxx",
+      "status": 400,
+      "seconds": 0.1008,
+      "passed": true
+    },
+    {
+      "check": "concurrent-replay",
+      "status": 200,
+      "seconds": 0.1023,
+      "passed": true
+    },
+    {
+      "check": "replay-charged-once",
+      "status": 200,
+      "seconds": 0.1219,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-1",
+      "status": 200,
+      "seconds": 0.1046,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-2",
+      "status": 200,
+      "seconds": 0.0793,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-3",
+      "status": 200,
+      "seconds": 0.0849,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-4",
+      "status": 200,
+      "seconds": 0.1106,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-5",
+      "status": 200,
+      "seconds": 0.1446,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-6",
+      "status": 200,
+      "seconds": 0.0788,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-7",
+      "status": 200,
+      "seconds": 0.0752,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-8",
+      "status": 200,
+      "seconds": 0.0958,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-9",
+      "status": 200,
+      "seconds": 0.0806,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-10",
+      "status": 200,
+      "seconds": 0.0872,
+      "passed": true
+    },
+    {
+      "check": "guest-quota-11",
+      "status": 400,
+      "seconds": 0.0939,
+      "passed": true
+    },
+    {
+      "check": "synthetic-member-login",
+      "status": 200,
+      "seconds": 0.5524,
+      "passed": true
+    },
+    {
+      "check": "member-query",
+      "status": 200,
+      "seconds": 0.1014,
+      "passed": true
+    },
+    {
+      "check": "member-last-allowed",
+      "status": 200,
+      "seconds": 0.0866,
+      "passed": true
+    },
+    {
+      "check": "member-limit-enforced",
+      "status": 400,
+      "seconds": 0.0779,
+      "passed": true
+    },
+    {
+      "check": "member-cannot-sign-stock-path",
+      "status": 400,
+      "seconds": 0.1042,
+      "passed": true
+    },
+    {
+      "check": "query-not-persisted",
+      "status": 200,
+      "seconds": 0.0829,
+      "passed": true
+    },
+    {
+      "check": "stock-withdrawal",
+      "status": 200,
+      "seconds": 0.1605,
+      "passed": true
+    },
+    {
+      "check": "withdrawn-metadata-hidden",
+      "status": 200,
+      "seconds": 0.0807,
+      "passed": true
+    },
+    {
+      "check": "withdrawn-image-hidden",
+      "status": 404,
+      "seconds": 0.3008,
+      "passed": true
+    },
+    {
+      "check": "cached-results-honor-withdrawal",
+      "status": 200,
+      "seconds": 0.099,
+      "passed": true
+    },
+    {
+      "check": "withdrawn-cannot-reactivate",
+      "status": 200,
+      "seconds": 0.0938,
+      "passed": true
+    },
+    {
+      "check": "final-count-dog",
+      "status": 200,
+      "seconds": 0.4746,
+      "passed": true
+    },
+    {
+      "check": "final-count-cat",
+      "status": 200,
+      "seconds": 0.1242,
+      "passed": true
+    }
+  ],
+  "passed": 47,
+  "query_source": "Pexels stock only",
+  "private_family_data_accessed": false,
+  "query_images_uploaded": false
+}

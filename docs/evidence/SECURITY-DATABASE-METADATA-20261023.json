@@ -1,0 +1,13 @@
+{
+  "scope": "production database security metadata only",
+  "metadata": [
+    {
+      "private_tables": 51,
+      "private_without_rls": 0,
+      "unchecked_definer_search_path": 0,
+      "anon_helper_execute": false,
+      "authenticated_helper_execute": false
+    }
+  ],
+  "passed": true
+}

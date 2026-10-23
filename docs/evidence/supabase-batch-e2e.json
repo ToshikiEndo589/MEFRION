@@ -1,0 +1,632 @@
+{
+  "passed": true,
+  "scope": "30 synthetic JPEGs / real Auth / same UUID retry",
+  "duplicate_upload_http_status": 400,
+  "checks": [
+    {
+      "check": "synthetic-owner-login",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-1",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-1",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "same-reservation-after-lost-response",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "existing-object-retry-response",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "finish-1",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "completed-reservation-retry",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-2",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-2",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-2",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-3",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-3",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-3",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-4",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-4",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-4",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-5",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-5",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-5",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-6",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-6",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-6",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-7",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-7",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-7",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-8",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-8",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-8",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-9",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-9",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-9",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-10",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-10",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-10",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-11",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-11",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-11",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-12",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-12",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-12",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-13",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-13",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-13",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-14",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-14",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-14",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-15",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-15",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-15",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-16",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-16",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-16",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-17",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-17",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-17",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-18",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-18",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-18",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-19",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-19",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-19",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-20",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-20",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-20",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-21",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-21",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-21",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-22",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-22",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-22",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-23",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-23",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-23",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-24",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-24",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-24",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-25",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-25",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-25",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-26",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-26",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-26",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-27",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-27",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-27",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-28",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-28",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-28",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-29",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-29",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-29",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-30",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-30",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-30",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "all-thirty-present",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-synthetic-photo",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

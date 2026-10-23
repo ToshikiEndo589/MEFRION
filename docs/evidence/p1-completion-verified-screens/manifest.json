@@ -1,0 +1,86 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "44B9ECC5-AF6A-4138-9BBE-A1B40FF52F67.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-cloud-card-rendered-1080x1920_0_CB0C8EF4-F2D6-40F9-A42A-34786FF27EE5.png",
+        "timestamp" : 1791554604.876
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudCardReallyRendersNineBySixteen()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudCardReallyRendersNineBySixteen"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "4EDFC595-1683-49E6-8EDD-9E6D00F265CD.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-import-review-before-any-upload_0_BB66C5C1-64B2-4263-A898-E34141EA2C5A.png",
+        "timestamp" : 1791554629.917
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudImportRequiresConfirmationAndAllowsUndo()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudImportRequiresConfirmationAndAllowsUndo"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "36D55AFF-24B5-4EDC-9F89-7394529435D4.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-cloud-events-and-pet-notifications_0_50076F8D-BE04-441A-B6DE-B9142E949BA6.png",
+        "timestamp" : 1791554662.163
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "6AFBED41-A85D-412D-AFF3-7AA6D18F1605.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-cloud-profile-saved_0_FDD5C895-C875-4D17-9939-276ACE5AD209.png",
+        "timestamp" : 1791554659.43
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudProfileAndMilestoneScreensUseNormalAccount()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudProfileAndMilestoneScreensUseNormalAccount"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "C8151913-EBEC-4BA5-92DB-BC0C0575F4EA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-saved-JPEG-retrieved-with-fresh-family-auth_0_D090324A-ACE3-47CB-8B8B-8732947FB01B.png",
+        "timestamp" : 1791554685.688
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testCloudSavedJPEGCanBeRetrievedToDevice()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudSavedJPEGCanBeRetrievedToDevice"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "06956550-31BE-4CE5-ABF8-32A2E516865A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "P1-normal-cloud-twins-input-erased_0_A6A802E0-E48F-417F-97E8-E7ECD41D113D.png",
+        "timestamp" : 1791554702.043
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testNormalCloudTwinsInputErasedOnTabExit"
+  }
+]

@@ -1,0 +1,121 @@
+{
+  "scope": "local Simulator/development evidence only; repeated tests are not distinct coverage",
+  "p2_complete": false,
+  "acceptance_scenarios": 69,
+  "end_to_end_verified": 0,
+  "runs": [
+    {
+      "evidence": "p2-accessibility-final-summary.json",
+      "result": "Passed",
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "totalTestCount": 2
+    },
+    {
+      "evidence": "p2-accessibility-fixed-summary.json",
+      "result": "Passed",
+      "passedTests": 2,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "totalTestCount": 2
+    },
+    {
+      "evidence": "p2-contrast-fixed-summary.json",
+      "result": "Failed",
+      "passedTests": 2,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "totalTestCount": 3
+    },
+    {
+      "evidence": "p2-contrast-summary.json",
+      "result": "Failed",
+      "passedTests": 2,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "totalTestCount": 3
+    },
+    {
+      "evidence": "p2-final-confirmation-summary.json",
+      "result": "Failed",
+      "passedTests": 2,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "totalTestCount": 3
+    },
+    {
+      "evidence": "p2-final-corrected-summary.json",
+      "result": "Failed",
+      "passedTests": 4,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "totalTestCount": 5
+    },
+    {
+      "evidence": "p2-final-offline-summary.json",
+      "result": "Failed",
+      "passedTests": 41,
+      "failedTests": 2,
+      "skippedTests": 0,
+      "totalTestCount": 43
+    },
+    {
+      "evidence": "p2-first-summary.json",
+      "result": "Failed",
+      "passedTests": 32,
+      "failedTests": 2,
+      "skippedTests": 0,
+      "totalTestCount": 34
+    },
+    {
+      "evidence": "p2-history-fixed-summary.json",
+      "result": "Failed",
+      "passedTests": 1,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "totalTestCount": 2
+    },
+    {
+      "evidence": "p2-large-final-summary.json",
+      "result": "Passed",
+      "passedTests": 3,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "totalTestCount": 3
+    },
+    {
+      "evidence": "p2-small-summary.json",
+      "result": "Passed",
+      "passedTests": 4,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "totalTestCount": 4
+    },
+    {
+      "evidence": "p2-ui-final-summary.json",
+      "result": "Failed",
+      "passedTests": 1,
+      "failedTests": 2,
+      "skippedTests": 0,
+      "totalTestCount": 3
+    },
+    {
+      "evidence": "p2-ui-retry-summary.json",
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 2,
+      "skippedTests": 0,
+      "totalTestCount": 2
+    }
+  ],
+  "external_gates": [
+    "real iPhone and VoiceOver/camera/Photos",
+    "formal authentication, email and APNs",
+    "permitted real-photo quality",
+    "HTTPS and continuous workers",
+    "backup restore and re-deletion",
+    "cloud load and actual costs",
+    "human trial and quality approval"
+  ]
+}

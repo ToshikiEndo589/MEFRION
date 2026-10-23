@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "58B451B4-9730-4924-910C-ED5B38F14F9C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Reference-twins-server-input-erased_0_69B0E9B0-BDB0-4BA7-BA4F-8822F8DC473C.png",
+        "timestamp" : 1791711315.17
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "610DCC77-C8B4-471E-9252-C50A2F2B210E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Reference-twins-server-results_0_907B9BEE-79F6-45FE-8C5E-64CB4F4D4DED.png",
+        "timestamp" : 1791711312.244
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testReferenceTwinsServerSearchAndPrivateDiscard()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testReferenceTwinsServerSearchAndPrivateDiscard"
+  }
+]

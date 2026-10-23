@@ -1,0 +1,17 @@
+[
+  {
+    "check": "owner-worker-denied",
+    "status": 403,
+    "passed": true
+  },
+  {
+    "check": "family-worker-denied",
+    "status": 403,
+    "passed": true
+  },
+  {
+    "check": "anon-worker-denied",
+    "status": 401,
+    "passed": true
+  }
+]

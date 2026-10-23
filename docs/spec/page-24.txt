@@ -1,0 +1,37 @@
+ID シナリオ 必須合格結果
+T-69 プロフィールを一括停止・権利撤回・一
+括復旧
+投稿と画像が安全に無効化され、承認の
+ない再公開は防止される
+重大な合格基準：T-09、T-13〜16、T-22〜23、T-29〜36、T-38〜40、T-46、T-48、T-54〜55、T-58、T-60、T-65、T-69は権
+利とプライバシーの安全に直結します。重大不具合が1件でも残る場合、公開準備完了と報告しないでください。
+16.3 テスト証拠と報告
+テストの名前だけではなく、実行コマンド、結果、日時、環境、使用したデモデータ、失敗時の原因、修正内容、再実行結果
+を残してください。App Store環境や実機が無くて行えない項目は「未検証」のまま残し、シミュレータ結果で代替したと明
+記します。品質テストとTwinsの主観的な「似てる」評価を混同しないでください。
+17. 分析指標・費用監視・試用計画
+17.1 イベント設計
+企画書v1.1の計測方針を引き継ぎます。以下は一例です。データの取りすぎを避け、イベントの意味と分母をドキュメント化
+してください。
+album_photo_added / album_view / family_invite_sent / family_invite_accepted / family_photo_added / milestone_saved / 
+memory_shown / memory_opened / comparison_saved / public_post_created / twins_started / twins_result_viewed / 
+twins_no_candidate / twins_failed / twins_feedback / follow / share_requested / shared_link_opened
+イベントに含めるのは原則、匿名化された内部ID、Pet ID、入口、結果種別、画面、時刻、エラー分類程度です。写真自体や
+ユーザーの自由記述は入れません。共有ボタンのタップは、実際に外部で共有されたことと区別します。
+運営準備投稿の計測追加：運営投稿と一般投稿を区別する属性content_origin=managed_seed|userをイベントと集計に持たせ
+る。managed_post_impression、managed_post_opened、managed_post_follow等で初回閲覧・フォロー・D1/D7再訪を調べる。
+運営投稿閲覧数を実ユーザーによるUGCや利用者数として集計しない。イベントに写真ファイル、コメント本文、個人の連絡
+先を含めない。
+17.2 観察する指標
+検証する価値 指標の例
+アルバム初回体験 Pet作成を始めた人のうち写真を追加して閲覧した割合
+家族共有 招待送信→承認、承認→写真追加
+記録継続 初回追加後、翌週も新しい写真を加えた割合
+振り返り 候補表示→閲覧→保存→公開→共有の段階別割合
+Twins品質 結果到達、候補不足、技術失敗、評価回答率、「似てる」割合
+見守り・再訪 結果からのフォロー、翌週の公開投稿再閲覧
+全体 D1・D7・D30再訪、iPhoneクラッシュ、継続率
+公開初期の運営準備投稿 初回の閲覧率、通常投稿への遷移・フォロー、運営管理/一般別
+の再訪、実ユーザー投稿の増加
+MEFRION / CODEX BUILD SPEC v1.2 · 2026.10.08
+CONFIDENTIAL · DEVELOPMENT INSTRUCTIONS 24 / 29

@@ -1,0 +1,3 @@
+# Worker/image privacy tests; matches the locally verified runtime.
+# Source: https://pypi.org/project/pillow/13.0.0/
+Pillow==13.0.0

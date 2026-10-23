@@ -1,0 +1,17 @@
+[
+  {
+    "check": "anonymous-image",
+    "status": 401,
+    "cache_control": "private, no-store, max-age=0"
+  },
+  {
+    "check": "forged-bearer-image",
+    "status": 401,
+    "cache_control": "private, no-store, max-age=0"
+  },
+  {
+    "check": "anon-rpc",
+    "status": 401,
+    "cache_control": null
+  }
+]

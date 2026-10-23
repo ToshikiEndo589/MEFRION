@@ -1,0 +1,299 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "create-dedicated-synthetic-user",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "real-password-auth",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "actual-auth-user",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "anon-retirement-rejected",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "check": "missing-explicit-confirmation-rejected",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "wrong-identity-retirement-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "private-pet-created",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reserve-owned-synthetic-image",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "store-synthetic-original",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "finish-original",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "original-visible-before-retirement",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "third-party-direct-original-denied",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "provider-sns-consent",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "explicit-public-profile",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "publication-request",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-password-auth",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-is-reserved-synthetic",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "retiring-owner-family-invite",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-joins-retiring-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-provider-original-reservation",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-provider-upload",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-provider-finish",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "other-family-owned-pet",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "other-family-invites-retiring-user",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "retiring-user-joins-other-family",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "retiring-user-provided-original-reservation",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "retiring-user-provided-upload",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "retiring-user-provided-finish",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "other-family-own-original-reservation",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "other-family-own-upload",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "other-family-own-finish",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "public-post-before-retirement",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "public-derived-before-retirement",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "retirement-accepted",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "exact-retirement-retry",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "other-key-conflict",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "old-session-private-original-denied",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "old-session-family-access-false",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "old-session-list-pets-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "old-session-private-album-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "old-session-pet-create-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "old-session-consent-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "old-session-profile-republish-denied",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "retired-pet-absent-from-public-search",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "user-cannot-run-cleanup",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "user-cannot-ack-cleanup",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "family-access-to-retired-pet-false",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "family-original-on-retired-pet-denied",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "family-cannot-reserve-on-retired-pet",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "provided-photo-removed-from-other-family",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "unrelated-family-own-photo-survives",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "other-family-owner-still-has-access",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "derived-immediately-revoked",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "check": "password-signin-after-erasure-denied",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "refresh-after-erasure-denied",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "pending-job-removed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "cleanup-surviving-exact-synthetic-photo",
+      "status": 200,
+      "passed": true
+    }
+  ],
+  "cleanup": {
+    "scope": "exact synthetic user",
+    "processed": 1,
+    "storage_paths_removed": 4,
+    "auth_soft_erased": true,
+    "backup_retention_finalized": false
+  },
+  "scope": "reserved synthetic development account only",
+  "remaining": "backup-retention policy, scheduled cloud deployment and additional concurrent relationship scenarios"
+}

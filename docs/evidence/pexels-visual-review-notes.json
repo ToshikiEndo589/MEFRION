@@ -1,0 +1,24 @@
+{
+  "reviewed_sample_count": 48,
+  "all_images_visually_reviewed": false,
+  "observed_query_mismatches": [
+    {
+      "pexels_id": 31548249,
+      "query_hint": "guinea_pig",
+      "observation": "Pig with piglets; exclude from guinea pig selection"
+    },
+    {
+      "pexels_id": 28802187,
+      "query_hint": "hamster",
+      "observation": "Birds; exclude from hamster selection"
+    }
+  ],
+  "ui_photo_shortlist": [
+    14202095,
+    18350380,
+    35507571,
+    7470,
+    20759366,
+    33845095
+  ]
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "screen": 1,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_20_53-1.png",
+    "file": "design/reference/01.png",
+    "sha256": "24e0397954ac07a1850f7bfe96d6c719cf455a36c94696c8f9a5cb88b5f3ea02",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 2,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_20_54-2.png",
+    "file": "design/reference/02.png",
+    "sha256": "8e0a29ac66ec4799e02f82e8d6faad36abf0148cecca92e98443e1a0fd34e1de",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 3,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_20_55-3.png",
+    "file": "design/reference/03.png",
+    "sha256": "437390d103fd7b052b9f53c05d29da90e5956ba902e5a92ff88967b0f15b650f",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 4,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_20_56-4.png",
+    "file": "design/reference/04.png",
+    "sha256": "9132e6be56841d2f401ac1a58ed4917adbc8a842a5aa91b53a3226c75bf44340",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 5,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_20_58-5.png",
+    "file": "design/reference/05.png",
+    "sha256": "e93fd1dd3fa571634a7d315f662a30cb5d2a6ec875ed90c245a53ee82f50020e",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 6,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_20_58-6.png",
+    "file": "design/reference/06.png",
+    "sha256": "fd8fbbf42550dcda07cda820a83ea2c0e034e7ffbcc3bfeb0ea5c54afa15c659",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 7,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_20_59-7.png",
+    "file": "design/reference/07.png",
+    "sha256": "e0c1ff9363a441fde8e9c1670edbfdafac9bd855d543f1c6c3c8046149e745cc",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 8,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_21_00-8.png",
+    "file": "design/reference/08.png",
+    "sha256": "648834d3e0703664867da24e4c0a49bef013fde18027a96af05c42c3a05c6b9a",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 9,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_21_01-9.png",
+    "file": "design/reference/09.png",
+    "sha256": "4ad6488c9922c631088e52e8dc956e67967fe82f6a9a04185cfbd40a04241733",
+    "usage": "UI reference only; embedded photo rights not established"
+  },
+  {
+    "screen": 10,
+    "source": "/Users/toshiki/Downloads/ChatGPT 画像 2026年10月8日 23_21_02-10.png",
+    "file": "design/reference/10.png",
+    "sha256": "de3585ee7476c4a5f79234497aa8b245c2e2415be7cb53c031c9d459a80eaeec",
+    "usage": "UI reference only; embedded photo rights not established"
+  }
+]

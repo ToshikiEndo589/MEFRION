@@ -1,0 +1,159 @@
+{
+  "passed": true,
+  "scope": "real Auth / synthetic EXIF JPEG / public derivative / consent withdrawal",
+  "checks": [
+    {
+      "check": "synthetic-login",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-original",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-original",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-original",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "profile-explicit-required",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "profile-explicit-enable",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "provider-purpose-required",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "provider-sns-purpose",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "post-explicit-required",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "body-limit",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "duplicate-media-rejected",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "queue-publication",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "same-request-retry",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "pending-not-visible",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owner-cannot-run-worker",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-cannot-run-worker",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "actual-metadata-stripping-worker",
+      "passed": true
+    },
+    {
+      "check": "published-feed-safe-projection",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "anonymous-derived-image",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "real-derived-dimensions-and-empty-private-metadata",
+      "passed": true
+    },
+    {
+      "check": "invalid-token-not-treated-as-anonymous",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "original-id-not-accepted-as-public-media",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "direct-derived-storage-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "signed-derived-url-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "withdraw-sns-purpose",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdrawn-feed-hidden",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdrawn-image-hidden-before-purge",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "regrant-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "regrant-does-not-republish",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "return-test-profile-to-private",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-test-original",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

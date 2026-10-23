@@ -1,0 +1,22 @@
+{
+  "jobs": [
+    {
+      "kind": "image",
+      "error": null,
+      "state": "done",
+      "attempts": 1
+    },
+    {
+      "kind": "retirement",
+      "error": null,
+      "state": "done",
+      "attempts": 1
+    }
+  ],
+  "retirement": "done",
+  "cron_failures": 0,
+  "backup_success": "2026-10-23T04:37:05.557597+00:00",
+  "auth_soft_erased": true,
+  "fixture_originals": 0,
+  "fixture_publication": "stopped"
+}

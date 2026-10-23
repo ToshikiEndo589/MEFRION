@@ -1,0 +1,331 @@
+{
+  "passed": true,
+  "scope": "reserved synthetic profiles/events/photos/notification RPCs",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "private-pets",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "full-private-profile-update",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "profile-roundtrip",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-profile-edit-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "family-profile-edit-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-profile-edit-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "invalid-birthday-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "unknown-public-field-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "cross-pet-profile-photo-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "public-profile-explicit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-fields-exclude-family-metadata",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-field-selected",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-field-projection",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "profile-withdraw",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdrawn-public-profile-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "event-date-precision",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "event-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "event-key-conflict",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "event-date-precision",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "event-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "event-key-conflict",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "event-date-precision",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "event-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "event-key-conflict",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "event-date-precision",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "event-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "event-key-conflict",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "unknown-event-date-preserved",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-events-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "invalid-event-date-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "pet-notifications-off",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "pet-notification-roundtrip",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-pet-preferences-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "notification-defaults",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "notification-settings-applied",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "notification-settings-roundtrip",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "other-user-settings-isolated",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "notification-invalid-schema-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "anonymous-notification-settings-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "restore-notification-settings",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "register-fingerprint",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-jpeg",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-jpeg",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "register-fingerprint",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-jpeg",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-jpeg",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "provider-photo-edit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "outsider-photo-edit-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "invalid-photo-date-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "photo-edit-roundtrip",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-profile-image",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-profile-source",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "deleted-profile-image-cleared",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-event",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-event",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-event",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "cleanup-event",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "restore-private-profile",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "keep-profile-private",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

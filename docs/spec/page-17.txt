@@ -1,0 +1,38 @@
+非公開アルバムへの任意閲覧を許さない。安全確認など例外的閲覧が必要なら、根拠・最小権限・記録・期限を定義して
+公開前に説明を確定する。
+画像の誤判定には申し立てと再確認の手段を設ける。危険な内容が明白な場合は迅速な非表示を可能にする。
+運営担当者、連絡先、対応時間、緊急時のエスカレーションは公開前のユーザー承認事項。
+SAFE/OPS 共通テスト
+通報した本人への報復的な個人情報露出がないこと、一般ユーザーが管理APIを実行できないこと、停止されたアカウントが
+別Pet名義で投稿できないこと、同時実行や競合状態でも削除・停止が漏れないことをテストしてください。
+13. データモデル・API・非機能要件
+13.1 データ設計の最低要素
+DB製品やデータ型はCodexが決めてください。ただし、少なくとも次の概念と関係を表現してください。
+概念 欠かせないデータと関係
+Account / Identity 認証主体、表示名、状態、削除、ログイン連携
+Pet 管理者、種別、任意プロフィール、公開設定
+FamilyMembership / Invitation 対象Pet、招待者・承認者、権限、有効期限・失効
+Photo / AlbumEntry 所有・提供者、対象Pet、撮影日精度、保存場所、可視範囲
+MediaConsent 写真ごとの提供者同意、外部公開可否、撤回日時
+Milestone / MemoryCard 記録との関係、日付、2枚比較、公開バージョン
+PublicPost / Comment 主Pet、関連Pet、素材参照、本文、返信親、公開状態
+ManagedPublisher / ManagedPetProfile /
+EditorialApproval
+内部の運営編集主体と複数Pet、表示名義、権利元・許諾・失
+効、編集承認、予約日時、配信状態
+Follow / Like / Save / Block 実行する人間アカウント、対象、状態
+TwinsEnrollment / Search / Result 許可、候補索引、履歴、検索削除、相手の公開状態
+SharedPage / Revocation 共有対象、外部URL、失効理由、匿名表示範囲
+Notification 受信者、種類、公開可能性、配信状態、希望設定
+Report / ModerationAction 通報理由、担当、証跡、処分、異議、監査
+Consent / DeletionJob / AuditEvent 同意版、取消伝播、削除処理、実行者と時刻
+重要：人間アカウントとPetの表示名義を混同しないこと。actor_account_idに相当する操作責任主体を必ず保持し、表示用
+Pet IDだけで認可しないこと。写真の提供者 / 管理者 / 公開権限 / 公開同意は別の概念として分離してください。
+運営管理Petの特例：ManagedPublisherは通常のユーザーログインアカウントではなく内部の編集主体として実装し、単一ま
+たは少数の認証済み運営担当者が複数ManagedPetProfileを管理する。actor_account_idは操作した運営担当者を指し、公開
+Pet名義は別IDに保持する。通常会員のPet上限を管理Petへ適用しない。
+• 
+• 
+• 
+MEFRION / CODEX BUILD SPEC v1.2 · 2026.10.08
+CONFIDENTIAL · DEVELOPMENT INSTRUCTIONS 17 / 29

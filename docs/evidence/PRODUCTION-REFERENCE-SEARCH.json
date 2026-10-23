@@ -1,0 +1,17 @@
+{
+  "stats": {
+    "dog": {
+      "count": 9186,
+      "seconds": 0.535
+    },
+    "cat": {
+      "count": 5721,
+      "seconds": 0.11
+    }
+  },
+  "search": {
+    "seconds": 0.147,
+    "candidate_count": 3,
+    "query_photo_uploaded": false
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "modelName" : "iPhone 17",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "MEFRION · Built with macOS 26.6",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1791500581.778,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Invalid frame dimension (negative or non-finite)."
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791500470.303,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Failed to tap \"コメントを削除\" Button: No matches found for Elements matching predicate '\"コメントを削除\" IN identifiers' from input {(\n    Button, label: '閉じる',\n    Button, identifier: 'house', label: 'ホーム', Selected,\n    Button, identifier: 'pawprint', label: 'そっくり',\n    Button, identifier: 'plus.circle', label: '投稿',\n    Button, identifier: 'person.crop.circle', label: 'マイページ',\n    Button, identifier: 'BackButton', label: 'MEFRION',\n    Button, identifier: 'cloud-reply-comment', label: '返信',\n    Button, identifier: 'cloud-delete-comment', label: '削除',\n    Button, identifier: 'cloud-report-comment', label: '通報',\n    Button, label: '表示名を保存',\n    Button, identifier: 'cloud-comment-speaker', label: '発言者、自分の表示名',\n    Button, label: '取消',\n    Button, identifier: 'cloud-send-comment', label: '送信', Disabled,\n    Button, label: '理由、スパム',\n    Button, identifier: 'cloud-submit-comment-report', label: '通報を送信',\n    Button, label: 'ブロックした相手',\n    Button, label: '通知',\n    Button, label: '検索',\n    Button, label: '最新の公開投稿を取得',\n    Button, identifier: 'cloud-like-post', label: '1', value: いいね済み,\n    Button, identifier: 'cloud-save-post', label: 'ブックマーク', value: 保存済み,\n    Button, identifier: 'cloud-comments-post', label: 'コメント 0',\n    Button, identifier: 'cloud-follow-pet', label: '解除',\n    Button, identifier: 'cloud-report-post', label: '通報する',\n    Button, identifier: 'cloud-block-post', label: 'ブロック',\n    Button, label: '見つける', Selected,\n    Button, label: 'フォロー中',\n    Button, label: '保存済み'\n)}",
+      "targetName" : "MEFRIONUITests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "PrototypeUITests/testCloudLikeSaveFollowCommentAndDelete()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testCloudLikeSaveFollowCommentAndDelete",
+      "testName" : "testCloudLikeSaveFollowCommentAndDelete()"
+    }
+  ],
+  "title" : "Test - MEFRION",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 1
+}

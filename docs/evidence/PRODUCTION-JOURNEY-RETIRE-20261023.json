@@ -1,0 +1,38 @@
+{
+  "action": "retire",
+  "passed": true,
+  "checks": [
+    {
+      "check": "password-login-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "password-login-family",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "password-login-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "request_retirement",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "request_retirement",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "request_retirement",
+      "status": 200,
+      "passed": true
+    }
+  ],
+  "email_delivery_tested": false,
+  "scope": "real production Auth login / customer RPC / synthetic fixtures only"
+}

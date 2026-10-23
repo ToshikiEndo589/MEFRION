@@ -1,0 +1,20 @@
+{
+  "all_p0_complete": false,
+  "python_passed": 65,
+  "latest_ios_unit_passed": 21,
+  "distinct_p0_ui_targets_passed": 5,
+  "distinct_regression_ui_targets_passed": 3,
+  "server_assertions_passed": {
+    "retirement": 57,
+    "operator": 40,
+    "social_safety": 75
+  },
+  "cloud_schedule_deployed": false,
+  "local_schedule_installed": false,
+  "human_operator_granted": false,
+  "apple_google_real_auth_verified": false,
+  "ci_executed": false,
+  "production_published": false,
+  "apple_submission_performed": false,
+  "note": "Targeted runs succeeded; earlier failed bundles remain preserved. These counts do not certify all acceptance scenarios."
+}

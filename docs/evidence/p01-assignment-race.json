@@ -1,0 +1,119 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "reserved-password-login",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "test-totp-challenge",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "test-totp-verify",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "create-reserved-second-staff",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "second-staff-password-login",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "second-test-factor",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "reserved-password-login",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "test-totp-challenge",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "test-totp-verify",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "grant-reserved-second-staff",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "queue",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "simultaneous-claim-single-winner",
+      "passed": true
+    },
+    {
+      "check": "other-active-staff-cannot-review",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "other-active-staff-cannot-steal-or-release",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "loser-queue",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "winner-release",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "old-version-rejected",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "check": "new-staff-can-claim-after-release",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "final-exact-release",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "disable-test-staff",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "remove-test-factor",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "cleanup-second-login",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "retire-exact-test-staff",
+      "status": 200,
+      "passed": true
+    }
+  ]
+}

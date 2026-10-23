@@ -1,0 +1,72 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "modelName" : "iPhone 17",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 41,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "MEFRION · Built with macOS 26.6",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1791598074.942,
+  "passedTests" : 41,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1791597249.6,
+  "statistics" : [
+    {
+      "subtitle" : "2 test runs",
+      "title" : "2 tests collected performance metrics"
+    }
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Application 'dev.local.mefrion.prototype' does not have a process ID",
+      "targetName" : "MEFRIONUITests",
+      "testIdentifier" : 32,
+      "testIdentifierString" : "PrototypeUITests/testAllTenReferenceGroupsHaveRenderedScreens()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testAllTenReferenceGroupsHaveRenderedScreens",
+      "testName" : "testAllTenReferenceGroupsHaveRenderedScreens()"
+    },
+    {
+      "failureText" : "XCTAssertTrue failed",
+      "targetName" : "MEFRIONUITests",
+      "testIdentifier" : 43,
+      "testIdentifierString" : "PrototypeUITests/testTwinsCropHistoryAndCameraAvailability()",
+      "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testTwinsCropHistoryAndCameraAvailability",
+      "testName" : "testTwinsCropHistoryAndCameraAvailability()"
+    }
+  ],
+  "title" : "Test - MEFRION",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "55% of duration",
+      "text" : "1 longest test run with outlier durations exceeding 373.59s (three standard deviations)"
+    },
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "89% of duration",
+      "text" : "1 longest test run with outlier durations exceeding 7.28s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 43
+}

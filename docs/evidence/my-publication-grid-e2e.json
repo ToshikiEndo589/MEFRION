@@ -1,0 +1,70 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "synthetic-owner-login",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "anonymous-list-rejected",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "reserve-synthetic-original",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-synthetic-original",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-synthetic-original",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-public-profile",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "explicit-photo-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "request-pending-post",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owner-list-has-pending-thumbnail",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "private-preview-owner-access",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owner-can-remove-post",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "removed-post-absent-from-grid",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-original-preserved",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

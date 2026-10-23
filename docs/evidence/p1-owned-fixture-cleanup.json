@@ -1,0 +1,80 @@
+{
+  "passed": true,
+  "private_ui_photos_deleted": 2,
+  "owned_web_share_withdrawn": true,
+  "browser_illustration_deleted": true,
+  "browser_pet_archived": true,
+  "human_data_changed": false,
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "editor-cannot-delete-ordinary-family-photo",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "anonymous-cannot-delete-managed-photo",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "outsider-cannot-delete-managed-photo",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "no-implicit-managed-delete",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "private-ui-photos-absent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "old-web-share-ended",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "archived-photo-deletion-idempotent",
+      "passed": true,
+      "status": 200
+    }
+  ]
+}

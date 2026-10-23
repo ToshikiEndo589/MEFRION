@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-11",
+  "input": 5221,
+  "indexed": 4412,
+  "species": {
+    "dog": 2578,
+    "cat": 1834
+  },
+  "rejected": 809,
+  "vector_bytes": 13553664,
+  "model": "Apple Vision revision 2 / 768 Float",
+  "quality_accepted": false,
+  "input_photo_uploaded": false,
+  "python_passed": 85,
+  "offline_ios_full_passed": 47,
+  "targeted_final_passed": 6,
+  "unique_ios_passed_across_runs": 49,
+  "cloud_ui_excluded": 17,
+  "device_install": true,
+  "device_process_launch": true,
+  "real_camera_manually_verified": false,
+  "photo_replacement_requires_fresh_confirmation_verified": true,
+  "final_confirmation_run_passed": 6,
+  "full_offline_run_note": "47 before final orientation/transport additions; affected final targeted tests 6 passed; 49 distinct tests across runs",
+  "visual_quality_note": "Brown puppy query returned distant black/white dog; resemblance quality not accepted",
+  "final_device_install_and_launch": true,
+  "device_evidence": [
+    {
+      "command": "devicectl.device.install.app",
+      "outcome": "success"
+    },
+    {
+      "command": "devicectl.device.process.launch",
+      "outcome": "success"
+    }
+  ]
+}

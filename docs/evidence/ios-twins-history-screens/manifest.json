@@ -1,0 +1,35 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "C7A113F7-792E-4A9B-8445-E42B58551499.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-Twins-history-cleared_0_B18B628B-3700-49A5-BE6D-B7B205B355CD.png",
+        "timestamp" : 1791499567.832
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "6BADD39F-740C-4495-A029-DE9B0CE80B30.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-Twins-history-owned-candidates_0_382C2B86-107E-471A-87AB-CB377F2B99EC.png",
+        "timestamp" : 1791499564.36
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "C44B280C-A09B-4B98-A12C-75FF4DF6D69F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-Twins-crop-owned-input_0_1A214997-5214-46DE-AD16-CD320DCC1138.png",
+        "timestamp" : 1791499554.392
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testTwinsCropHistoryAndCameraAvailability()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testTwinsCropHistoryAndCameraAvailability"
+  }
+]

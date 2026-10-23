@@ -1,0 +1,98 @@
+{
+  "action": "verify",
+  "passed": true,
+  "checks": [
+    {
+      "check": "password-login-owner",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "password-login-family",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "password-login-outsider",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "public_feed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "public-media-0",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "public-media-1",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "set_social_name",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "react",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "react",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "saved_feed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "follow",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "comment",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "comments",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "report",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "report_queue",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "check": "block_pet",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "public_feed",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "check": "block_pet",
+      "status": 200,
+      "passed": true
+    }
+  ],
+  "email_delivery_tested": false,
+  "scope": "real production Auth login / customer RPC / synthetic fixtures only"
+}

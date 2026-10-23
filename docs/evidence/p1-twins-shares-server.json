@@ -1,0 +1,308 @@
+{
+  "passed": true,
+  "scope": "owned synthetic Twins lifecycle/card projections/quota; real RPCs",
+  "checks": [
+    {
+      "check": "login-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-owner",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-family",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "login-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "identity-outsider",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "fixture-pet",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-profile-explicit",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-owned-jpeg",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-private",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "reserve-owned-photo",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "upload-owned-jpeg",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-private",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "twins-without-provider-purpose-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "provider-twins-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "implicit-enrollment-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "outsider-enrollment-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "explicit-enroll",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "enroll-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "public-candidate-projection-no-originals",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "self-owner-excluded",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "other-species-excluded",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "candidate-gateway-derivative",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "registered-search",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "same-search-retry-does-not-spend-more",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "retry-key-input-conflict",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "anonymous-no-identity-search-denied",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "check": "record-real-candidate",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "finish-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "foreign-history-write-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "own-history-projected",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "owner-cannot-see-outsider-history",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "block-masks-candidate",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "blocked-candidate-omitted",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "blocked-history-masked",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "unblock",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdraw-purpose",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "withdrawn-candidate-gateway-denied",
+      "passed": true,
+      "status": 404
+    },
+    {
+      "check": "withdrawn-history-masked",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "daily-member-slot",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "daily-member-slot",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "daily-member-slot",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "daily-member-slot",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "member-sixth-search-denied",
+      "passed": true,
+      "status": 400
+    },
+    {
+      "check": "save-private-card",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "share-without-export-consents-denied",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "external-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "external-consent",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "family-cannot-share-owner-card",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "check": "explicit-card-share",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "card-share-idempotency",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "pending-share-not-exposed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "guest-card-projection",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "card-does-not-enter-SNS-feed",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "block-masks-card",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "blocked-card-projection-hidden",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "unblock-card",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "delete-source-card",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "check": "deleted-card-share-ended",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "guest_identity_quota": false,
+  "real_pet_quality_approved": false
+}

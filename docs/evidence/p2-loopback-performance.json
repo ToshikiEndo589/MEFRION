@@ -1,0 +1,11 @@
+{
+  "scope": "100 sequential loopback requests, owned synthetic fixture feed, not cloud load or real-user latency",
+  "date": "2026-10-10",
+  "requests": 100,
+  "median_ms": 0.5674795002050814,
+  "p95_ms": 0.9063329998753034,
+  "max_ms": 1.2401250005495967,
+  "response_bytes": 3299,
+  "body_logged": false,
+  "cloud_cost_measured": false
+}

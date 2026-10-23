@@ -1,0 +1,346 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "438C63DE-6C30-4BE3-81DC-8BC82857553F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-twins-on-device-demo_0_9351ABD7-920C-4498-83E6-93C8E9781BFB.png",
+        "timestamp" : 1791471024.689
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "875203C9-7D4B-4053-9ED4-A714D4AF4A06.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-private-card_0_B492B491-0EFF-47C7-854B-350A767877B2.png",
+        "timestamp" : 1791471017.674
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "FBA6E0F7-66DE-4763-87D7-01608539ED5E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase1-private-album_0_F986616F-DF57-4FB2-BD44-1FF588345753.png",
+        "timestamp" : 1791471010.447
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "0B54127D-33D7-478A-9A56-0905AA2B421B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Phase0-home-four-tabs_0_6A2E0904-0D76-4372-BEA2-B10B4158C885.png",
+        "timestamp" : 1791470991.934
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testFourTabsPrivateAlbumComparisonAndTwinsStates()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testFourTabsPrivateAlbumComparisonAndTwinsStates"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "A2591AF5-EA59-44E6-B4C2-20CF042548FA",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-10-08 at 11.51.05 午後",
+        "timestamp" : 1791471065.596
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "1DCEFF87-3843-4113-914C-F861867459F1",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-10-08 at 11.51.06 午後",
+        "timestamp" : 1791471066.013
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "FFF8CB4C-1975-4DBD-A4B9-459309523EBB",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-10-08 at 11.51.02 午後",
+        "timestamp" : 1791471062.503
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "FE10C431-2520-4283-A879-741DB28BA8F9",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-10-08 at 11.51.02 午後",
+        "timestamp" : 1791471062.917
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "5AE6A420-6092-4043-9D06-A43FB95D37F6",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-10-08 at 11.50.59 午後",
+        "timestamp" : 1791471059.411
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "13F7E6A9-E80A-496F-99BF-F4538639A193",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-10-08 at 11.50.59 午後",
+        "timestamp" : 1791471059.832
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "4FBDF67A-1E13-4576-BFA8-9987D8F1FE90",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-10-08 at 11.50.56 午後",
+        "timestamp" : 1791471056.282
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "F12A06E5-A728-4B15-8CB1-FEFEE9D416DA",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-10-08 at 11.50.56 午後",
+        "timestamp" : 1791471056.698
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "F9FCEE15-3FFB-45B3-8CEE-5A83216B70B1",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-10-08 at 11.50.53 午後",
+        "timestamp" : 1791471053.195
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "09A57213-7EBC-4F3E-8975-0E0BAB7172B5",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-10-08 at 11.50.53 午後",
+        "timestamp" : 1791471053.617
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "D022F622-31FB-457E-8E21-7EA1E22398EA",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-10-08 at 11.50.50 午後",
+        "timestamp" : 1791471050.1
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "A8F66F03-59C3-46EC-9B96-C450839F5776",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-10-08 at 11.50.50 午後",
+        "timestamp" : 1791471050.531
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "6FED94B7-00D3-42C6-BE12-2804583C483B.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "App UI hierarchy for dev.local.mefrion_0_130CE0C5-4FF8-4AFA-B32E-69A0053E72DD.prototype",
+        "timestamp" : 1791471047.698
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "BF706539-A0AA-4F27-904E-D6B380435393",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-10-08 at 11.50.47 午後",
+        "timestamp" : 1791471047.699
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "E34C589C-14AC-4E28-8D69-B07F16AA57EA.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_26F1A4EB-DAFB-468B-92A1-CFC5228F205D.txt",
+        "timestamp" : 1791471047.624
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "2070BB3A-62BC-4139-B3E2-B51C42F5AB1A.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_B1B027DF-E10B-45B8-BB25-24D215F06DFA.txt",
+        "timestamp" : 1791471046.703
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "91BCDD00-2CFD-4883-A94D-C805DA47A400.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_F9991805-FA50-4AF3-8BE8-B76C48277659.txt",
+        "timestamp" : 1791471045.647
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "399B433D-092F-45E2-A562-F012CA1E41F8.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_960CF185-3A1C-4D09-A11E-81CCC86DF98E.txt",
+        "timestamp" : 1791471044.686
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "EB4F022B-04DC-42B2-B5F9-36DDE2173D21.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_329B7F4A-1005-4ECC-88E1-81F0E32FB871.txt",
+        "timestamp" : 1791471043.719
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "941484D8-71B4-43E9-B862-C38591F9CEE0.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_18E228CE-EFF5-41AE-897D-B4929394A4F2.txt",
+        "timestamp" : 1791471042.655
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "A5A09BB7-9A2F-4065-A600-B3B7CA5902F7.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_0480B4F3-E0C6-401E-991F-F0A2A8E03905.txt",
+        "timestamp" : 1791471041.688
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "00F0B948-F5D5-4899-B6AF-DEF582A4C408.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_A895DF8C-81A7-46EA-A8DA-0B9728F02DB3.txt",
+        "timestamp" : 1791471040.725
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "16145098-BD19-4761-8EF0-03CFFB0B7910.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_114D30F9-F3E9-45E0-935F-F423F44C2B20.txt",
+        "timestamp" : 1791471039.652
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "4D40AB03-E891-4FE2-9F9B-17580FB2EDAD.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_57294DE1-DB49-46A9-B5DC-6A42962802AC.txt",
+        "timestamp" : 1791471038.686
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "3F18F7A5-B87E-4AF5-B424-6381C9BC2E9D.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_017929D1-65DA-4363-AAA9-00B6BFCBEBF3.txt",
+        "timestamp" : 1791471037.726
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "E90B3E36-A3E3-4994-AD74-EE0CB70833BC.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_DA5CDAF9-3217-4872-8DB8-7688FEE760E7.txt",
+        "timestamp" : 1791471036.671
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "DE0B6DF6-3991-4D88-9C04-85A8DF5E15C4.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_DB1111D4-1A6B-4047-8D05-A6646A45ACB7.txt",
+        "timestamp" : 1791471035.698
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "3F0CA767-9678-4467-A714-AECF6AF8D906.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_156376B7-3EF0-4D91-8040-C907DC6F9920.txt",
+        "timestamp" : 1791471034.734
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "7A05B0FC-57EF-4845-A7B4-1E95D4857688.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Debug description for `\"feed-like-demo-post-demo-9\" Button`_0_B73EFDA7-6383-48A5-87C3-90652AE88D93.txt",
+        "timestamp" : 1791471033.88
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "787A609F-6901-4316-8C1F-36C667E4C830.mp4",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Screen Recording 2026-10-08 at 11.50.25 午後.mp4",
+        "timestamp" : 1791471025.729
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "E9877918-4FEB-4576-BE0F-03DF9DC3F2BF.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "111AF0A1-6507-4AA0-8916-4DA057434744.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "App UI hierarchy for dev.local.mefrion_0_5A5F1951-1751-4BD8-9927-F0BADE5C94C8.prototype",
+        "timestamp" : 1791471068.676
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "4F89959B-BD92-42D9-BBFB-DFD0F86318B8",
+        "deviceName" : "MEFRION iPhone 17",
+        "exportedFileName" : "2E081A1F-B598-4234-B026-5A6FEA9C548E",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-10-08 at 11.51.08 午後",
+        "timestamp" : 1791471068.676
+      }
+    ],
+    "testIdentifier" : "PrototypeUITests/testLocalSocialLikeAndCommentThroughAPI()",
+    "testIdentifierURL" : "test://com.apple.xcode/MEFRION/MEFRIONUITests/PrototypeUITests/testLocalSocialLikeAndCommentThroughAPI"
+  }
+]
