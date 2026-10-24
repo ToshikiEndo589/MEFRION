@@ -21,14 +21,9 @@ enum PetVisualFeature {
     // Provisional feature-distance cutoffs, not validated resemblance scores.
     static let maximumDistance:Float=1.1
     static let duplicateDistance:Float=0.08
-    static func extract(_ image:CGImage,species:String,requireSingleSubject:Bool=true) throws->[Float] {
+    static func extract(_ image:CGImage,species:String,requireSingleSubject:Bool=true,subjects:[PetSubjectCrop.Subject]?=nil) throws->[Float] {
         guard min(image.width,image.height)>=80, ["dog","cat"].contains(species) else {throw PetVisualError.photo}
-        let animals=VNRecognizeAnimalsRequest();animals.revision=2
-        configure(animals)
-        try perform(animals,image:image,stage:"animal")
-        let observations=(animals.results ?? []).filter {observation in
-            observation.labels.contains{$0.identifier.lowercased()==species && $0.confidence>=0.35}
-        }
+        let observations=try (subjects ?? PetSubjectCrop.locate(image,species:species)).filter{$0.species==species}
         if requireSingleSubject && observations.count>1 {throw PetVisualError.photo}
         guard let animal=observations.max(by:{$0.confidence<$1.confidence}) else {throw PetVisualError.species}
         let box=animal.boundingBox

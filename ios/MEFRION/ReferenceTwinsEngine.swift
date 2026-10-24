@@ -34,6 +34,7 @@ struct ReferenceSearchRecord:Codable,Identifiable {
     let created:Date
     let species:String
     let candidates:[String]
+    var queryThumbnail:Data?=nil
 }
 
 actor ReferenceTwinsEngine {
@@ -119,14 +120,29 @@ actor VisionPetRanker {
 }
 
 extension PrototypeStore {
-    func saveReferenceSearch(owner:String,species:String,candidates:[String],now:Date=Date()) throws {
+    func saveReferenceSearch(owner:String,species:String,candidates:[String],now:Date=Date(),id:UUID=UUID(),queryImage:UIImage?=nil) throws {
         guard !owner.isEmpty,["dog","cat"].contains(species),!candidates.isEmpty,candidates.count<=3,
               Set(candidates).count==candidates.count,candidates.allSatisfy({$0.hasPrefix("pexels-") && !$0.dropFirst(7).isEmpty && $0.dropFirst(7).allSatisfy(\.isNumber)}) else {throw PetVisualError.index}
+        let thumbnail:Data?
+        if let queryImage {
+            guard queryImage.size.width>0,queryImage.size.height>0 else {throw PetVisualError.photo}
+            let scale=min(1,512/max(queryImage.size.width,queryImage.size.height))
+            let size=CGSize(width:max(1,queryImage.size.width*scale),height:max(1,queryImage.size.height*scale))
+            let format=UIGraphicsImageRendererFormat();format.scale=1;format.opaque=true
+            thumbnail=UIGraphicsImageRenderer(size:size,format:format).image {context in
+                UIColor.white.setFill();context.fill(CGRect(origin:.zero,size:size))
+                queryImage.draw(in:CGRect(origin:.zero,size:size))
+            }.jpegData(compressionQuality:0.75)
+            guard thumbnail != nil else {throw PetVisualError.photo}
+        } else {thumbnail=nil}
         try persistMutation {
-            referenceTwinsHistory=referenceTwinsHistory.filter{let age=now.timeIntervalSince($0.created);return age>=0 && age<86400}
-            referenceTwinsHistory.insert(ReferenceSearchRecord(id:UUID(),owner:owner,created:now,species:species,candidates:candidates),at:0)
-            referenceTwinsHistory=Array(referenceTwinsHistory.prefix(20))
+            referenceTwinsHistory=referenceTwinsHistory.filter{let age=now.timeIntervalSince($0.created);return age>=0 && age<86400 && $0.id != id}
+            referenceTwinsHistory.insert(ReferenceSearchRecord(id:id,owner:owner,created:now,species:species,candidates:candidates,queryThumbnail:thumbnail),at:0)
         }
+    }
+    func pruneReferenceHistory(now:Date=Date()) throws {
+        guard referenceTwinsHistory.contains(where:{let age=now.timeIntervalSince($0.created);return age<0 || age>=86400}) else{return}
+        try persistMutation {referenceTwinsHistory.removeAll {let age=now.timeIntervalSince($0.created);return age<0 || age>=86400}}
     }
     func eraseReferenceHistory(owner:String) throws {try persistMutation {referenceTwinsHistory.removeAll{$0.owner==owner}}}
 }
@@ -137,9 +153,10 @@ actor ReferenceQueryEncoder {
     private var model:PetResemblance?
     func encode(_ image:CGImage,species:String) throws->ReferenceQuery {
         try Task.checkCancellation()
-        let values=try PetVisualFeature.extract(image,species:species)
+        let subjects=try PetSubjectCrop.locate(image,species:species)
+        let values=try PetVisualFeature.extract(image,species:species,subjects:subjects)
         guard let fingerprint=PetVisualFeature.fingerprint(image) else {throw PetVisualError.photo}
-        let cropped=try PetSubjectCrop.crop(image,species:species)
+        let cropped=try PetSubjectCrop.crop(image,species:species,subjects:subjects)
         try Task.checkCancellation()
         if model==nil {model=try PetResemblance()}
         let descriptor=try model!.features(cropped.image)

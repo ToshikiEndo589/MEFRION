@@ -31,7 +31,8 @@ struct CloudPublicPetView:View {
                     HStack(alignment:.bottom,spacing:12) {
                         ZStack {
                             Circle().fill(Theme.background)
-                            if let cover {Image(uiImage:cover).resizable().scaledToFill().clipShape(Circle())}
+                            if let icon=pet.icon {ProfileIconImage(encoded:icon,size:82)}
+                            else if let cover {Image(uiImage:cover).resizable().scaledToFill().clipShape(Circle())}
                             else {Image(systemName:"pawprint.fill").font(.system(size:32)).foregroundStyle(Theme.accent)}
                         }.frame(width:82,height:82).overlay {Circle().stroke(.white,lineWidth:4)}
                             .shadow(color:Theme.accent.opacity(0.18),radius:8,y:4)

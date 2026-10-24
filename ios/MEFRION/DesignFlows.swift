@@ -96,15 +96,13 @@ struct NotificationHubView:View {
     var body:some View {
         Group {
             if cloud.authenticated {CloudSocialNotificationsView(client:cloud)}
-            else {ScrollView {VStack(alignment:.leading,spacing:24) {
-                ScrollView(.horizontal,showsIndicators:false) {HStack {ForEach(["すべて","いいね","コメント","フォロー","Twins"],id:\.self) {name in Button {filter=name} label: {Text(name).font(.caption).padding(.horizontal,14).frame(minHeight:34).background(filter==name ? Theme.accent.opacity(0.15) : .white).clipShape(Capsule())}}}}
-                ContentUnavailableView("新しいお知らせはありません",systemImage:"bell",description:Text("クラウドにログインすると、実際のいいねやコメントを確認できます。"))
-                NavigationLink {CloudFamilyView()} label: {Label("ログイン",systemImage:"person").frame(maxWidth:.infinity)}.buttonStyle(CoralButtonStyle())
-                Text("通知設定").font(.headline)
-                ForEach([("いいね","heart"),("コメント","bubble.right"),("フォロー","person"),("Twins関連","pawprint")],id:\.0) {title,icon in HStack {Label(title,systemImage:icon);Spacer();Text("ログイン後に設定").font(.caption).foregroundStyle(.secondary)}.padding(14).background(.white).clipShape(RoundedRectangle(cornerRadius:12))}
-                Text("プッシュ通知は接続準備中です。").font(.caption).foregroundStyle(.secondary)
-            }.padding(16)}.background(Theme.background)}
-        }.navigationTitle("通知").navigationBarTitleDisplayMode(.inline).toolbar {ToolbarItem(placement:.cancellationAction) {Button("閉じる") {dismiss()}}}
+            else {ScrollView {VStack(spacing:20) {
+                Image(systemName:"bell.badge.fill").font(.system(size:40)).foregroundStyle(Theme.accent).padding(.top,50)
+                Text("まだお知らせはないよ").font(.headline)
+                Text("ログインすると、うれしいお知らせが届くよ ♡").font(.subheadline).foregroundStyle(Theme.secondaryText)
+                NavigationLink {CloudFamilyView()} label: {Text("ログイン").frame(maxWidth:.infinity)}.buttonStyle(CoralButtonStyle())
+            }.padding(24)}.background(Theme.background)}
+        }.navigationTitle("お知らせ").navigationBarTitleDisplayMode(.inline).toolbar {ToolbarItem(placement:.cancellationAction) {Button("閉じる") {dismiss()}}}
     }
 }
 
@@ -124,7 +122,7 @@ struct LocalPetProfileView:View {
             if !pet.introduction.isEmpty {Text(pet.introduction).font(.subheadline)}
             Label("家族内のみ・非公開",systemImage:"lock").font(.caption).foregroundStyle(.secondary)
             NavigationLink {AlbumView(petID:petID)} label: {Label("成長アルバム · \(store.album(petID).count)枚",systemImage:"book.closed").frame(maxWidth:.infinity,alignment:.leading).padding(16).background(.white).clipShape(RoundedRectangle(cornerRadius:14))}
-            NavigationLink("公開設定・Twinsについて") {PrivacyInformationView()}
+            NavigationLink("公開設定・そっくりについて") {PrivacyInformationView()}
             LazyVGrid(columns:[GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())],spacing:6) {ForEach(store.album(petID)) {photo in NavigationLink {PhotoEditor(photoID:photo.id)} label: {Image(uiImage:photo.image).resizable().scaledToFill().frame(height:105).clipped().clipShape(RoundedRectangle(cornerRadius:8))}}}
         }.padding(16)}}.background(Theme.background).navigationTitle(pet?.name ?? "うちの子").navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented:$editing) {NavigationStack {LocalPetEditor(petID:petID)}}
@@ -200,14 +198,11 @@ struct PrivacyInformationView:View {
                 Link("利用規約",destination:URL(string:"\(publicInfoBase)/terms")!)
                 Link("サポート・お問い合わせ",destination:URL(string:publicInfoBase)!)
             }
-            Section("利用条件") {
-                NavigationLink("画像比較モデルのライセンス") {LegalDraftView(title:"モデルのライセンス",text:(Bundle.main.url(forResource:"ModelNotices",withExtension:"txt").flatMap{try? String(contentsOf:$0,encoding:.utf8)}) ?? "ライセンス情報を読み込めません。")}
-                Text("初期版は18歳以上・無料・広告なしの方針です。現在は提供準備中です。最新の案内は公開ページをご確認ください。")
-            }
-            Section("写真の公開") {Label("家族内写真は初期非公開",systemImage:"lock");Text("アルバム保存と公開同意は別です。提供者の用途同意とオーナーの明示操作を確認します。SNS、Twins参加、外部共有は用途ごとに選択します。")}
-            Section("Twins") {Text("参考写真検索は、検索ボタンを押すと写真の特徴数値をSupabaseへ送りサーバーで比較します。写真そのものは送信せず、自動公開・候補登録もしません。未保存入力は10分または画面終了等で破棄します。実写真の類似品質は評価待ちです。")}
             Section("同意と削除") {Text("用途同意の撤回・元写真削除・退会で関連公開を終了します。アプリ内退会はログイン中のアカウントから削除を確認して申し込めます。物理削除・バックアップの期限運用は常時サーバーの配備後に検証します。端末や第三者が保存したコピーは回収できません。")}
             Section("運営と問い合わせ") {Text("運営名：MEFRION。運営はサービス提供者本人が担当します。現在の案を発効済みの規約、既存利用者の同意済み文書として扱いません。");Link("nextedovation@gmail.com",destination:URL(string:"mailto:nextedovation@gmail.com")!).accessibilityLabel("MEFRIONへの問い合わせメールを作成").accessibilityIdentifier("operator-contact");Text("パスワードや認証コードは送らないでください。").font(.caption).foregroundStyle(.secondary)}
+            Section("ライセンス") {
+                NavigationLink("画像比較モデルのライセンス") {LegalDraftView(title:"モデルのライセンス",text:(Bundle.main.url(forResource:"ModelNotices",withExtension:"txt").flatMap{try? String(contentsOf:$0,encoding:.utf8)}) ?? "ライセンス情報を読み込めません。")}
+            }
         }.scrollContentBackground(.hidden).background(Theme.background).navigationTitle("プライバシーと同意").navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -222,8 +217,8 @@ private struct LegalDraftView:View {
 }
 
 private enum MEFRIONLegalDraft {
-    static let terms = "現在は提供準備中です。この文書を正式発効済み、既存利用者の同意済みとは扱いません。取扱主体の正式情報・URLを補完し、提供機能と運用を検証してから発効します。\n\n1. MEFRIONは18歳以上を対象とするiPhone向けペット記録・家族共有・公開交流サービスです。初期版は無料です。有料機能を導入する場合は事前に料金と条件を案内します。\n2. 登録情報は正確に入力し、本人が利用できる認証手段を使用してください。他人へのなりすましや認証手段の共有は禁止します。サービスの規約への同意だけで写真は公開されません。\n3. 家族内アルバムは参加権限のある人だけが閲覧します。招待の共有先は慎重に選んでください。家族の閲覧権限とSNSのブロックは別です。端末へ保存されたコピーや画面撮影を当サービスから回収することはできません。\n4. 写真・文章の権利は投稿者または元の権利者に残ります。サービス提供に必要な保存、縮小、表示、同意した範囲の配信だけを許可いただきます。無関係な広告利用や学習用途へ自動転用しません。第三者が写る写真や第三者の作品は必要な許可を取得してください。\n5. 公開投稿、Twinsの候補参加、外部共有はそれぞれ明示同意を必要とします。家族の写真は提供者の用途同意とオーナーの操作を確認します。撤回または元写真削除時は関連する公開経路を終了します。\n6. Twinsは写真の見た目から候補を探す機能です。血縁、同一個体、健康状態を判定する機能ではありません。現在の実写真品質は評価待ちであり、根拠のない類似パーセントは表示しません。\n7. 権利侵害、個人情報の無断公開、嫌がらせ、差別、脅迫、虐待の助長、性的な不適切内容、スパム、不正アクセスは禁止します。通報とブロックを用意し、違反や重大な安全上の問題に対して非表示・利用停止等を行います。対象者はアプリの処分通知から異議を申し立てられます。通報者と内部調査情報は公開しません。\n8. 運営が制作・管理するPetと投稿が含まれます。通常投稿の画面で表示し、実際の反応だけを集計します。運営コンテンツは所有または許諾素材を使います。\n9. アカウント削除はアプリ内から申請できます。ログイン中のアカウントで削除を確認した後にアクセスを失効し、本人データ・提供写真・関連公開物を削除計画に従って処理します。他の人が提供したデータの扱いは権利と共同管理の状態に従います。実行期限とバックアップ運用の正式提供は配備・検証後に案内します。\n10. 障害、保守、違反対処による利用制限が生じる場合があります。重要な変更は事前に案内し、必要な同意を取得します。法律で認められない責任免除を定めません。問い合わせ先と提供主体は公開前に記載します。\n\n取扱主体の正式氏名/事業名：本人情報待ち。運営名：MEFRION。問い合わせ先：nextedovation@gmail.com。正式URL・発効日：未設定。"
-    static let privacy = "現在は提供準備中です。正式な取扱主体・委託先と処理地域、運用実績を補完するまで、発効済みの文書として扱いません。\n\n取得する情報と目的\n\n認証識別子、メール、表示名、同意状態を登録・本人確認・復旧に使用します。Pet情報、写真、撮影日、家族参加情報を非公開記録と家族共有に使用します。公開を選んだプロフィール・投稿・コメント・反応・Twins候補・共有カードを指定した範囲で表示します。通知設定・通知先は希望した通知に、通報・処分・最小監査情報は安全な運営と異議対応に使用します。障害情報と件数はサービス改善に使用し、写真・本文・招待秘密・認証資格を不要にログへ記録しません。\n\n公開と共有\n\n家族内写真は初期非公開です。公開Pet、SNS投稿、Twins参加、外部共有には個別の明示操作と必要な提供者同意があります。閲覧・保存・アルバム登録だけで公開しません。家族原本を運営者が任意に閲覧できる権限は設けません。公開を選んだデータは第三者に閲覧され、外部コピーの回収はできません。\n\nTwinsの入力\n\n参考写真検索では、検索ボタンを押した時に犬猫写真の特徴数値・近重複判定用指紋・種類をSupabaseへ送信し、サーバーで候補を比較します。写真そのものは送信せず、送信した特徴を候補DB・履歴・アプリログへ保存しません。再試行用の候補ID・識別子は10分で利用終了し、期限切れ行は次回検索時に整理します。回数制限用のアカウントまたは端末識別子・日付・回数は当日を含む3日分を検索時に整理します。通信基盤の標準リクエストメタデータは別途保持される可能性があり、写真・特徴値をログに記録しない運用を行います。従来の公開Pet検索は端末内比較です。10分経過・画面終了・アプリ非アクティブ時に未保存入力を破棄します。アプリ内アルバムから選ぶ写真は、別途家族保存した写真です。会員の検索履歴には候補ID・状態等の記録を保存します。公開候補登録と外部共有は別の同意を用います。広告や汎用AI学習へ写真を自動転用しません。\n\n委託・国外処理・安全管理\n\n現在のサービス基盤はSupabaseを使用します。正式提供時は契約主体、処理地域、国外取扱いの情報、安全管理を確認し、必要な説明/同意を整えます。通信の保護、権限分離、Keychain、用途別公開、MFA、最小権限、失効再確認を採用します。委託先の契約やバックアップ機能が設定済みだとは断定しません。\n\n保持・削除\n\n非公開データは利用目的に必要な期間保管します。用途同意の撤回・削除受付で関連公開を終了します。アプリ内の退会手続にはログインと明示確認が必要です。採用する運用目標は原本/派生/Authの7日以内処理、暗号化バックアップ30日、技術ログ30日、安全監査180日、最小の復元抑止台帳365日です。これらの自動期限処理と常時運用は未配備であり、現在の利用者向け保証ではありません。正式提供前に実際の処理・復元時再削除を検証します。法律上必要な保全は理由・対象・期間を限定します。\n\n本人の権利・問い合わせ\n\nアプリからプロフィール編集、用途同意の撤回、写真削除、退会を行えます。開示・訂正・利用停止等の問い合わせは、nextedovation@gmail.comで本人確認のうえ対応します。パスワードや認証コードの送付は求めません。変更時は変更点と適用日を案内し、必要な同意を取得します。\n\n運営名：MEFRION。問い合わせ先：nextedovation@gmail.com。取扱主体の正式氏名/事業名・正式URL・発効日：本人情報/設定待ち。"
+    static let terms = "現在は提供準備中です。この文書を正式発効済み、既存利用者の同意済みとは扱いません。取扱主体の正式情報・URLを補完し、提供機能と運用を検証してから発効します。\n\n1. MEFRIONは18歳以上を対象とするiPhone向けペット記録・家族共有・公開交流サービスです。初期版は無料です。有料機能を導入する場合は事前に料金と条件を案内します。\n2. 登録情報は正確に入力し、本人が利用できる認証手段を使用してください。他人へのなりすましや認証手段の共有は禁止します。サービスの規約への同意だけで写真は公開されません。\n3. 家族内アルバムは参加権限のある人だけが閲覧します。招待の共有先は慎重に選んでください。家族の閲覧権限とSNSのブロックは別です。端末へ保存されたコピーや画面撮影を当サービスから回収することはできません。\n4. 写真・文章の権利は投稿者または元の権利者に残ります。サービス提供に必要な保存、縮小、表示、同意した範囲の配信だけを許可いただきます。無関係な広告利用や学習用途へ自動転用しません。第三者が写る写真や第三者の作品は必要な許可を取得してください。\n5. 公開投稿、そっくりの候補参加、外部共有はそれぞれ明示同意を必要とします。家族の写真は提供者の用途同意とオーナーの操作を確認します。撤回または元写真削除時は関連する公開経路を終了します。\n6. そっくりは写真の見た目から候補を探す機能です。血縁、同一個体、健康状態を判定する機能ではありません。現在の実写真品質は評価待ちであり、根拠のない類似パーセントは表示しません。\n7. 権利侵害、個人情報の無断公開、嫌がらせ、差別、脅迫、虐待の助長、性的な不適切内容、スパム、不正アクセスは禁止します。通報とブロックを用意し、違反や重大な安全上の問題に対して非表示・利用停止等を行います。対象者はアプリの処分通知から異議を申し立てられます。通報者と内部調査情報は公開しません。\n8. 運営が制作・管理するPetと投稿が含まれます。通常投稿の画面で表示し、実際の反応だけを集計します。運営コンテンツは所有または許諾素材を使います。\n9. アカウント削除はアプリ内から申請できます。ログイン中のアカウントで削除を確認した後にアクセスを失効し、本人データ・提供写真・関連公開物を削除計画に従って処理します。他の人が提供したデータの扱いは権利と共同管理の状態に従います。実行期限とバックアップ運用の正式提供は配備・検証後に案内します。\n10. 障害、保守、違反対処による利用制限が生じる場合があります。重要な変更は事前に案内し、必要な同意を取得します。法律で認められない責任免除を定めません。問い合わせ先と提供主体は公開前に記載します。\n\n取扱主体の正式氏名/事業名：本人情報待ち。運営名：MEFRION。問い合わせ先：nextedovation@gmail.com。正式URL・発効日：未設定。"
+    static let privacy = "現在は提供準備中です。正式な取扱主体・委託先と処理地域、運用実績を補完するまで、発効済みの文書として扱いません。\n\n取得する情報と目的\n\n認証識別子、メール、表示名、同意状態を登録・本人確認・復旧に使用します。Pet情報、写真、撮影日、家族参加情報を非公開記録と家族共有に使用します。公開を選んだプロフィール・投稿・コメント・反応・そっくり候補・共有カードを指定した範囲で表示します。通知設定・通知先は希望した通知に、通報・処分・最小監査情報は安全な運営と異議対応に使用します。障害情報と件数はサービス改善に使用し、写真・本文・招待秘密・認証資格を不要にログへ記録しません。\n\n公開と共有\n\n家族内写真は初期非公開です。公開Pet、SNS投稿、そっくり参加、外部共有には個別の明示操作と必要な提供者同意があります。閲覧・保存・アルバム登録だけで公開しません。家族原本を運営者が任意に閲覧できる権限は設けません。公開を選んだデータは第三者に閲覧され、外部コピーの回収はできません。\n\nそっくりの入力\n\n参考写真検索では、検索ボタンを押した時に犬猫写真の特徴数値・近重複判定用指紋・種類をSupabaseへ送信し、サーバーで候補を比較します。写真そのものは送信せず、送信した特徴を候補DB・履歴・アプリログへ保存しません。再試行用の候補ID・識別子は10分で利用終了し、期限切れ行は次回検索時に整理します。回数制限用のアカウントまたは端末識別子・日付・回数は当日を含む3日分を検索時に整理します。通信基盤の標準リクエストメタデータは別途保持される可能性があり、写真・特徴値をログに記録しない運用を行います。従来の公開Pet検索は端末内比較です。10分経過・画面終了・アプリ非アクティブ時に未保存入力を破棄します。アプリ内アルバムから選ぶ写真は、別途家族保存した写真です。会員の検索履歴には候補ID・状態等の記録を保存します。公開候補登録と外部共有は別の同意を用います。広告や汎用AI学習へ写真を自動転用しません。\n\n委託・国外処理・安全管理\n\n現在のサービス基盤はSupabaseを使用します。正式提供時は契約主体、処理地域、国外取扱いの情報、安全管理を確認し、必要な説明/同意を整えます。通信の保護、権限分離、Keychain、用途別公開、MFA、最小権限、失効再確認を採用します。委託先の契約やバックアップ機能が設定済みだとは断定しません。\n\n保持・削除\n\n非公開データは利用目的に必要な期間保管します。用途同意の撤回・削除受付で関連公開を終了します。アプリ内の退会手続にはログインと明示確認が必要です。採用する運用目標は原本/派生/Authの7日以内処理、暗号化バックアップ30日、技術ログ30日、安全監査180日、最小の復元抑止台帳365日です。これらの自動期限処理と常時運用は未配備であり、現在の利用者向け保証ではありません。正式提供前に実際の処理・復元時再削除を検証します。法律上必要な保全は理由・対象・期間を限定します。\n\n本人の権利・問い合わせ\n\nアプリからプロフィール編集、用途同意の撤回、写真削除、退会を行えます。開示・訂正・利用停止等の問い合わせは、nextedovation@gmail.comで本人確認のうえ対応します。パスワードや認証コードの送付は求めません。変更時は変更点と適用日を案内し、必要な同意を取得します。\n\n運営名：MEFRION。問い合わせ先：nextedovation@gmail.com。取扱主体の正式氏名/事業名・正式URL・発効日：本人情報/設定待ち。"
 }
 
 struct FamilyInviteView:View {
@@ -231,24 +226,30 @@ struct FamilyInviteView:View {
     @ObservedObject var client:CloudFamilyClient
     @State private var showQR=false
     @State private var cancel=false
+    @State private var replacingUnused=false
     private var shareValue:String? {client.invitation.map {"mefrion://family?token="+$0.token}}
     var body:some View {
         ScrollView {VStack(alignment:.leading,spacing:18) {
             PhotoHero(image:client.images.values.first,height:200)
             Text("大切な家族と、一緒に見守ろう").font(.title2.bold())
             Text(pet.name+"の家族アルバム").font(.headline)
-            Text("家族は写真の閲覧・追加ができます。公開操作や提供者の公開同意は別に確認します。").font(.caption).foregroundStyle(.secondary)
+            Text("招待した家族と、写真や動画を一緒に楽しめます。").font(.caption).foregroundStyle(.secondary)
             if let value=shareValue,let invite=client.invitation {
-                HStack {ShareLink(item:value) {Label("招待を共有",systemImage:"link")}.buttonStyle(CoralButtonStyle());Button("QRコードを表示") {showQR.toggle()}.buttonStyle(.bordered)}
+                HStack {ShareLink(item:value) {Label("招待リンクを送る",systemImage:"link")}.buttonStyle(CoralButtonStyle());Button("QRコードを表示") {showQR.toggle()}.buttonStyle(.bordered)}
                 if showQR,let qr=qrImage(value) {Image(uiImage:qr).interpolation(.none).resizable().scaledToFit().frame(height:220).frame(maxWidth:.infinity).accessibilityLabel("家族への招待QRコード")}
                 Text("有効期限："+invite.expires_at).font(.caption)
-                Label("1回だけ使える招待です",systemImage:"person.badge.plus").font(.subheadline)
+                Label("このリンクから参加できるのは1人です",systemImage:"person.badge.plus").font(.subheadline)
                 Button("招待を取り消す",role:.destructive) {cancel=true}.frame(minHeight:44)
-            } else {Button("招待を作成") {Task {await client.perform {try await client.invite(pet:pet.id)}}}.buttonStyle(CoralButtonStyle()).disabled(client.busy || pet.role != "owner")}
+            } else {Button("招待リンクを作る") {Task {await client.perform {do {try await client.invite(pet:pet.id)} catch FamilyInvitationError.limit {replacingUnused=true}}}}.buttonStyle(CoralButtonStyle()).disabled(client.busy || pet.role != "owner")}
             if client.busy {ProgressView()}
             if let error=client.error {Text(error).foregroundStyle(.red)}
-            Text("リンクを受け取る端末にもMEFRIONが必要です。Universal Linksは公開準備の工程で接続します。").font(.caption).foregroundStyle(.secondary)
+            Text("招待したい家族に、リンクかQRコードを送ってね。相手にもMEFRIONが必要です。").font(.caption).foregroundStyle(.secondary)
         }.padding(16)}.background(Theme.background).navigationTitle("家族を招待").navigationBarTitleDisplayMode(.inline).protectWhenInactive()
+            .task(id:pet.id) {await client.performRefresh {try await client.prepareInvitation(pet:pet.id)}}
+            .alert("古い招待リンクを作り直す？",isPresented:$replacingUnused) {
+                Button("古いリンクを取り消して作り直す",role:.destructive) {Task {await client.perform {try await client.invite(pet:pet.id,replacingUnused:true)}}}
+                Button("今はやめる",role:.cancel) {}
+            } message: {Text("使っていない招待リンクが5件残っています。このアルバムの未使用リンクをすべて無効にして、新しいリンクを1つ作ります。参加済みの家族はそのままです。")}
             .confirmationDialog("この招待を取り消しますか？",isPresented:$cancel) {Button("招待を取り消す",role:.destructive) {Task {await client.perform {try await client.cancelInvite()}}}}
     }
     private func qrImage(_ value:String)->UIImage? {
@@ -275,7 +276,7 @@ struct FamilyInvitationAcceptView:View {
                 Button("参加する") {let value=token;Task {await client.perform {try await client.accept(token:value,confirmed:confirmed);token="";joined=true}}}.buttonStyle(CoralButtonStyle()).disabled(!confirmed || token.isEmpty || client.busy)
             }
             if let error=client.error {Text(error).foregroundStyle(.red)}
-            Text("SNS・Twinsへの公開権限はこの参加操作で付与されません。").font(.caption).foregroundStyle(.secondary)
+            Text("SNS・そっくりへの公開権限はこの参加操作で付与されません。").font(.caption).foregroundStyle(.secondary)
         }.padding(24)}.background(Theme.background).navigationTitle("家族への招待").navigationBarTitleDisplayMode(.inline).protectWhenInactive().task {await client.restore()}
     }
 }
@@ -294,7 +295,7 @@ struct CloudPetPublicSettingsView:View {
             Text("現在の設定を推測せず、変更する設定を選びます。家族の元写真はどちらでも非公開のままです。").font(.caption).foregroundStyle(.secondary)
             HStack(spacing:12) {option("公開","globe",true);option("非公開","lock",false)}
             Button("選択した設定を保存") {confirming=true}.buttonStyle(CoralButtonStyle()).disabled(selectedPublic==nil || pet.role != "owner" || client.busy)
-            Label("Twinsへの参加",systemImage:"pawprint.fill").font(.headline)
+            Label("そっくりへの参加",systemImage:"pawprint.fill").font(.headline)
             Text("候補登録のクラウド接続は準備中です。家族の写真は自動登録しません。").font(.caption)
             if changed {Text("公開設定を保存しました").foregroundStyle(Theme.accent)}
             if let error=client.error {Text(error).foregroundStyle(.red)}
@@ -341,7 +342,7 @@ struct CloudPostEntryView:View {
             if client.authenticated {
                 if ownedPets.isEmpty {
                     ContentUnavailableView("うちの子の写真を投稿",systemImage:"pawprint",description:Text("写真を投稿するときに、うちの子を登録できます"))
-                    NavigationLink("うちの子を登録") {CloudFamilyView()}.buttonStyle(CoralButtonStyle()).frame(maxWidth:.infinity)
+                    NavigationLink("うちの子を登録") {CloudFamilyView(registrationOnly:true)}.buttonStyle(CoralButtonStyle()).frame(maxWidth:.infinity)
                 } else if let pet=chosenPet {
                     if ownedPets.count>1 {
                         Text("誰の写真？").font(.subheadline.weight(.semibold))

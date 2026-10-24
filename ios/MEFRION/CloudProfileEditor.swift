@@ -1,6 +1,106 @@
 import SwiftUI
+import PhotosUI
+import ImageIO
+
+/// A bounded, metadata-free thumbnail. Never place full photos in Auth/JWT data.
+enum ProfileIconCodec {
+    static let maximumBytes=16384
+    static func encode(data:Data)->String? {
+        guard let source=CGImageSourceCreateWithData(data as CFData,nil),
+              let image=CGImageSourceCreateThumbnailAtIndex(source,0,[kCGImageSourceCreateThumbnailFromImageAlways:true,kCGImageSourceCreateThumbnailWithTransform:true,kCGImageSourceThumbnailMaxPixelSize:1024] as CFDictionary) else{return nil}
+        return encode(image:UIImage(cgImage:image))
+    }
+    static func encode(image:UIImage)->String? {
+        guard image.size.width>0,image.size.height>0 else{return nil}
+        for side in [256.0,192.0,128.0] {
+            let format=UIGraphicsImageRendererFormat();format.scale=1;format.opaque=true
+            let scale=max(side/image.size.width,side/image.size.height)
+            let size=CGSize(width:image.size.width*scale,height:image.size.height*scale)
+            let thumbnail=UIGraphicsImageRenderer(size:CGSize(width:side,height:side),format:format).image {context in
+                UIColor.white.setFill();context.fill(CGRect(x:0,y:0,width:side,height:side))
+                image.draw(in:CGRect(x:(side-size.width)/2,y:(side-size.height)/2,width:size.width,height:size.height))
+            }
+            for quality in [0.8,0.6,0.4] {
+                if let jpeg=thumbnail.jpegData(compressionQuality:quality),jpeg.count<=maximumBytes {return jpeg.base64EncodedString()}
+            }
+        }
+        return nil
+    }
+    static func image(_ value:String?)->UIImage? {
+        guard let value,value.count<=22500,let bytes=Data(base64Encoded:value,options:.ignoreUnknownCharacters),bytes.count<=maximumBytes else{return nil}
+        return UIImage(data:bytes)
+    }
+}
+
+struct ProfileIconImage:View {
+    let encoded:String?
+    var size:CGFloat=48
+    var fallback="pawprint.fill"
+    @State private var image:UIImage?
+    @State private var decodedValue:String?
+    var body:some View {
+        ZStack {
+            Circle().fill(Theme.accent.opacity(0.1))
+            if let image,decodedValue==encoded {
+                Image(uiImage:image).resizable().scaledToFill()
+            } else {Image(systemName:fallback).font(.system(size:size*0.4)).foregroundStyle(Theme.actionText)}
+        }.frame(width:size,height:size).clipShape(Circle())
+            .task(id:encoded) {image=ProfileIconCodec.image(encoded);decodedValue=encoded}
+    }
+}
+
+struct EditableProfileIcon:View {
+    @Binding var encoded:String?
+    @Binding var changed:Bool
+    @State private var selection:PhotosPickerItem?
+    @Binding var importing:Bool
+    @State private var requestID=UUID()
+    @State private var error:String?
+    var body:some View {
+        VStack(spacing:9) {
+            PhotosPicker(selection:$selection,matching:.images) {
+                HStack(spacing:16) {
+                    ProfileIconImage(encoded:encoded,size:72)
+                        .overlay(alignment:.bottomTrailing) {
+                            Image(systemName:"camera.fill").font(.caption).foregroundStyle(.white)
+                                .frame(width:28,height:28).background(Theme.accent,in:Circle())
+                        }
+                    VStack(alignment:.leading,spacing:6) {
+                        Text("写真を変更").font(.subheadline.weight(.semibold)).foregroundStyle(Theme.actionText)
+                        Text("プロフィールやコメントにも表示されます。")
+                            .font(.caption).foregroundStyle(Theme.secondaryText).multilineTextAlignment(.leading)
+                    }
+                    Spacer(minLength:0)
+                }
+            }.buttonStyle(.borderless).disabled(importing)
+                .accessibilityIdentifier("profile-icon-picker")
+            if importing {ProgressView("写真を準備中")}
+            if encoded != nil {
+                Button("写真を外す") {requestID=UUID();encoded=nil;changed=true;selection=nil;importing=false}
+                    .font(.caption).foregroundStyle(Theme.secondaryText).buttonStyle(.borderless)
+                    .accessibilityIdentifier("profile-icon-remove")
+            }
+            if let error {Text(error).font(.caption).foregroundStyle(.red)}
+        }.frame(maxWidth:.infinity).padding(.vertical,10)
+        .onChange(of:selection) {_,item in
+            guard let item else{return}
+            importing=true;error=nil;let request=UUID();requestID=request
+            Task {
+                defer {if requestID==request {importing=false}}
+                do {
+                    guard let data=try await item.loadTransferable(type:Data.self) else {throw CocoaError(.fileReadCorruptFile)}
+                    let value=await Task.detached(priority:.userInitiated) {ProfileIconCodec.encode(data:data)}.value
+                    guard let value else {throw CocoaError(.fileReadCorruptFile)}
+                    guard requestID==request else{return}
+                    encoded=value;changed=true
+                } catch {if requestID==request {self.error="写真を選び直してね"}}
+            }
+        }
+    }
+}
 
 struct CloudProfileEditor:View {
+    @Environment(\.dismiss) private var dismiss
     let pet:CloudPet
     @ObservedObject var client:CloudFamilyClient
     @State private var name=""
@@ -12,62 +112,160 @@ struct CloudProfileEditor:View {
     @State private var age=""
     @State private var temperament=""
     @State private var life="living"
-    @State private var icon=""
+    @State private var familyIcon=""
     @State private var cover=""
+    @State private var icon:String?
+    @State private var iconChanged=false
+    @State private var importingIcon=false
     @State private var fields:Set<String>=[]
     @State private var saved=false
+    @State private var initialized=false
+    @State private var albumPhotos:[CloudPhoto]=[]
+    @State private var photoPurpose:String?
+    @State private var showAlbumPicker=false
     @State private var twinPhoto=""
     @State private var twinConfirmed=false
     @State private var twinKey=UUID()
     @State private var twinMessage:String?
-    private let labels=[("breed","種類"),("introduction","紹介"),("sex","性別"),("birthday","誕生日"),("arrival","お迎え日"),("age_basis","年齢の根拠"),("temperament","性格"),("life_status","状態")]
+    @State private var photoError:String?
+    private let labels=[("breed","品種"),("introduction","自己紹介"),("sex","性別"),("birthday","誕生日"),("arrival","お迎え日"),("age_basis","年齢"),("temperament","性格"),("life_status","状態")]
+    private var valid:Bool {
+        (1...40).contains(name.trimmingCharacters(in:.whitespacesAndNewlines).count) && breed.count<=100 && intro.count<=500 && age.count<=100 && temperament.count<=200
+    }
     var body:some View {
         Form {
-            Section("Petのプロフィール") {
-                if let image=client.images[cover] {PhotoHero(image:image,height:180)}
-                TextField("なまえ",text:$name).accessibilityIdentifier("cloud-profile-name")
-                BreedAutocompleteField(species:pet.species,text:$breed,identifier:"cloud-profile-breed")
-                Picker("性別",selection:$sex) {Text("不明").tag("unknown");Text("男の子").tag("male");Text("女の子").tag("female")}
-                TextField("誕生日（年/月/日・空欄は不明）",text:$birthday)
-                TextField("お迎え日（年/月/日・空欄は不明）",text:$arrival)
-                TextField("年齢の根拠・推定",text:$age)
-                TextField("性格",text:$temperament)
-                TextField("紹介文",text:$intro,axis:.vertical)
-                Picker("Petの状態",selection:$life) {Text("通常").tag("living");Text("シニア").tag("senior");Text("亡くなった子").tag("deceased")}
-                Text("シニア・亡くなった子の写真もアルバムに残せます。通知はPet単位で休止できます。").font(.caption)
+            Section {EditableProfileIcon(encoded:$icon,changed:$iconChanged,importing:$importingIcon)}
+            Section("うちの子") {
+                LabeledContent("名前") {TextField("名前を入力",text:$name).multilineTextAlignment(.trailing).accessibilityIdentifier("cloud-profile-name")}
+                VStack(alignment:.leading,spacing:5) {
+                    Text(pet.species=="cat" ? "猫種" : "犬種").font(.caption).foregroundStyle(Theme.secondaryText)
+                    BreedAutocompleteField(species:pet.species,text:$breed,identifier:"cloud-profile-breed")
+                }
+                VStack(alignment:.leading,spacing:5) {
+                    Text("自己紹介").font(.caption).foregroundStyle(Theme.secondaryText)
+                    TextField("好きなことなど ♡",text:$intro,axis:.vertical).lineLimit(2...4)
+                        .accessibilityIdentifier("cloud-profile-introduction")
+                }
             }
-            Section("家族内プロフィールの写真") {
-                Picker("アイコン",selection:$icon) {Text("未設定").tag("");ForEach(client.photos) {Text($0.title.isEmpty ? ($0.captured ?? "日付不明")+" "+String($0.id.prefix(6)) : $0.title).tag($0.id)}}
-                Picker("カバー",selection:$cover) {Text("未設定").tag("");ForEach(client.photos) {Text($0.title.isEmpty ? ($0.captured ?? "日付不明")+" "+String($0.id.prefix(6)) : $0.title).tag($0.id)}}
-                Text("ここで選んだ家族写真は公開されません。公開画像は用途同意を経た投稿から表示します。").font(.caption)
+            Section {
+                DisclosureGroup("誕生日・性別など") {
+                    Picker("性別",selection:$sex) {Text("未設定").tag("unknown");Text("男の子").tag("male");Text("女の子").tag("female")}
+                    TextField("誕生日（例：2021-04-05）",text:$birthday).keyboardType(.numbersAndPunctuation)
+                    TextField("お迎え日（例：2021-06-01）",text:$arrival).keyboardType(.numbersAndPunctuation)
+                    TextField("年齢のメモ",text:$age)
+                    TextField("性格",text:$temperament)
+                    Picker("この子について",selection:$life) {Text("通常").tag("living");Text("シニア").tag("senior");Text("亡くなった子").tag("deceased")}
+                }
+                DisclosureGroup("公開する項目") {
+                    Text("公開プロフィールに表示する情報を選べます。").font(.caption).foregroundStyle(Theme.secondaryText)
+                    ForEach(labels,id:\.0) {field,label in Toggle(label,isOn:Binding(get:{fields.contains(field)},set:{if $0 {fields.insert(field)} else {fields.remove(field)}}))}
+                }
+                DisclosureGroup("アルバムの写真から選ぶ") {
+                    Button("アイコン写真を選ぶ") {photoPurpose="icon";showAlbumPicker=true}
+                    Button("カバー写真を選ぶ") {photoPurpose="cover";showAlbumPicker=true}
+                    if !cover.isEmpty {Button("カバー写真を外す") {cover=""}}
+                    Text("カバー写真は家族アルバム内だけに表示します。").font(.caption).foregroundStyle(Theme.secondaryText)
+                }
+                DisclosureGroup("そっくりへの掲載") {
+                    Picker("掲載する写真",selection:$twinPhoto) {Text("写真を選ぶ").tag("");ForEach(albumPhotos.filter{$0.media_kind != "video"}) {Text($0.title.isEmpty ? ($0.captured ?? "写真") : $0.title).tag($0.id)}}
+                    Toggle("公開プロフィールへの掲載を確認しました",isOn:$twinConfirmed)
+                    Text("他の提供者の写真は、その方のそっくり用途同意が必要です。").font(.caption)
+                    Button("この写真でそっくりに参加") {Task {await client.perform {
+                        if albumPhotos.first(where:{$0.id==twinPhoto})?.mine==true {try await client.consent(photo:twinPhoto,purpose:"twins",allowed:true)}
+                        try await client.setPublicProfile(pet:pet.id,enabled:true,explicit:true)
+                        let result=try await client.enrollTwins(pet:pet.id,photo:twinPhoto,key:twinKey)
+                        twinMessage=result.state=="pending" ? "参加を受け付けました" : "参加状態を確認しました"
+                    }}}.disabled(!twinConfirmed || twinPhoto.isEmpty || client.busy)
+                    if let twinMessage {Text(twinMessage).font(.caption)}
+                    Button("そっくりへの掲載をやめる",role:.destructive) {twinConfirmed=false;Task {await client.perform {try await client.withdrawTwins(pet:pet.id)}}}
+                }
             }
-            Section("公開プロフィールへ表示する項目") {
-                Text("名前と犬・猫の区分は公開プロフィールを有効にした場合に表示します。家族アルバムは非公開です。").font(.caption)
-                ForEach(labels,id:\.0) {field,label in Toggle(label,isOn:Binding(get:{fields.contains(field)},set:{if $0 {fields.insert(field)} else {fields.remove(field)}}))}
+            Section {
+                if let error=client.error {Text(error).font(.footnote).foregroundStyle(.red)}
+                if let photoError {Text(photoError).font(.caption).foregroundStyle(Theme.secondaryText)}
             }
-            Section("Twins候補への参加") {
-                Picker("掲載する写真",selection:$twinPhoto) {Text("選択してください").tag("");ForEach(client.photos) {Text($0.title.isEmpty ? ($0.captured ?? "日付不明") : $0.title).tag($0.id)}}
-                Toggle("公開プロフィールとTwins掲載への別同意を確認した",isOn:$twinConfirmed)
-                Text("他の提供者の写真は、その方のTwins用途同意が必要です。ご自身の写真は、この操作でTwins用途同意を記録します。SNS・外部共有の同意は追加しません。").font(.caption)
-                Button("この写真でTwinsに参加") {Task {await client.perform {if client.photos.first(where:{$0.id==twinPhoto})?.mine==true {try await client.consent(photo:twinPhoto,purpose:"twins",allowed:true)};try await client.setPublicProfile(pet:pet.id,enabled:true,explicit:true);let result=try await client.enrollTwins(pet:pet.id,photo:twinPhoto,key:twinKey);twinMessage=result.state=="pending" ? "参加を受け付けました。派生処理後に候補になります。" : "参加状態を確認しました。"}}}.disabled(!twinConfirmed || twinPhoto.isEmpty || client.busy)
-                if let twinMessage {Text(twinMessage).font(.caption)}
-                Button("このPetのTwins掲載を取り消す",role:.destructive) {twinConfirmed=false;Task {await client.perform {try await client.withdrawTwins(pet:pet.id)}}}.disabled(client.busy)
+        }.disabled(client.busy).scrollContentBackground(.hidden).background(Theme.background)
+            .navigationTitle("プロフィールを編集").navigationBarTitleDisplayMode(.inline).protectWhenInactive()
+            .safeAreaInset(edge:.top,spacing:0) {
+                if saved {
+                    Label("保存したよ ♡",systemImage:"checkmark.circle.fill").font(.subheadline.weight(.medium))
+                        .foregroundStyle(Theme.actionText).frame(maxWidth:.infinity).padding(.vertical,9)
+                        .background(Theme.accent.opacity(0.08)).accessibilityIdentifier("cloud-profile-saved")
+                }
             }
-            Button("プロフィールを保存") {Task {await client.perform {
-                var details=["sex":sex,"age_basis":age,"temperament":temperament,"life_status":life]
-                if !birthday.isEmpty {details["birthday"]=birthday};if !arrival.isEmpty {details["arrival"]=arrival};if !icon.isEmpty {details["icon_photo"]=icon};if !cover.isEmpty {details["cover_photo"]=cover}
-                let selectedBreed=PetBreedCatalog.canonical(breed,species:pet.species) ?? breed.trimmingCharacters(in:.whitespacesAndNewlines)
-                try await client.updatePet(pet,name:name,breed:selectedBreed,introduction:intro,details:details,publicFields:fields.sorted());saved=true
-            }}}.disabled(client.busy || name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty).accessibilityIdentifier("cloud-profile-save")
-            if saved {Text("保存しました").accessibilityIdentifier("cloud-profile-saved")}
-            if let error=client.error {Text(error).foregroundStyle(.red)}
-        }.scrollContentBackground(.hidden).background(Theme.background).navigationTitle("プロフィールを編集").protectWhenInactive()
-        .onChange(of:twinPhoto) {_,_ in twinKey=UUID();twinConfirmed=false}
-        .task {
-            name=pet.name;breed=pet.breed;intro=pet.introduction
-            let d=pet.details ?? [:];sex=d["sex"] ?? "unknown";birthday=d["birthday"] ?? "";arrival=d["arrival"] ?? "";age=d["age_basis"] ?? "";temperament=d["temperament"] ?? "";life=d["life_status"] ?? "living";icon=d["icon_photo"] ?? "";cover=d["cover_photo"] ?? "";fields=Set(pet.public_fields ?? ["breed","introduction"])
-            await client.perform {try await client.loadAlbum(pet:pet.id)}
-        }
+            .toolbar {ToolbarItem(placement:.topBarTrailing) {
+                Button(importingIcon ? "写真を準備中…" : client.busy ? "保存中…" : "保存") {save()}
+                    .fontWeight(.semibold).disabled(client.busy || importingIcon || !valid)
+                    .accessibilityIdentifier("cloud-profile-save")
+            }}
+            .onChange(of:client.currentUserID) {_,_ in dismiss()}
+            .onChange(of:twinPhoto) {_,_ in twinKey=UUID();twinConfirmed=false}
+            .onChange(of:[name,breed,intro,sex,birthday,arrival,age,temperament,life,cover]) {_,_ in saved=false}
+            .onChange(of:icon) {_,_ in if iconChanged {saved=false}}
+            .onChange(of:fields) {_,_ in saved=false}
+            .sheet(isPresented:$showAlbumPicker) {
+                NavigationStack {CloudProfileAlbumPhotoPicker(photos:photoPurpose=="icon" ? albumPhotos.filter(\.mine) : albumPhotos,client:client) {photo,image in
+                    if photoPurpose=="cover" {cover=photo.id}
+                    else if let encoded=ProfileIconCodec.encode(image:image) {icon=encoded;iconChanged=true;familyIcon=""}
+                    showAlbumPicker=false
+                }}
+            }
+            .task {
+                guard !initialized else{return};initialized=true
+                name=pet.name;breed=pet.breed;intro=pet.introduction;icon=pet.icon
+                let d=pet.details ?? [:]
+                sex=d["sex"] ?? "unknown";birthday=d["birthday"] ?? "";arrival=d["arrival"] ?? "";age=d["age_basis"] ?? "";temperament=d["temperament"] ?? "";life=d["life_status"] ?? "living"
+                familyIcon=d["icon_photo"] ?? "";cover=d["cover_photo"] ?? "";fields=Set(pet.public_fields ?? ["breed","introduction"])
+                do {albumPhotos=try await client.albumPhotos(pet:pet.id)} catch {photoError="アルバムの写真を読み込めませんでした"}
+                if icon==nil,!familyIcon.isEmpty,let image=try? await client.privatePhotoForDeviceSave(familyIcon),!iconChanged {icon=ProfileIconCodec.encode(image:image)}
+            }
+    }
+    private func save() {
+        Task {await client.perform {
+            var details=["sex":sex,"age_basis":age,"temperament":temperament,"life_status":life]
+            if !birthday.isEmpty {details["birthday"]=birthday};if !arrival.isEmpty {details["arrival"]=arrival}
+            if !familyIcon.isEmpty,!iconChanged {details["icon_photo"]=familyIcon};if !cover.isEmpty {details["cover_photo"]=cover}
+            let selectedBreed=PetBreedCatalog.canonical(breed,species:pet.species) ?? breed.trimmingCharacters(in:.whitespacesAndNewlines)
+            try await client.updatePetProfile(pet,name:name,breed:selectedBreed,introduction:intro,details:details,publicFields:fields.sorted(),icon:icon,iconChanged:iconChanged)
+            if iconChanged {familyIcon=""}
+            iconChanged=false;saved=true
+        }}
+    }
+}
+
+private struct CloudProfileAlbumPhotoPicker:View {
+    let photos:[CloudPhoto]
+    @ObservedObject var client:CloudFamilyClient
+    let onPick:(CloudPhoto,UIImage)->Void
+    @Environment(\.dismiss) private var dismiss
+    var body:some View {
+        ScrollView {
+            if photos.filter({$0.media_kind != "video"}).isEmpty {ContentUnavailableView("写真はまだありません",systemImage:"photo",description:Text("アイコンは「写真を変更」からも選べます"))}
+            LazyVGrid(columns:Array(repeating:GridItem(.flexible(),spacing:8),count:3),spacing:8) {
+                ForEach(photos.filter{$0.media_kind != "video"}) {photo in
+                    CloudProfileAlbumPhoto(photo:photo,client:client,onPick:onPick)
+                }
+            }.padding(12)
+        }.background(Theme.background).navigationTitle("写真を選ぶ").navigationBarTitleDisplayMode(.inline)
+            .toolbar {ToolbarItem(placement:.cancellationAction) {Button("閉じる") {dismiss()}}}
+    }
+}
+private struct CloudProfileAlbumPhoto:View {
+    let photo:CloudPhoto
+    @ObservedObject var client:CloudFamilyClient
+    let onPick:(CloudPhoto,UIImage)->Void
+    @State private var image:UIImage?
+    var body:some View {
+        Button {if let image {onPick(photo,image)}} label: {
+            GeometryReader {geometry in
+                ZStack {
+                    RoundedRectangle(cornerRadius:12).fill(Theme.accent.opacity(0.08))
+                    if let image {Image(uiImage:image).resizable().scaledToFill().frame(width:geometry.size.width,height:geometry.size.height).clipped()}
+                    else {Image(systemName:"pawprint.fill").foregroundStyle(Theme.accent)}
+                }.clipShape(RoundedRectangle(cornerRadius:12))
+            }.aspectRatio(1,contentMode:.fit)
+        }.buttonStyle(.plain).disabled(image==nil).accessibilityLabel("この写真を選ぶ")
+            .task {image=try? await client.privatePhotoForDeviceSave(photo.id)}
     }
 }
 
@@ -102,6 +300,44 @@ enum PetBreedCatalog {
         let prefixMatches=names.filter{key($0).hasPrefix(query) || aliasTargets.contains($0)}
         let otherMatches=names.filter{key($0).contains(query) && !prefixMatches.contains($0)}
         return Array((prefixMatches+otherMatches).prefix(6))
+    }
+}
+
+struct PetSpeciesSelectionField:View {
+    @Binding var species:String
+    @Binding var selected:Bool
+    var body:some View {
+        if selected {
+            HStack {
+                Text(species=="cat" ? "🐱 猫" : "🐶 犬").font(.headline)
+                    .accessibilityIdentifier("pet-species-selected")
+                Spacer()
+                Button("変更") {selected=false}
+                    .font(.subheadline.weight(.semibold)).foregroundStyle(Theme.actionText)
+                    .frame(minHeight:44).buttonStyle(.borderless)
+                    .accessibilityLabel("犬・猫を選び直す")
+                    .accessibilityIdentifier("pet-species-change")
+            }
+        } else {
+            VStack(alignment:.leading,spacing:10) {
+                Text("犬・猫を選んでね").font(.subheadline.weight(.semibold))
+                HStack(spacing:12) {
+                    choice("dog",emoji:"🐶",name:"犬")
+                    choice("cat",emoji:"🐱",name:"猫")
+                }
+            }.padding(.vertical,6)
+        }
+    }
+    private func choice(_ value:String,emoji:String,name:String)->some View {
+        Button {species=value;selected=true} label: {
+            HStack(spacing:8) {
+                Text(emoji).font(.system(size:30))
+                Text(name).font(.headline)
+            }.foregroundStyle(Theme.actionText).frame(maxWidth:.infinity,minHeight:66)
+                .background(Theme.accent.opacity(0.09),in:RoundedRectangle(cornerRadius:16))
+                .overlay {RoundedRectangle(cornerRadius:16).strokeBorder(Theme.accent.opacity(0.25),lineWidth:1)}
+        }.buttonStyle(.borderless).accessibilityLabel(name+"を選ぶ")
+            .accessibilityIdentifier("pet-species-"+value)
     }
 }
 
@@ -175,10 +411,6 @@ struct CloudEventsView:View {
     @State private var kind="birthday"
     @State private var note=""
     @State private var key=UUID()
-    @State private var frequency="off"
-    @State private var milestones=false
-    @State private var pause=false
-    @State private var pausedUntil=Date().addingTimeInterval(86400*7)
     @State private var deleting:String?
     @State private var editing:CloudEvent?
     var body:some View {
@@ -191,17 +423,10 @@ struct CloudEventsView:View {
                 Button("節目を保存") {let requestKey=key;Task {await client.perform {try await client.saveEvent(pet:pet.id,key:requestKey,captured:captured.isEmpty ? nil : captured,title:title,kind:kind,note:note);events=try await client.events(pet:pet.id);title="";note="";key=UUID()}}}.disabled(client.busy || title.isEmpty).accessibilityIdentifier("cloud-event-save")
             }
             Section("家族だけの節目") {ForEach(events) {event in VStack(alignment:.leading) {Text(event.title).font(.headline);Text(event.captured ?? "日付不明");Text(event.note);if event.mine {Button("この節目を編集") {editing=event};Button("この節目を削除",role:.destructive) {deleting=event.id}}}}}
-            Section("このPetの通知") {
-                Picker("家族の新着",selection:$frequency) {Text("オフ").tag("off");Text("すぐに").tag("immediate");Text("まとめて").tag("batched")}
-                Toggle("節目のお知らせを希望する",isOn:$milestones)
-                Toggle("通知を休止する",isOn:$pause)
-                if pause {DatePicker("休止終了",selection:$pausedUntil,in:Date()...Date().addingTimeInterval(86400*365),displayedComponents:.date)}
-                Button("通知設定を保存") {Task {await client.perform {try await client.savePetNotifications(pet:pet.id,frequency:frequency,milestones:milestones,paused:pause ? ISO8601DateFormatter().string(from:pausedUntil) : nil)}}}
-                Text("通知をオフにしてもアルバムを利用できます。Push配信の接続確認は別途必要です。").font(.caption)
-            }
+            Section {NavigationLink("通知設定") {CloudNotificationSettingsView(client:client)}}
             if let error=client.error {Text(error).foregroundStyle(.red)}
-        }.navigationTitle("節目・通知休止").protectWhenInactive()
-        .task {await client.performRefresh {events=try await client.events(pet:pet.id);let settings=try await client.petNotifications(pet:pet.id);frequency=settings.frequency;milestones=settings.milestones;pause=settings.paused_until != nil;if let date=settings.paused_until.flatMap({ISO8601DateFormatter().date(from:$0)}) {pausedUntil=date}}}
+        }.navigationTitle("記念日").protectWhenInactive()
+        .task {await client.performRefresh {events=try await client.events(pet:pet.id)}}
         .onChange(of:captured) {_,_ in key=UUID()}.onChange(of:title) {_,_ in key=UUID()}.onChange(of:kind) {_,_ in key=UUID()}.onChange(of:note) {_,_ in key=UUID()}
         .sheet(item:$editing,onDismiss:{Task {await client.perform {events=try await client.events(pet:pet.id)}}}) {event in NavigationStack {CloudMilestoneEditor(event:event,client:client)}}
         .confirmationDialog("この節目を削除しますか？",isPresented:Binding(get:{deleting != nil},set:{if !$0 {deleting=nil}})) {Button("削除",role:.destructive) {if let id=deleting {Task {await client.perform {try await client.deleteEvent(id);events=try await client.events(pet:pet.id)}}};deleting=nil}}

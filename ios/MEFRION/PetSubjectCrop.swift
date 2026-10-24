@@ -91,26 +91,98 @@ actor PetPostValidator {
 /// Otherwise the detected animal region is retained, without inventing a face.
 enum PetSubjectCrop {
     struct Result {let image:CGImage;let kind:String;let bounds:CGRect}
+    struct Subject {
+        let species:String
+        let confidence:Float
+        /// Vision coordinates: normalized, bottom-left origin, relative to the unpadded input.
+        let boundingBox:CGRect
+    }
     static func detectSpecies(_ image:CGImage) throws->String {
-        let request=VNRecognizeAnimalsRequest();request.revision=2
-        #if targetEnvironment(simulator)
+        guard let best=try locate(image).max(by:{$0.confidence<$1.confidence}) else {throw PetVisualError.species}
+        return best.species
+    }
+    /// Keep the original detection unchanged when it works. Only difficult close-ups
+    /// pay for a second scale or image classification; no species is assumed from user input.
+    static func locate(_ image:CGImage,species:String?=nil) throws->[Subject] {
+        guard min(image.width,image.height)>=80 else {throw PetVisualError.photo}
+        if let species,!["dog","cat"].contains(species) {throw PetVisualError.species}
+        func accepted(_ values:[Subject])->[Subject] {values.filter{species==nil || $0.species==species}}
+        let original=try detectObjects(image)
+        let matches=accepted(original)
+        if !matches.isEmpty {return matches}
+        // Do not relabel an already recognized dog as a cat (or vice versa).
+        if !original.isEmpty {throw PetVisualError.species}
+        var views:[CGImage]=[image]
+        for padding in [0.2,0.45] {
+            try Task.checkCancellation()
+            guard let padded=paddedView(image,padding:padding) else {continue}
+            views.append(padded.image)
+            let mapped=try detectObjects(padded.image).compactMap {subject->Subject? in
+                let box=CGRect(x:(subject.boundingBox.minX*CGFloat(padded.image.width)-padded.content.minX)/padded.content.width,
+                               y:(subject.boundingBox.minY*CGFloat(padded.image.height)-padded.content.minY)/padded.content.height,
+                               width:subject.boundingBox.width*CGFloat(padded.image.width)/padded.content.width,
+                               height:subject.boundingBox.height*CGFloat(padded.image.height)/padded.content.height)
+                    .intersection(CGRect(x:0,y:0,width:1,height:1))
+                guard !box.isNull,box.width*CGFloat(image.width)>=32,box.height*CGFloat(image.height)>=32 else{return nil}
+                return Subject(species:subject.species,confidence:subject.confidence,boundingBox:box)
+            }
+            let matches=accepted(mapped)
+            if !matches.isEmpty {return matches}
+            if !mapped.isEmpty {throw PetVisualError.species}
+        }
+        // Object localization can fail when ears/body extend beyond the photo.
+        // Classification can still recognize the portrait; retain the whole input then.
+        for view in views {
+            try Task.checkCancellation()
+            let request=VNClassifyImageRequest();request.revision=1
+            configure(request)
+            do {try VNImageRequestHandler(cgImage:view).perform([request])}
+            catch {throw PetVisualError.processing}
+            let scores=Dictionary((request.results ?? []).map{($0.identifier.lowercased(),$0.confidence)},uniquingKeysWith:max)
+            if let detected=classificationSpecies(scores),species==nil || detected==species {
+                return [Subject(species:detected,confidence:scores[detected] ?? 0,boundingBox:CGRect(x:0,y:0,width:1,height:1))]
+            }
+        }
+        throw PetVisualError.species
+    }
+    static func classificationSpecies(_ scores:[String:Float])->String? {
+        // Exact identifiers exclude "hotdog", "prairie_dog" and "caterpillar".
+        let dog=scores["dog"] ?? 0,cat=scores["cat"] ?? 0
+        let best=max(dog,cat),other=min(dog,cat),overall=scores.values.max() ?? 0
+        guard best>=0.55,best-other>=0.2,best>=overall*0.75 else{return nil}
+        return dog>cat ? "dog" : "cat"
+    }
+    private static func configure(_ request:VNRequest) {
+        #if targetEnvironment(simulator) || os(macOS)
         request.usesCPUOnly=true
         #endif
+    }
+    private static func detectObjects(_ image:CGImage) throws->[Subject] {
+        let request=VNRecognizeAnimalsRequest();request.revision=2;configure(request)
         do {try VNImageRequestHandler(cgImage:image).perform([request])}
         catch {throw PetVisualError.processing}
-        let labels=(request.results ?? []).flatMap(\.labels)
-            .filter{["dog","cat"].contains($0.identifier.lowercased()) && $0.confidence>=0.35}
-        guard let best=labels.max(by:{$0.confidence<$1.confidence}) else {throw PetVisualError.species}
-        return best.identifier.lowercased()
+        return (request.results ?? []).compactMap {observation in
+            guard let label=observation.labels.filter({["dog","cat"].contains($0.identifier.lowercased()) && $0.confidence>=0.35})
+                .max(by:{$0.confidence<$1.confidence}) else{return nil}
+            return Subject(species:label.identifier.lowercased(),confidence:label.confidence,boundingBox:observation.boundingBox)
+        }
     }
-    static func crop(_ image:CGImage,species:String,single:Bool=true) throws->Result {
+    private static func paddedView(_ image:CGImage,padding:Double)->(image:CGImage,content:CGRect)? {
+        let scale=min(1,1024/Double(max(image.width,image.height)))
+        let width=max(1,Int(Double(image.width)*scale)),height=max(1,Int(Double(image.height)*scale))
+        let x=Int(Double(width)*padding),y=Int(Double(height)*padding)
+        guard let context=CGContext(data:nil,width:width+2*x,height:height+2*y,bitsPerComponent:8,bytesPerRow:0,
+            space:CGColorSpaceCreateDeviceRGB(),bitmapInfo:CGImageAlphaInfo.premultipliedLast.rawValue) else{return nil}
+        context.setFillColor(gray:0.5,alpha:1)
+        context.fill(CGRect(x:0,y:0,width:context.width,height:context.height))
+        let content=CGRect(x:x,y:y,width:width,height:height)
+        context.interpolationQuality = .high;context.draw(image,in:content)
+        guard let padded=context.makeImage() else{return nil}
+        return (padded,content)
+    }
+    static func crop(_ image:CGImage,species:String,single:Bool=true,subjects:[Subject]?=nil) throws->Result {
         guard ["dog","cat"].contains(species),min(image.width,image.height)>=80 else {throw PetVisualError.photo}
-        let request=VNRecognizeAnimalsRequest();request.revision=2
-        #if targetEnvironment(simulator)
-        request.usesCPUOnly=true
-        #endif
-        try VNImageRequestHandler(cgImage:image).perform([request])
-        let animals=(request.results ?? []).filter{$0.labels.contains{$0.identifier.lowercased()==species && $0.confidence>=0.35}}
+        let animals=try (subjects ?? locate(image,species:species)).filter{$0.species==species}
         guard !animals.isEmpty else {throw PetVisualError.species}
         if single && animals.count>1 {throw PetVisualError.photo}
         let animal=animals.max{$0.boundingBox.width*$0.boundingBox.height < $1.boundingBox.width*$1.boundingBox.height}!
@@ -141,7 +213,6 @@ enum PetSubjectCrop {
                 guard min(candidate.width,candidate.height)>=48,candidate.width*candidate.height>=box.width*box.height*0.025 else{continue}
                 heads.append(candidate)
             }
-            if single && heads.count>1 {throw PetVisualError.photo}
             if let head=heads.max(by:{$0.width*$0.height < $1.width*$1.height}) {box=head;kind="head"}
         }
         guard min(box.width,box.height)>=32,let cropped=image.cropping(to:box) else {throw PetVisualError.photo}

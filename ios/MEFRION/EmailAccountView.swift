@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 enum SignupRequirements {
     static func validEmail(_ email:String)->Bool {
@@ -7,14 +8,27 @@ enum SignupRequirements {
         return parts.count==2 && !parts[0].isEmpty && parts[1].contains(".") && !address.contains(" ")
     }
 
+    static let minimumPasswordLength=12
+    static func validationMessage(email:String,password:String,confirmation:String,adult:Bool,confirmed:Bool)->String? {
+        if !validEmail(email) {return "メールアドレスを確認してね"}
+        if password.isEmpty {return "パスワードを入力してね"}
+        if password.count<minimumPasswordLength {return "パスワードは12文字以上にしてね"}
+        if confirmation.isEmpty {return "確認用のパスワードも入力してね"}
+        if password != confirmation {return "2つのパスワードを同じにしてね"}
+        if !adult {return "18歳以上の確認をオンにしてね"}
+        if !confirmed {return "データの取り扱いを確認してね"}
+        return nil
+    }
     static func valid(email:String,password:String,confirmation:String,adult:Bool,confirmed:Bool)->Bool {
-        validEmail(email) && password.count>=12 && password==confirmation && adult && confirmed
+        validationMessage(email:email,password:password,confirmation:confirmation,adult:adult,confirmed:confirmed)==nil
     }
 }
 
 struct EmailAccountView:View {
     @ObservedObject var client:CloudFamilyClient
     @Environment(\.dismiss) private var dismiss
+    private enum Input:Hashable {case email,password,confirmation,code}
+    @FocusState private var focusedInput:Input?
     @State private var mode="login"
     @State private var email=""
     @State private var password=""
@@ -25,6 +39,7 @@ struct EmailAccountView:View {
     @State private var awaitingEmail=false
     @State private var passwordChanged=false
     @State private var notice:String?
+    @State private var attemptedSubmission=false
 
     init(client:CloudFamilyClient,initialMode:String="login") {
         self.client=client
@@ -32,6 +47,12 @@ struct EmailAccountView:View {
     }
 
     private var address:String {email.trimmingCharacters(in:.whitespacesAndNewlines)}
+    private var validationMessage:String? {
+        if mode=="signup" {return SignupRequirements.validationMessage(email:address,password:password,confirmation:passwordConfirmation,adult:adult,confirmed:confirmed)}
+        if !SignupRequirements.validEmail(address) {return "メールアドレスを確認してね"}
+        if mode=="login" && password.isEmpty {return "パスワードを入力してね"}
+        return nil
+    }
     private var canSubmit:Bool {
         guard !client.busy,SignupRequirements.validEmail(address) else{return false}
         switch mode {
@@ -67,7 +88,8 @@ struct EmailAccountView:View {
         .background(Theme.background)
         .navigationTitle("アカウント")
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of:mode) {_,_ in password="";passwordConfirmation="";code="";awaitingEmail=false;passwordChanged=false;notice=nil}
+        .toolbar {ToolbarItemGroup(placement:.keyboard) {Spacer();Button("完了") {focusedInput=nil;UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),to:nil,from:nil,for:nil)}}}
+        .onChange(of:mode) {_,_ in password="";passwordConfirmation="";code="";awaitingEmail=false;passwordChanged=false;notice=nil;attemptedSubmission=false;focusedInput=nil;UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),to:nil,from:nil,for:nil)}
         .protectWhenInactive()
     }
 
@@ -108,35 +130,49 @@ struct EmailAccountView:View {
 
     private var credentialsCard:some View {
         VStack(alignment:.leading,spacing:12) {
-            TextField("メールアドレス",text:$email)
+            inputLabel("メールアドレス")
+            TextField("例：pet@example.com",text:$email)
                 .textContentType(.emailAddress).textInputAutocapitalization(.never)
                 .autocorrectionDisabled().keyboardType(.emailAddress)
-                .textFieldStyle(AuthInputStyle()).accessibilityLabel("メールアドレス").accessibilityIdentifier("account-email")
+                .textFieldStyle(AuthInputStyle()).focused($focusedInput,equals:.email)
+                .submitLabel(mode=="recovery" ? .done : .next)
+                .onSubmit {focusedInput=mode=="recovery" ? nil : .password}
+                .accessibilityLabel("メールアドレス").accessibilityIdentifier("account-email")
 
             if mode != "recovery" {
-                SecureField(mode=="signup" ? "パスワード（12文字以上）" : "パスワード",text:$password)
-                    .textContentType(mode=="signup" ? .newPassword : .password)
-                    .textFieldStyle(AuthInputStyle()).accessibilityLabel("パスワード").accessibilityIdentifier("account-password")
+                inputLabel(mode=="signup" ? "パスワード（12文字以上）" : "パスワード")
+                passwordInput(text:$password,confirmation:false)
             }
 
             if mode=="signup" {
-                SecureField("パスワードをもう一度",text:$passwordConfirmation)
-                    .textContentType(.newPassword)
-                    .textFieldStyle(AuthInputStyle()).accessibilityIdentifier("account-password-confirmation")
-                if !passwordConfirmation.isEmpty && password != passwordConfirmation {
+                inputLabel("パスワードの確認")
+                passwordInput(text:$passwordConfirmation,confirmation:true)
+                if !attemptedSubmission && !passwordConfirmation.isEmpty && password != passwordConfirmation {
                     Text("パスワードが一致しません").font(.caption).foregroundStyle(.red)
                 }
-                Toggle("18歳以上です",isOn:$adult).tint(Theme.accent).font(.subheadline)
-                Toggle("データの取り扱いを確認しました",isOn:$confirmed).tint(Theme.accent).font(.subheadline)
+                Toggle("18歳以上です",isOn:$adult).tint(Theme.accent).font(.subheadline).accessibilityIdentifier("account-adult")
+                Toggle("データの取り扱いを確認しました",isOn:$confirmed).tint(Theme.accent).font(.subheadline).accessibilityIdentifier("account-privacy")
                 NavigationLink("データの取り扱いを見る") {PrivacyInformationView()}
                     .font(.caption.weight(.semibold)).foregroundStyle(Theme.actionText)
             }
 
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--ui-test-isolated"),ProcessInfo.processInfo.arguments.contains("--ui-signup-fixture") {
+                Text("入力\(password.count)・確認\(passwordConfirmation.count)")
+                    .font(.caption2).accessibilityIdentifier("signup-fixture-counts")
+            }
+            #endif
+            if attemptedSubmission,let validationMessage {
+                Label(validationMessage,systemImage:"heart.circle")
+                    .font(.subheadline.weight(.medium)).foregroundStyle(Theme.actionText)
+                    .fixedSize(horizontal:false,vertical:true)
+                    .accessibilityIdentifier("account-validation-message")
+            }
             Button(mode=="signup" ? "確認メールを送る" : mode=="recovery" ? "復旧メールを送る" : "ログイン") {submit()}
                 .frame(maxWidth:.infinity)
                 .buttonStyle(CoralButtonStyle())
-                .disabled(!canSubmit)
-                .opacity(canSubmit ? 1 : 0.45)
+                .disabled(client.busy)
+                .opacity(client.busy ? 0.45 : 1)
                 .accessibilityIdentifier("account-submit")
 
             if mode=="signup" {
@@ -154,6 +190,17 @@ struct EmailAccountView:View {
         .background(.white,in:RoundedRectangle(cornerRadius:24))
     }
 
+    private func passwordInput(text:Binding<String>,confirmation:Bool)->some View {
+        SecureField(confirmation ? "同じパスワードをもう一度" : mode=="signup" ? "12文字以上で入力" : "パスワードを入力",text:text)
+            .textContentType(mode=="login" ? .password : .newPassword)
+            .textInputAutocapitalization(.never).autocorrectionDisabled().keyboardType(.asciiCapable)
+            .textFieldStyle(AuthInputStyle())
+            .focused($focusedInput,equals:confirmation ? .confirmation : .password)
+            .submitLabel(mode=="signup" && !confirmation ? .next : .done)
+            .onSubmit {focusedInput=mode=="signup" && !confirmation ? .confirmation : nil}
+            .accessibilityLabel(confirmation ? "パスワードの確認" : "パスワード")
+            .accessibilityIdentifier(confirmation ? "account-password-confirmation" : "account-password")
+    }
     private func inputLabel(_ title:String)->some View {
         Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(Theme.text)
     }
@@ -164,7 +211,7 @@ struct EmailAccountView:View {
                 .font(.subheadline).foregroundStyle(Theme.secondaryText)
             inputLabel("確認コード")
             TextField("メールに届いた数字",text:$code)
-                .keyboardType(.numberPad).textContentType(.oneTimeCode)
+                .keyboardType(.numberPad).textContentType(.oneTimeCode).focused($focusedInput,equals:.code)
                 .textFieldStyle(AuthInputStyle())
                 .accessibilityIdentifier("account-verification-code")
             Button(recovery ? "コードを確認する" : "登録を完了する") {verifyCode(recovery:recovery)}
@@ -231,6 +278,8 @@ struct EmailAccountView:View {
     }
 
     private func submit() {
+        attemptedSubmission=true
+        guard canSubmit else{return}
         let supplied=password,action=mode,address=address,accepted=adult && confirmed
         notice=nil
         Task {await client.perform {

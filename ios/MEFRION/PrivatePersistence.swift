@@ -39,7 +39,8 @@ extension PrototypeStore {
             return PhotoRecord(id:photo.id,petID:photo.petID,image:image,fingerprint:photo.fingerprint,captured:photo.captured,title:photo.title,eventKind:photo.eventKind,note:photo.note)
         }
         pets=snapshot.pets;photos=restored;cards=snapshot.cards;selectedPet=snapshot.selectedPet;twinsHistory=Self.recentTwinsHistory(snapshot.twinsHistory ?? [])
-        referenceTwinsHistory=(snapshot.referenceTwinsHistory ?? []).filter{let age=Date().timeIntervalSince($0.created);return age>=0 && age<86400}
+        referenceTwinsHistory=snapshot.referenceTwinsHistory ?? []
+        try pruneReferenceHistory()
     }
 
     func persistMutation(_ body: () throws -> Void) throws {

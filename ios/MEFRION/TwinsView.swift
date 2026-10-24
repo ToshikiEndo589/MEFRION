@@ -61,7 +61,7 @@ HStack {Label("そっくり",systemImage:"pawprint.fill").font(.headline).access
                 if let cameraError {Text(cameraError).foregroundStyle(.red).accessibilityIdentifier("twins-camera-error");Button("カメラの案内を閉じる") {self.cameraError=nil}}
                 if let image {Button("写真を切り抜く",systemImage:"crop") {cropInput=CropInput(image:image)}.disabled(loading).accessibilityIdentifier("twins-crop")}
                 if loading { ProgressView("選択画像を読み込み中") }
-                if let image { Image(uiImage: image).resizable().scaledToFit().frame(maxHeight: 220).accessibilityLabel("Twinsの入力写真・端末内のみ") }
+                if let image { Image(uiImage: image).resizable().scaledToFit().frame(maxHeight: 220).accessibilityLabel("そっくりの入力写真・端末内のみ") }
                 if let loadError { Text(loadError).foregroundStyle(.red) }
                 Picker("対象を確認・修正", selection: $species) { ForEach(Species.allCases) { Text($0.title).tag($0) } }.pickerStyle(.segmented).disabled(loading)
                 Picker("デモの検索状態", selection: $scenario) { ForEach(Array(zip(cases,labels)), id: \.0) { Text($0.1).tag($0.0) } }.disabled(loading)

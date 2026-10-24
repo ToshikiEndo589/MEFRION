@@ -58,10 +58,8 @@ struct ReferenceTwinsView:View {
     @State private var cameraFailure:String?
     @State private var cameraNeedsSettings=false
     @State private var crop:Crop?
-    @State private var publicPets=false
     @State private var showingDetails=false
     @State private var auth=false
-    @State private var saved=false
     @State private var sharing=false
     private let engine=ReferenceTwinsService.shared
     private struct Crop:Identifiable {let id=UUID();let image:UIImage}
@@ -150,9 +148,8 @@ struct ReferenceTwinsView:View {
             Button("閉じる",role:.cancel) {cameraFailure=nil}
         } message: {Text(cameraFailure ?? "")}
         .sheet(isPresented:$auth) {AuthenticationSheet(client:client)}
-        .sheet(isPresented:$publicPets) {NavigationStack {CloudTwinsView()}}
         .sheet(isPresented:$showingDetails) {NavigationStack {
-            ScrollView {Text("検索すると、写真の特徴データをサーバーへ送ります。写真そのものは送信・保存しません。候補はPexelsの写真で、同じ個体や血縁を判定する機能ではありません。入力写真は10分後、画面終了時、またはアプリを離れたときに破棄します。結果の履歴は自分で保存した場合のみ、候補IDを端末に24時間保持します。")
+            ScrollView {Text("検索すると、写真の特徴データをサーバーへ送ります。写真そのものはサーバーへ送りません。候補はPexelsの写真で、同じ個体や血縁を判定する機能ではありません。入力写真の原本は10分後、画面終了時、またはアプリを離れたときに破棄します。履歴には入力写真の小さな画像と検索結果をこの端末だけに24時間残します。期限切れの履歴は、アプリの利用・再起動時に削除します。")
                 .font(.subheadline).padding(20)}
             .navigationTitle("そっくりについて").toolbar {Button("閉じる") {showingDetails=false}}
         }}
@@ -167,7 +164,7 @@ struct ReferenceTwinsView:View {
     }
     private var optionsMenu:some View {
         Menu {
-            Button("公開Petから探す",systemImage:"pawprint") {publicPets=true}
+            NavigationLink {ReferenceHistoryView().toolbar(.visible,for:.navigationBar)} label: {Label("そっくりの履歴",systemImage:"clock.arrow.circlepath")}
             if let image {
                 Button("写真を調整",systemImage:"crop") {crop=Crop(image:image)}
                     .accessibilityIdentifier("reference-twins-crop")
@@ -175,8 +172,6 @@ struct ReferenceTwinsView:View {
                     .accessibilityIdentifier("reference-twins-discard")
             }
             if state=="results" {
-                Button(saved ? "履歴に保存済み" : "結果を履歴に保存",systemImage:"bookmark") {saveResult()}
-                    .disabled(saved).accessibilityIdentifier("reference-twins-save")
                 Button("共有カードを見る",systemImage:"square.and.arrow.up") {sharing=true}
                     .accessibilityIdentifier("reference-twins-share")
             }
@@ -258,11 +253,6 @@ struct ReferenceTwinsView:View {
             .accessibilityElement(children:.contain)
             .accessibilityIdentifier("reference-twins-main")
     }
-    private func saveResult() {
-        guard let owner=client.currentUserID,client.authenticated else {auth=true;return}
-        do {try store.saveReferenceSearch(owner:owner,species:species,candidates:results.map(\.id));saved=true}
-        catch {message=error.localizedDescription}
-    }
     private func openCamera() {
         if [.denied,.restricted].contains(AVCaptureDevice.authorizationStatus(for:.video)) {cameraNeedsSettings=true;cameraFailure="MEFRIONのカメラ使用が許可されていません。iPhoneの設定でカメラを許可してください。";return}
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else {cameraNeedsSettings=false;cameraFailure="カメラを利用できません。ほかのアプリが使用中の場合は閉じてからお試しください。写真を選ぶこともできます。";return}
@@ -284,11 +274,11 @@ struct ReferenceTwinsView:View {
             .font(.caption2).foregroundStyle(Theme.secondaryText).lineLimit(1)}}
     }
     private func cancel() {task?.cancel();task=nil;generation=UUID();working=false}
-    private func erase() {cancel();requestID=UUID();image=nil;results=[];state="";message=nil;expires=nil;picker=nil;crop=nil;sharing=false;saved=false}
-    private func replace(_ next:UIImage?) {cancel();requestID=UUID();image=next?.normalizedForTwins();results=[];state="";message=nil;expires=Date().addingTimeInterval(600);saved=false}
+    private func erase() {cancel();requestID=UUID();image=nil;results=[];state="";message=nil;expires=nil;picker=nil;crop=nil;sharing=false}
+    private func replace(_ next:UIImage?) {cancel();requestID=UUID();image=next?.normalizedForTwins();results=[];state="";message=nil;expires=Date().addingTimeInterval(600)}
     private func search() {
         guard let cg=image?.cgImage,let expires,expires>Date() else{return}
-        cancel();let stamp=generation;working=true;message=nil;results=[];state="";saved=false
+        cancel();let stamp=generation;let owner=client.authenticated ? (client.currentUserID ?? "guest") : "guest";working=true;message=nil;results=[];state=""
         task=Task {
             do {
                 let detectedSpecies=try await PetSpeciesDetection.shared.detect(cg)
@@ -297,6 +287,11 @@ struct ReferenceTwinsView:View {
                 let found=try await engine.search(image:cg,species:detectedSpecies,consent:true,request:requestID)
                 guard stamp==generation,!Task.isCancelled else{return}
                 results=found;state=found.isEmpty ? "insufficient" : "results"
+                let currentOwner=client.authenticated ? (client.currentUserID ?? "guest") : "guest"
+                if !found.isEmpty,owner==currentOwner {
+                    do {try store.saveReferenceSearch(owner:owner,species:detectedSpecies,candidates:found.map(\.id),id:requestID,queryImage:UIImage(cgImage:cg))}
+                    catch {message="結果は見られるけど、履歴を保存できなかったよ。もう一度検索してね。"}
+                }
             }
             catch {guard stamp==generation,!Task.isCancelled else{return};if let error=error as? PetVisualError {switch error {case .photo,.species:state="poor_photo";case .index,.processing:state="failure"}} else {state="failure"};message=error.localizedDescription}
             if stamp==generation {working=false}
@@ -307,23 +302,21 @@ struct ReferenceTwinsView:View {
 struct ReferenceHistoryView:View {
     @EnvironmentObject var store:PrototypeStore
     @ObservedObject private var client=CloudFamilyClient.shared
-    @State private var assets:[ReferencePetAsset]=[]
+    @State private var now=Date()
     @State private var error:String?
     private var records:[ReferenceSearchRecord] {
-        guard let owner=client.currentUserID,client.authenticated else{return []}
-        return store.referenceTwinsHistory.filter{$0.owner==owner && Date().timeIntervalSince($0.created)>=0 && Date().timeIntervalSince($0.created)<86400}
+        let owner=client.authenticated ? (client.currentUserID ?? "guest") : "guest"
+        return store.referenceTwinsHistory.filter{$0.owner==owner && now.timeIntervalSince($0.created)>=0 && now.timeIntervalSince($0.created)<86400}
             .sorted{$0.created>$1.created}
     }
     var body:some View {
         ScrollView {
-            VStack(alignment:.leading,spacing:18) {
-                if !client.authenticated {
-                    ContentUnavailableView("ログインすると見られるよ",systemImage:"pawprint",description:Text("保存したそっくりをここに集めよう ♡"))
-                } else if records.isEmpty {
+            LazyVStack(alignment:.leading,spacing:18) {
+                if records.isEmpty {
                     VStack(spacing:12) {
                         Image(systemName:"pawprint.fill").font(.system(size:52)).foregroundStyle(Theme.accent)
                         Text("まだ履歴はないよ ♡").font(.title3.bold()).foregroundStyle(Theme.actionText)
-                        Text("そっくりの結果を保存すると、ここに並ぶよ")
+                        Text("そっくりを探すと、ここに24時間並ぶよ")
                             .font(.subheadline).foregroundStyle(Theme.secondaryText)
                     }.frame(maxWidth:.infinity).padding(.vertical,60)
                         .background(.white,in:RoundedRectangle(cornerRadius:24))
@@ -338,39 +331,81 @@ struct ReferenceHistoryView:View {
                                     Image(systemName:"trash").font(.subheadline).frame(width:36,height:36)
                                 }.accessibilityLabel("この検索履歴を削除")
                             }
-                            HStack(spacing:8) {
-                                ForEach(record.candidates,id:\.self) {id in
-                                    candidatePhoto(id)
-                                }
+                            if let data=record.queryThumbnail,let photo=UIImage(data:data) {
+                                Text("検索した写真").font(.caption.bold()).foregroundStyle(Theme.secondaryText)
+                                Image(uiImage:photo).resizable().scaledToFit()
+                                    .frame(maxWidth:.infinity).frame(height:180)
+                                    .background(Theme.accent.opacity(0.06),in:RoundedRectangle(cornerRadius:18))
+                                    .clipShape(RoundedRectangle(cornerRadius:18))
+                                    .accessibilityLabel("この写真で検索したよ")
+                                    .accessibilityIdentifier("history-query-photo-"+record.id.uuidString)
+                                Image(systemName:"chevron.down").font(.caption.bold()).foregroundStyle(Theme.accent)
+                                    .frame(maxWidth:.infinity).accessibilityHidden(true)
+                            } else {
+                                Text("前の履歴のため、検索した写真は残っていないよ").font(.caption).foregroundStyle(Theme.secondaryText)
                             }
+                            Text("そっくりな子たち").font(.caption.bold()).foregroundStyle(Theme.actionText)
+                            ReferenceHistoryPhotos(ids:record.candidates)
                         }.padding(14).background(.white,in:RoundedRectangle(cornerRadius:22))
                     }
                     Button("履歴をすべて削除",role:.destructive) {
-                        guard let owner=client.currentUserID else{return}
+                        let owner=client.authenticated ? (client.currentUserID ?? "guest") : "guest"
                         do {try store.eraseReferenceHistory(owner:owner)} catch {self.error=error.localizedDescription}
                     }.frame(maxWidth:.infinity).padding(.top,8)
                 }
-                Text("写真は保存せず、結果だけを24時間残します。")
+                Text("検索した写真と結果は、この端末だけに24時間残るよ。")
                     .font(.caption).foregroundStyle(Theme.secondaryText).frame(maxWidth:.infinity)
                 if let error {Text(error).font(.footnote).foregroundStyle(.red)}
             }.padding(16)
         }.background(Theme.background).navigationTitle("そっくりの履歴")
-            .task {do {let ids=records.flatMap(\.candidates);assets=try await ReferenceTwinsService.shared.lookup(ids:ids)} catch {self.error=error.localizedDescription}}
+            .onAppear {prune()}
+            .onReceive(Timer.publish(every:30,on:.main,in:.common).autoconnect()) {_ in prune()}
     }
-    @ViewBuilder private func candidatePhoto(_ id:String)->some View {
-        if let asset=assets.first(where:{$0.id==id}),let image=ReferenceTwinsService.shared.image(asset) {
-            Image(uiImage:image).resizable().scaledToFill()
-                .frame(maxWidth:.infinity).frame(height:150).clipped()
-                .clipShape(RoundedRectangle(cornerRadius:14))
-        } else {
-            RoundedRectangle(cornerRadius:14).fill(Theme.accent.opacity(0.08))
-                .frame(maxWidth:.infinity).frame(height:150)
-                .overlay(Image(systemName:"pawprint").foregroundStyle(Theme.accent))
-        }
+    private func prune() {
+        now=Date()
+        do {try store.pruneReferenceHistory(now:now)} catch {self.error=error.localizedDescription}
     }
     private func remove(_ id:UUID) {
         do {try store.persistMutation {store.referenceTwinsHistory.removeAll{$0.id==id}}}
         catch {self.error=error.localizedDescription}
+    }
+}
+
+/// Load one visible search at a time; a 24-hour history can exceed the service's 60-ID lookup limit.
+private struct ReferenceHistoryPhotos:View {
+    let ids:[String]
+    @State private var photos:[String:UIImage]=[:]
+    @State private var loading=true
+    @State private var failed=false
+    @State private var attempt=0
+    var body:some View {
+        VStack(spacing:8) {
+            GeometryReader {geometry in
+            HStack(spacing:8) {
+                ForEach(ids,id:\.self) {id in
+                    Group {
+                        if let image=photos[id] {Image(uiImage:image).resizable().scaledToFill()}
+                        else {Rectangle().fill(Theme.accent.opacity(0.08)).overlay {
+                            Image(systemName:"pawprint.fill").foregroundStyle(Theme.accent.opacity(0.5))
+                        }}
+                    }.frame(width:max(0,(geometry.size.width-CGFloat(max(0,ids.count-1))*8)/CGFloat(max(1,ids.count))),height:150).clipped()
+                        .clipShape(RoundedRectangle(cornerRadius:14))
+                }
+            }
+            }.frame(height:150)
+            if failed {Button("写真をもう一度読み込む") {attempt+=1}.font(.caption)}
+            else if !loading && photos.isEmpty {Text("この結果は掲載が終了したよ").font(.caption).foregroundStyle(Theme.secondaryText)}
+        }.task(id:attempt) {
+            loading=true;failed=false
+            do {
+                let assets=try await ReferenceTwinsService.shared.lookup(ids:ids)
+                try Task.checkCancellation()
+                photos=Dictionary(uniqueKeysWithValues:assets.compactMap {asset in
+                    ReferenceTwinsService.shared.image(asset).map{(asset.id,$0)}
+                })
+                loading=false
+            } catch is CancellationError {} catch {loading=false;failed=true}
+        }
     }
 }
 

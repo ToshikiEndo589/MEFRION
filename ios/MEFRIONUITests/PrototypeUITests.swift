@@ -2,6 +2,113 @@ import XCTest
 
 @MainActor
 final class PrototypeUITests: XCTestCase {
+    func testMyPageBottomActionsStayAboveFloatingTabs() throws {
+        let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-album-fixture","--ui-profile-fixture"]
+        app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1";app.launch()
+        let tab=app.buttons["root-tab-マイページ"]
+        tab.tap()
+        XCTAssertTrue(app.buttons["open-account-profile"].waitForExistence(timeout:10))
+        let retirement=app.buttons["open-account-retirement"]
+        // Reach the actual resting bottom, rather than tapping during overscroll.
+        for _ in 0..<4 {app.scrollViews.firstMatch.swipeUp()}
+        XCTAssertTrue(retirement.isHittable)
+        XCTAssertLessThan(retirement.frame.maxY,tab.frame.minY-6)
+        capture(app,"My-page-bottom-clear-of-tabs")
+        retirement.tap()
+        XCTAssertTrue(app.navigationBars["退会・データ削除"].waitForExistence(timeout:5))
+        XCTAssertFalse(app.buttons["account-retirement-submit"].isEnabled)
+        app.navigationBars.buttons.firstMatch.tap()
+        let management=app.buttons["設定・管理"]
+        XCTAssertTrue(management.isHittable);management.tap()
+        for _ in 0..<2 {app.scrollViews.firstMatch.swipeUp()}
+        XCTAssertLessThan(retirement.frame.maxY,tab.frame.minY-6)
+        retirement.tap()
+        XCTAssertTrue(app.navigationBars["退会・データ削除"].waitForExistence(timeout:5))
+        app.navigationBars.buttons.firstMatch.tap()
+        for _ in 0..<6 {app.scrollViews.firstMatch.swipeDown()}
+        app.buttons["設定"].tap()
+        let settingsRetirement=app.buttons["アカウントを削除する"]
+        for _ in 0..<3 {app.swipeUp()}
+        XCTAssertTrue(settingsRetirement.isHittable)
+        XCTAssertLessThan(settingsRetirement.frame.maxY,tab.frame.minY-6)
+        settingsRetirement.tap()
+        XCTAssertTrue(app.navigationBars["退会・データ削除"].waitForExistence(timeout:5))
+        // Never confirm or submit account deletion in this navigation test.
+    }
+    func testSimpleAccountAndPetProfilesSaveAndReopen() throws {
+        let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-album-fixture","--ui-profile-fixture"]
+        app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1";app.launch()
+        app.buttons["root-tab-マイページ"].tap()
+        let account=app.buttons["open-account-profile"];XCTAssertTrue(account.waitForExistence(timeout:10));account.tap()
+        XCTAssertTrue(app.buttons["profile-icon-picker"].waitForExistence(timeout:10))
+        let remove=app.buttons["profile-icon-remove"];XCTAssertTrue(remove.waitForExistence(timeout:10));remove.tap()
+        let accountSave=app.buttons["account-profile-save"];reveal(accountSave,in:app);accountSave.tap()
+        XCTAssertTrue(app.staticTexts["account-profile-saved"].waitForExistence(timeout:10))
+        capture(app,"Simple-account-profile")
+        app.navigationBars.buttons.firstMatch.tap();account.tap()
+        XCTAssertFalse(app.buttons["profile-icon-remove"].exists,"Removing the account icon must survive reopening")
+        app.navigationBars.buttons.firstMatch.tap()
+        let pet=app.buttons.matching(NSPredicate(format:"identifier BEGINSWITH %@","cloud-pet-")).firstMatch
+        reveal(pet,in:app);pet.tap()
+        XCTAssertTrue(app.textFields["cloud-profile-name"].waitForExistence(timeout:10))
+        XCTAssertFalse(app.textFields["誕生日（例：2021-04-05）"].exists,"Optional details start collapsed")
+        let chooseAlbum=app.buttons["アルバムの写真から選ぶ"];reveal(chooseAlbum,in:app);chooseAlbum.tap()
+        app.buttons["アイコン写真を選ぶ"].tap()
+        let image=app.buttons["この写真を選ぶ"].firstMatch
+        XCTAssertTrue(image.waitForExistence(timeout:10));expectation(for:NSPredicate(format:"enabled == true"),evaluatedWith:image);waitForExpectations(timeout:10);image.tap()
+        let save=app.buttons["cloud-profile-save"];reveal(save,in:app);save.tap()
+        XCTAssertTrue(app.staticTexts["cloud-profile-saved"].waitForExistence(timeout:10))
+        capture(app,"Simple-pet-profile")
+        app.navigationBars.buttons.firstMatch.tap();reveal(pet,in:app);pet.tap()
+        XCTAssertTrue(app.buttons["profile-icon-remove"].waitForExistence(timeout:10),"Selected pet photo must survive reopening")
+    }
+    func testFamilyInviteLimitRecoveryAndReopenKeepsCreatedLink() throws {
+        let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-album-fixture","--ui-family-invite-fixture"]
+        app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1";app.launch()
+        app.buttons["root-tab-マイページ"].tap()
+        let settings=app.buttons["open-album-settings"]
+        XCTAssertTrue(settings.waitForExistence(timeout:10));reveal(settings,in:app);settings.tap()
+        XCTAssertFalse(app.buttons["プロフィール"].exists)
+        app.buttons["家族を招待"].tap()
+        let create=app.buttons["招待リンクを作る"]
+        XCTAssertTrue(create.waitForExistence(timeout:10));create.tap()
+        XCTAssertTrue(app.buttons["古いリンクを取り消して作り直す"].waitForExistence(timeout:10))
+        app.buttons["今はやめる"].tap()
+        XCTAssertTrue(create.exists,"Cancel must not create or replace any invite")
+        create.tap();app.buttons["古いリンクを取り消して作り直す"].tap()
+        XCTAssertTrue(app.buttons["招待リンクを送る"].waitForExistence(timeout:10))
+        XCTAssertTrue(app.staticTexts["このリンクから参加できるのは1人です"].exists)
+        app.navigationBars.buttons.element(boundBy:0).tap()
+        app.buttons["家族を招待"].tap()
+        XCTAssertTrue(app.buttons["招待リンクを送る"].waitForExistence(timeout:10))
+        XCTAssertFalse(create.exists,"Reopening must show the existing invite, not ask to create another")
+        capture(app,"Family-invite-recovered-and-restored")
+    }
+    func testPostDoubleTapOffersLoginWithoutStealingCarouselSwipe() throws {
+        let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-feed-fixture"]
+        app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1";app.launch()
+        let photo=app.images["cloud-public-image"].firstMatch
+        XCTAssertTrue(photo.waitForExistence(timeout:10))
+        photo.doubleTap()
+        XCTAssertTrue(app.buttons["auth-resume-cancel"].waitForExistence(timeout:10))
+    }
+    func testReferenceSearchAutomaticallyAppearsIn24HourHistory() throws {
+        let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-stock-twins"];app.launch()
+        app.buttons["root-tab-そっくり"].tap()
+        let sample=app.buttons["reference-twins-sample"]
+        XCTAssertTrue(sample.waitForExistence(timeout:15))
+        reveal(sample,in:app);sample.tap()
+        app.buttons["reference-twins-search"].tap()
+        XCTAssertTrue(app.staticTexts["そっくりな子、見つけた！"].waitForExistence(timeout:30))
+        app.buttons["reference-twins-more"].tap()
+        app.buttons["そっくりの履歴"].tap()
+        XCTAssertTrue(app.buttons["この検索履歴を削除"].firstMatch.waitForExistence(timeout:10))
+        XCTAssertFalse(app.staticTexts["まだ履歴はないよ ♡"].exists)
+        XCTAssertTrue(app.images.matching(NSPredicate(format:"identifier BEGINSWITH %@","history-query-photo-")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts["検索した写真"].exists)
+        XCTAssertTrue(app.staticTexts["そっくりな子たち"].exists)
+        capture(app,"Reference-auto-history-24-hours")
+    }
     func testHomeTabReselectScrollsToTopAndRefreshesFeed() throws {
         let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-feed-fixture"]
         app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1";app.launch()
@@ -94,6 +201,52 @@ final class PrototypeUITests: XCTestCase {
         let route=app.buttons["open-twins-history"]
         XCTAssertTrue(route.waitForExistence(timeout:10));reveal(route,in:app);route.tap()
         XCTAssertTrue(app.navigationBars["検索履歴"].waitForExistence(timeout:10))
+    }
+    private func dismissPasswordSuggestion(in app:XCUIApplication) {
+        // iOS presents its password generator in place of the keyboard. Typing
+        // through that remote view does not exercise normal password entry.
+        if app.buttons["GenerateStrongPasswordButton"].waitForExistence(timeout:2) {
+            app.buttons["xmark"].tap()
+        }
+    }
+    private func signupFixture(password:String)->XCUIApplication {
+        let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-signup-fixture"]
+        app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1";app.launch()
+        app.buttons["root-tab-マイページ"].tap()
+        let account=app.buttons["登録・ログイン"];XCTAssertTrue(account.waitForExistence(timeout:10));account.tap()
+        let registration=app.buttons["メールで新規登録"];reveal(registration,in:app);registration.tap()
+        let email=app.textFields["account-email"];XCTAssertTrue(email.waitForExistence(timeout:10));email.tap();email.typeText("pet.owner@example.com")
+        let field=app.secureTextFields["account-password"];reveal(field,in:app);field.tap();dismissPasswordSuggestion(in:app);app.typeText(password)
+        let countAfterPassword=app.staticTexts["signup-fixture-counts"].label
+        XCTContext.runActivity(named:"After primary input: "+countAfterPassword+" "+field.label) {_ in}
+        let confirmation=app.secureTextFields["account-password-confirmation"];reveal(confirmation,in:app);confirmation.tap();dismissPasswordSuggestion(in:app);app.typeText(password)
+        XCTContext.runActivity(named:"After confirmation input: "+app.staticTexts["signup-fixture-counts"].label+" "+field.label+" "+confirmation.label) {_ in}
+        if app.buttons["完了"].exists {app.buttons["完了"].firstMatch.tap()}
+        let adult=app.switches["account-adult"],privacy=app.switches["account-privacy"]
+        reveal(adult,in:app);adult.tap();reveal(privacy,in:app);privacy.tap()
+        return app
+    }
+    func testSignupSendButtonExplainsShortPasswordAndPrivacyIsSimplified() throws {
+        let app=signupFixture(password:"Paw12345")
+        let submit=app.buttons["account-submit"];reveal(submit,in:app)
+        XCTAssertTrue(submit.isEnabled);submit.tap()
+        XCTAssertTrue(app.staticTexts["パスワードは12文字以上にしてね"].waitForExistence(timeout:5))
+        capture(app,"Signup-actionable-password-help")
+        app.buttons["データの取り扱いを見る"].tap()
+        XCTAssertTrue(app.navigationBars["プライバシーと同意"].waitForExistence(timeout:5))
+        XCTAssertFalse(app.staticTexts["利用条件"].exists)
+        XCTAssertFalse(app.staticTexts["写真の公開"].exists)
+        XCTAssertFalse(app.staticTexts["Twins"].exists)
+        XCTAssertTrue(app.buttons["プライバシーポリシー"].exists || app.links["プライバシーポリシー"].exists)
+        capture(app,"Privacy-without-long-feature-explanations")
+    }
+    func testValidSignupReachesEmailCodeWithFloatingTabs() throws {
+        let app=signupFixture(password:"Paw12345more")
+        let submit=app.buttons["account-submit"];reveal(submit,in:app);XCTAssertTrue(submit.isEnabled);submit.tap()
+        XCTAssertTrue(app.textFields["account-verification-code"].waitForExistence(timeout:10))
+        XCTAssertTrue(app.buttons["root-tab-マイページ"].exists)
+        XCTAssertFalse(app.tabBars.firstMatch.exists,"Only the floating tab bar should be visible")
+        capture(app,"Signup-code-step-floating-tabs")
     }
     func testSignupExplainsRequirementsAndConfirmsPassword() throws {
         let app=XCUIApplication();app.launchArguments=["--ui-test-isolated"];app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1";app.launch()
@@ -330,24 +483,6 @@ final class PrototypeUITests: XCTestCase {
         }
         XCTAssertTrue(search.waitForExistence(timeout:10))
         XCTAssertTrue(search.isEnabled)
-    }
-    func testPublicPetTwinsCameraCapture() throws {
-        let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-stock-twins"];app.launch()
-        app.buttons["root-tab-そっくり"].tap()
-        let publicPet=app.buttons["公開Petから探す"]
-        reveal(publicPet,in:app);publicPet.tap()
-        let camera=app.buttons["写真を撮る"]
-        XCTAssertTrue(camera.waitForExistence(timeout:10));camera.tap()
-        let shutter=app.buttons["PhotoCapture"]
-        XCTAssertTrue(shutter.waitForExistence(timeout:10),"公開Pet検索のカメラが開きません")
-        shutter.tap()
-        let crop=app.buttons["写真を確認・切り抜く"]
-        if !crop.waitForExistence(timeout:5) {
-            let use=app.buttons["写真を使用"].exists ? app.buttons["写真を使用"] : app.buttons["Use Photo"]
-            XCTAssertTrue(use.waitForExistence(timeout:8));use.tap()
-        }
-        XCTAssertTrue(crop.waitForExistence(timeout:10))
-        XCTAssertTrue(app.buttons["cloud-twins-search"].isEnabled)
     }
     private func runReferenceTwinsPhotoSearch(server:Bool) throws {
         let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-stock-twins"]
@@ -630,7 +765,7 @@ final class PrototypeUITests: XCTestCase {
         let save=app.buttons["cloud-profile-save"];reveal(save,in:app);expectation(for:NSPredicate(format:"enabled == true"),evaluatedWith:save);waitForExpectations(timeout:30);save.tap()
         let saved=app.staticTexts["cloud-profile-saved"];reveal(saved,in:app);XCTAssertTrue(saved.waitForExistence(timeout:30));capture(app,"P1-cloud-profile-saved")
         app.navigationBars.buttons.firstMatch.tap()
-        let event=app.buttons["節目・通知休止"];reveal(event,in:app);event.tap()
+        let event=app.buttons["記念日"];reveal(event,in:app);event.tap()
         XCTAssertTrue(app.textFields["cloud-event-title"].waitForExistence(timeout:20));capture(app,"P1-cloud-events-and-pet-notifications")
     }
     func testUnifiedCloudHomeAndAccountSession() throws {
@@ -684,7 +819,7 @@ final class PrototypeUITests: XCTestCase {
         following.tap();XCTAssertEqual(following.value as? String,"選択中");recommended.tap()
         app.buttons["検索"].firstMatch.tap();XCTAssertTrue(app.textFields["public-search-input"].waitForExistence(timeout:5));capture(app,"UI-09-search-live")
         app.buttons["閉じる"].firstMatch.tap();app.buttons["通知"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["新しいお知らせはありません"].waitForExistence(timeout:5));capture(app,"UI-09-notification-guest")
+        XCTAssertTrue(app.staticTexts["まだお知らせはないよ"].waitForExistence(timeout:5));capture(app,"UI-09-notification-guest")
     }
     func testPetEditAndMemoryRoutes() throws {
         let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-reference-gallery"];app.launch()
@@ -895,6 +1030,31 @@ final class PrototypeUITests: XCTestCase {
         add(attachment)
     }
 
+    func testUnifiedNotificationSettingsAndCuteInbox() throws {
+        let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-notifications"];app.launch()
+        app.buttons["通知設定"].tap()
+        XCTAssertTrue(app.staticTexts["家族アルバム"].waitForExistence(timeout:10))
+        XCTAssertTrue(app.staticTexts["こむぎ"].exists)
+        XCTAssertTrue(app.staticTexts["新しい写真・動画"].firstMatch.exists)
+        XCTAssertFalse(app.buttons["設定を保存"].exists)
+        XCTAssertFalse(app.staticTexts["Twinsのクラウド通知は準備中です。"].exists)
+        XCTAssertFalse(app.staticTexts["アプリ内通知の表示を設定します。プッシュ通知はまだ接続していません。家族アルバムの通知設定は別です。"].exists)
+        let like=app.switches["notice-setting-like"]
+        XCTAssertTrue(like.exists);like.tap();XCTAssertEqual(like.value as? String,"0")
+        let pause=app.switches["しばらくおやすみ"].firstMatch
+        reveal(pause,in:app);pause.tap()
+        XCTAssertTrue(app.staticTexts["いつまで？"].waitForExistence(timeout:5))
+        capture(app,"Unified-notification-settings")
+        app.navigationBars.buttons.firstMatch.tap()
+        app.buttons["お知らせ"].tap()
+        XCTAssertTrue(app.staticTexts["アルバムに4枚の思い出が増えたよ"].waitForExistence(timeout:10))
+        capture(app,"Cute-notification-inbox")
+        app.buttons["notice-filter-family"].tap()
+        XCTAssertFalse(app.staticTexts["こむぎの投稿にいいね ♡"].exists)
+        XCTAssertTrue(app.staticTexts["もち"].exists)
+        capture(app,"Cute-family-notifications")
+    }
+
     func testBreedAutocompleteSelectsCanonicalName() throws {
         let app=XCUIApplication();app.launchArguments=["--ui-test-isolated"];app.launch()
         app.buttons["root-tab-投稿"].tap()
@@ -919,7 +1079,8 @@ final class PrototypeUITests: XCTestCase {
         app.buttons["create-pet"].tap()
         let name = app.textFields["pet-name"]
         XCTAssertTrue(name.waitForExistence(timeout: 5)); name.tap(); name.typeText("こむぎ")
-        let breed=app.textFields["犬種"]
+        let dogChoice=app.buttons["pet-species-dog"];reveal(dogChoice,in:app);dogChoice.tap()
+        let breed=app.textFields["private-pet-breed"]
         reveal(breed,in:app);breed.tap();breed.typeText("柴犬")
         app.buttons["save-private-pet"].tap()
         XCTAssertTrue(app.buttons["demo-photos"].waitForExistence(timeout: 5))

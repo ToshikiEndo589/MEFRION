@@ -4,13 +4,18 @@ import CryptoKit
 import ImageIO
 import os
 
-struct CloudPet:Codable,Identifiable { let id:String;let name:String;let species:String;let breed:String;let introduction:String;let role:String?;var details:[String:String]?=nil;var public_fields:[String]?=nil }
+struct CloudPet:Codable,Identifiable { let id:String;let name:String;let species:String;let breed:String;let introduction:String;let role:String?;var details:[String:String]?=nil;var public_fields:[String]?=nil;var icon:String?=nil }
 private struct PendingFirstPet:Codable {let email:String;let name:String;let species:String;let breed:String}
 struct CloudPhoto:Decodable,Identifiable { let id:String;let path:String;let captured:String?;let title:String;let mine:Bool;var event_kind:String?=nil;var note:String?=nil;var provider_name:String?=nil;var created_at:String?=nil;var media_kind:String?=nil;var duration_seconds:Double?=nil }
-struct CloudInvitation:Decodable { let id:String;let token:String;let expires_at:String }
+struct CloudInvitation:Codable { let id:String;let token:String;let expires_at:String }
+struct CloudPendingInvitation:Decodable {let id:String;let expires_at:String}
+enum FamilyInvitationError:LocalizedError {
+    case limit
+    var errorDescription:String? {"使っていない招待リンクが5件残っています。古いリンクを取り消すと、新しく作れます。"}
+}
 struct CloudMember:Decodable,Identifiable {let id:String;let role:String;let me:Bool;var display_name:String?=nil}
 struct ProvidedPhoto:Decodable,Identifiable {let id:String;let captured:String?;let title:String;let sns:Bool;let twins:Bool;let external_share:Bool}
-struct CloudPublicPost:Decodable,Identifiable {let id:String;let pet_id:String;let name:String;let species:String;let breed:String;let body:String;let kind:String;let media:[String];var likes:Int;var comments:Int;var liked:Bool;var saved:Bool;var following:Bool;var tags:[CloudPublicTag]?=nil;var published_at:String?=nil;var video_media:[String]?=nil}
+struct CloudPublicPost:Decodable,Identifiable {let id:String;let pet_id:String;let name:String;let species:String;let breed:String;let body:String;let kind:String;let media:[String];var likes:Int;var comments:Int;var liked:Bool;var saved:Bool;var following:Bool;var tags:[CloudPublicTag]?=nil;var published_at:String?=nil;var video_media:[String]?=nil;var icon:String?=nil}
 struct CloudPublicTag:Decodable,Identifiable {let id:String;let name:String}
 struct CloudModerationNotice:Decodable,Identifiable {let id:String;let decision:String;let note:String;let created_at:String}
 struct CloudBlockedPet:Decodable,Identifiable {let id:String;let name:String}
@@ -22,8 +27,9 @@ private struct CloudPublicationUploadError:LocalizedError {
 struct CloudMyPublication:Decodable,Identifiable {
     let id:String;let pet_id:String;let pet_name:String;let body:String;let state:String;let created_at:String;let media:[String];let preview_photo:String?;var video_media:[String]?=nil
 }
-struct CloudComment:Decodable,Identifiable {let id:String;let body:String;let parent:String?;let display_name:String;let mine:Bool;let deleted:Bool;let created_at:String}
-struct CloudNotificationPreferences:Codable {var like:Bool;var comment:Bool;var follow:Bool;var twins:Bool}
+struct CloudComment:Decodable,Identifiable {let id:String;let body:String;let parent:String?;let display_name:String;let mine:Bool;let deleted:Bool;let created_at:String;var icon:String?=nil}
+struct CloudNotificationPreferences:Codable,Equatable {var like:Bool;var comment:Bool;var follow:Bool;var twins:Bool}
+struct CloudAccountProfile:Decodable {var name:String;var icon:String?}
 struct CloudSocialIdentity:Decodable {let name:String;let last_pet:String?}
 struct CloudSocialConnection:Decodable,Identifiable {
     let id:String
@@ -40,7 +46,7 @@ struct CloudAlbumGesture:Decodable {let photo_id:String;let gesture:String}
 struct CloudFamilyActivity:Decodable,Identifiable {let id:String;let action:String;let mine:Bool;let created_at:String;var actor_name:String?=nil}
 private struct CloudSession:Codable { let access_token:String;let refresh_token:String;let expires_at:Double? }
 struct CloudEvent:Decodable,Identifiable {let id:String;let captured:String?;let title:String;let kind:String;let note:String;let mine:Bool}
-struct CloudPetNotifications:Decodable {let frequency:String;let milestones:Bool;let paused_until:String?}
+struct CloudPetNotifications:Decodable,Equatable {var frequency:String;var milestones:Bool;var paused_until:String?}
 private struct PhotoReservation:Decodable { let id:String;let path:String;let state:String;var preview_path:String?=nil }
 
 @MainActor
@@ -52,6 +58,7 @@ final class CloudFamilyClient:ObservableObject {
     #if DEBUG
     private let referenceProbeGuestID=UUID()
     #endif
+    @Published private(set) var accountProfile=CloudAccountProfile(name:"",icon:nil)
     @Published var pets:[CloudPet]=[]
     @Published var photos:[CloudPhoto]=[]
     @Published var images:[String:UIImage]=[:]
@@ -75,6 +82,8 @@ final class CloudFamilyClient:ObservableObject {
     #endif
     @Published var busy=false
     @Published var error:String?
+    private var invitationCache:[String:CloudInvitation]=[:]
+    private var invitationCacheOwner:String?
     @Published var invitation:CloudInvitation?
     @Published var members:[CloudMember]=[]
     @Published var providedPhotos:[ProvidedPhoto]=[]
@@ -90,6 +99,7 @@ final class CloudFamilyClient:ObservableObject {
     private var twinsGuest:CloudSession?
     private var authenticationGeneration=UUID()
     private var refreshTask:Task<CloudSession,Error>?
+    private var profileFixtureLoaded=false
     private var restoration:Task<Void,Never>?
     private(set) var sessionRefreshCount=0
     private var privacyGeneration=UUID()
@@ -191,6 +201,10 @@ final class CloudFamilyClient:ObservableObject {
         // checks the registered path and provider before treating it as complete.
         if raw != nil && Self.isExistingUpload(status:response.statusCode,data:data) {return data}
         if response.statusCode==401 {throw Failure.notAuthenticated}
+        if !(200..<300).contains(response.statusCode),
+           let payload=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any],payload["message"] as? String=="invitation_limit" {
+            throw FamilyInvitationError.limit
+        }
         if let error=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any],error["message"] as? String == "daily_search_limit" {throw Failure.dailyLimit}
         if let error=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any],error["message"] as? String == "reference_search_limit" {throw Failure.referenceLimit}
         if path.hasPrefix("/auth/v1/"),!(200..<300).contains(response.statusCode),
@@ -264,8 +278,9 @@ final class CloudFamilyClient:ObservableObject {
         }
     }
     private func invalidateSession() {
+        clearInvitationCache()
         authenticationGeneration=UUID();refreshTask=nil;session=nil;authenticated=false;currentUserID=nil
-        pets=[];providedPhotos=[];blockedPets=[];moderationNotices=[];clearPrivateViews();clearPublicViews();uploads.clear()
+        profileFixtureLoaded=false;pets=[];accountProfile=CloudAccountProfile(name:"",icon:nil);providedPhotos=[];blockedPets=[];moderationNotices=[];clearPrivateViews();clearPublicViews();uploads.clear()
         if sessionStorageEnabled {SecItemDelete([kSecClass as String:kSecClassGenericPassword,kSecAttrService as String:sessionService,kSecAttrAccount as String:base] as CFDictionary)}
     }
     func perform(_ operation:() async throws->Void) async {
@@ -320,7 +335,10 @@ final class CloudFamilyClient:ObservableObject {
         if let email=userObject?["email"] as? String {try? await completePendingFirstPet(email:email)}
     }
     func signUp(email:String,password:String,confirmed:Bool) async throws->Bool {
-        guard confirmed,password.count>=12 else {throw Failure.invalid}
+        guard confirmed,password.count>=SignupRequirements.minimumPasswordLength else {throw Failure.invalid}
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--ui-signup-fixture") {return false}
+        #endif
         let data=try await request("/auth/v1/signup",body:["email":email,"password":password,"data":["adult_confirmation":true,"data_handling_confirmation":true]])
         // A previous registration attempt may have left a local Pet draft. This
         // registration flow never creates a Pet without the user's later choice.
@@ -390,6 +408,7 @@ final class CloudFamilyClient:ObservableObject {
             return
         }
         if isolated,ProcessInfo.processInfo.arguments.contains("--ui-album-fixture") {
+            if ProcessInfo.processInfo.arguments.contains("--ui-profile-fixture"),authenticated,!pets.isEmpty {return}
             currentUserID="ui-album-fixture";authenticated=true
             pets=[CloudPet(id:"fixture-album-pet",name:"クッキー",species:"dog",breed:"トイ・プードル",introduction:"",role:"owner")]
             return
@@ -478,6 +497,45 @@ final class CloudFamilyClient:ObservableObject {
     func updatePet(_ pet:CloudPet,name:String,breed:String,introduction:String,details:[String:String],publicFields:[String]) async throws {
         let _:Bool=try await rpc("update_pet",["p_pet":pet.id,"p_name":name,"p_breed":breed,"p_introduction":introduction,"p_details":details,"p_public_fields":publicFields]);clearPublicViews();try await loadPets()
     }
+    func updatePetProfile(_ pet:CloudPet,name:String,breed:String,introduction:String,details:[String:String],publicFields:[String],icon:String?,iconChanged:Bool) async throws {
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--ui-profile-fixture"),let index=pets.firstIndex(where:{$0.id==pet.id}) {
+            pets[index]=CloudPet(id:pet.id,name:name,species:pet.species,breed:breed,introduction:introduction,role:pet.role,details:details,public_fields:publicFields,icon:iconChanged ? icon : pets[index].icon)
+            return
+        }
+        #endif
+        let _:Bool=try await rpc("update_pet_profile",["p_pet":pet.id,"p_name":name,"p_breed":breed,"p_introduction":introduction,"p_details":details,"p_public_fields":publicFields,"p_icon":icon as Any? ?? NSNull(),"p_icon_changed":iconChanged])
+        clearPublicViews();try await loadPets()
+    }
+    func loadAccountProfile() async throws {
+        #if DEBUG
+        if isolated,(ProcessInfo.processInfo.arguments.contains("--ui-album-fixture") || ProcessInfo.processInfo.arguments.contains("--appstore-screenshots")) {
+            if !profileFixtureLoaded {
+                profileFixtureLoaded=true
+                accountProfile=CloudAccountProfile(name:"こむぎ",icon:UIImage(named:"pet-0").flatMap{ProfileIconCodec.encode(image:$0)})
+            }
+            return
+        }
+        #endif
+        let actor=authenticationGeneration
+        let value:CloudAccountProfile=try await rpc("account_profile")
+        guard actor==authenticationGeneration,authenticated else {throw CancellationError()}
+        accountProfile=value
+    }
+    func saveAccountProfile(name:String,icon:String?,iconChanged:Bool) async throws {
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--ui-profile-fixture") {
+            if !name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty {accountProfile.name=name.trimmingCharacters(in:.whitespacesAndNewlines)}
+            if iconChanged {accountProfile.icon=icon}
+            return
+        }
+        #endif
+        let actor=authenticationGeneration
+        let trimmed=name.trimmingCharacters(in:.whitespacesAndNewlines)
+        let value:CloudAccountProfile=try await rpc("set_account_profile",["p_name":trimmed.isEmpty ? NSNull() : trimmed as Any,"p_icon":icon as Any? ?? NSNull(),"p_icon_changed":iconChanged])
+        guard actor==authenticationGeneration,authenticated else {throw CancellationError()}
+        accountProfile=value
+    }
     func editPhoto(_ photo:CloudPhoto,pet:String,captured:String?,title:String,kind:String?,note:String) async throws {
         let _:Bool=try await rpc("edit_photo",["p_photo":photo.id,"p_captured":captured as Any? ?? NSNull(),"p_title":title,"p_event_kind":kind as Any? ?? NSNull(),"p_note":note]);try await loadAlbum(pet:pet)
     }
@@ -529,8 +587,59 @@ final class CloudFamilyClient:ObservableObject {
     func familyActivity(pet:String) async throws->[CloudFamilyActivity] {try await rpc("family_activity",["p_pet":pet])}
     func familyNew(pet:String) async throws->Int {try await rpc("family_new",["p_pet":pet])}
     func markFamilyRead(pet:String) async throws {let _:Bool=try await rpc("mark_family_read",["p_pet":pet])}
-    func invite(pet:String) async throws { invitation=try await rpc("invite",["p_pet":pet]) }
-    func cancelInvite() async throws { if let invitation {let _:Bool=try await rpc("revoke_invite",["p_invite":invitation.id]);self.invitation=nil} }
+    private var invitationCacheQuery:[String:Any]? {
+        guard let owner=currentUserID else{return nil}
+        return [kSecClass as String:kSecClassGenericPassword,kSecAttrService as String:sessionService+".invitations",kSecAttrAccount as String:base+"|"+owner]
+    }
+    private func loadInvitationCache() {
+        guard invitationCacheOwner != currentUserID else{return}
+        invitationCache=[:];invitationCacheOwner=currentUserID
+        guard sessionStorageEnabled,let query=invitationCacheQuery else{return}
+        var found:CFTypeRef?
+        if SecItemCopyMatching(query.merging([kSecReturnData as String:true,kSecMatchLimit as String:kSecMatchLimitOne]){_,value in value} as CFDictionary,&found)==errSecSuccess,
+           let data=found as? Data,let values=try? JSONDecoder().decode([String:CloudInvitation].self,from:data) {invitationCache=values}
+    }
+    private func saveInvitationCache() {
+        guard sessionStorageEnabled,let query=invitationCacheQuery,let data=try? JSONEncoder().encode(invitationCache) else{return}
+        let attrs:[String:Any]=[kSecValueData as String:data,kSecAttrAccessible as String:kSecAttrAccessibleWhenUnlockedThisDeviceOnly]
+        if SecItemUpdate(query as CFDictionary,attrs as CFDictionary)==errSecItemNotFound {
+            _=SecItemAdd(query.merging(attrs){_,value in value} as CFDictionary,nil)
+        }
+    }
+    private func clearInvitationCache() {
+        if sessionStorageEnabled,let query=invitationCacheQuery {SecItemDelete(query as CFDictionary)}
+        invitationCache=[:];invitationCacheOwner=nil
+    }
+    func prepareInvitation(pet:String) async throws {
+        invitation=nil;loadInvitationCache()
+        guard let cached=invitationCache[pet] else{return}
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--ui-family-invite-fixture") {invitation=cached;return}
+        #endif
+        let pending:[CloudPendingInvitation]=try await rpc("pending_invites",["p_pet":pet])
+        if pending.contains(where:{$0.id==cached.id}) {invitation=cached}
+        else {invitationCache.removeValue(forKey:pet);saveInvitationCache()}
+    }
+    func invite(pet:String,replacingUnused:Bool=false) async throws {
+        let value:CloudInvitation
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--ui-family-invite-fixture") {
+            guard replacingUnused else {throw FamilyInvitationError.limit}
+            value=CloudInvitation(id:"fixture-invite",token:String(repeating:"a",count:64),expires_at:"2026-10-31T00:00:00Z")
+        } else {
+            value=try await rpc(replacingUnused ? "replace_invites" : "invite",replacingUnused ? ["p_pet":pet,"p_explicit":true] : ["p_pet":pet])
+        }
+        #else
+        value=try await rpc(replacingUnused ? "replace_invites" : "invite",replacingUnused ? ["p_pet":pet,"p_explicit":true] : ["p_pet":pet])
+        #endif
+        loadInvitationCache();invitationCache[pet]=value;saveInvitationCache();invitation=value
+    }
+    func cancelInvite() async throws {
+        if let invitation {
+            let _:Bool=try await rpc("revoke_invite",["p_invite":invitation.id])
+            loadInvitationCache();invitationCache=invitationCache.filter{$0.value.id != invitation.id};saveInvitationCache();self.invitation=nil
+        }
+    }
     func accept(token:String,confirmed:Bool) async throws { let _:AcceptResult=try await rpc("accept_invite",["p_token":token,"p_confirm_scope":confirmed]);try await loadPets() }
     private struct AcceptResult:Decodable {let pet_id:String}
     func albumPhotos(pet:String) async throws->[CloudPhoto] {
@@ -1076,7 +1185,7 @@ final class CloudFamilyClient:ObservableObject {
     func comments(post:String) async throws->[CloudComment] {try await rpc("comments",["p_post":post])}
     func publicSpeakers() async throws->[CloudBlockedPet] {try await rpc("public_speakers")}
     func socialIdentity() async throws->CloudSocialIdentity? {try await rpc("social_identity")}
-    func setSocialName(_ name:String) async throws {let _:Bool=try await rpc("set_social_name",["p_name":name])}
+    func setSocialName(_ name:String) async throws {let _:Bool=try await rpc("set_social_name",["p_name":name]);accountProfile.name=name.trimmingCharacters(in:.whitespacesAndNewlines)}
     func comment(post:String,body:String,parent:String?,aliasPet:String?,key:UUID) async throws {let _:String=try await rpc("comment",["p_post":post,"p_body":body,"p_parent":parent as Any? ?? NSNull(),"p_alias_pet":aliasPet as Any? ?? NSNull(),"p_request_key":key.uuidString])}
     func deleteComment(_ id:String) async throws {let _:Bool=try await rpc("delete_comment",["p_comment":id])}
     func reportComment(_ id:String,reason:String,note:String,key:UUID) async throws {let _:String=try await rpc("report_comment",["p_comment":id,"p_reason":reason,"p_note":note,"p_request_key":key.uuidString])}
@@ -1195,6 +1304,6 @@ struct CloudTwinsHistory:Decodable,Identifiable {let id:String;let state:String;
 
 struct CloudFamilyNotification:Decodable,Identifiable {let id:String;let kind:String;let pet_id:String;let pet_name:String;let title:String;let count:Int;let created_at:String}
 
-struct CloudPublicPet:Decodable {let id:String;let name:String;let species:String;var breed:String?;var introduction:String?;var sex:String?;var birthday:String?;var life_status:String?}
+struct CloudPublicPet:Decodable {let id:String;let name:String;let species:String;var breed:String?;var introduction:String?;var sex:String?;var birthday:String?;var life_status:String?;var icon:String?=nil}
 struct CloudPetRecentPost:Decodable,Identifiable {let id:String;let body:String;let media:[String]}
 struct CloudSharedProjection:Decodable {let id:String;let kind:String;let name:String}

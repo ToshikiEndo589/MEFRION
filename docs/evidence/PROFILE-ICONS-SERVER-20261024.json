@@ -1,0 +1,285 @@
+{
+  "date": "2026-10-24",
+  "sql": {
+    "development": [
+      {
+        "name": "icons table is private",
+        "passed": true
+      },
+      {
+        "name": "anonymous cannot edit account icons",
+        "passed": true
+      },
+      {
+        "name": "anonymous cannot read account profiles",
+        "passed": true
+      },
+      {
+        "name": "base projections cannot bypass wrappers",
+        "passed": true
+      },
+      {
+        "name": "private icon helper cannot be called",
+        "passed": true
+      },
+      {
+        "name": "private profile helper is inaccessible",
+        "passed": true
+      },
+      {
+        "name": "account icon works without a pet",
+        "passed": true
+      },
+      {
+        "name": "account response has no authentication ID",
+        "passed": true
+      },
+      {
+        "name": "owner can reopen pet icon",
+        "passed": true
+      },
+      {
+        "name": "my-page projection includes pet icon",
+        "passed": true
+      },
+      {
+        "name": "private profile is not public",
+        "passed": true
+      },
+      {
+        "name": "oversized icon rejected",
+        "passed": true
+      },
+      {
+        "name": "failed icon save is atomic with profile edits",
+        "passed": true
+      },
+      {
+        "name": "invalid image rejected",
+        "passed": true
+      },
+      {
+        "name": "name-only edit preserves icon",
+        "passed": true
+      },
+      {
+        "name": "public profile includes explicitly selected pet icon",
+        "passed": true
+      },
+      {
+        "name": "other accounts cannot read own-profile data",
+        "passed": true
+      },
+      {
+        "name": "outsider cannot read private pet icon endpoint",
+        "passed": true
+      },
+      {
+        "name": "outsider cannot edit pet icon",
+        "passed": true
+      },
+      {
+        "name": "invited family can see pet icon",
+        "passed": true
+      },
+      {
+        "name": "family member cannot edit owner profile",
+        "passed": true
+      },
+      {
+        "name": "feed projection includes icon on visible post",
+        "passed": true
+      },
+      {
+        "name": "comments include account icon",
+        "passed": true
+      },
+      {
+        "name": "comment icons do not expose account UUID",
+        "passed": true
+      },
+      {
+        "name": "blocking still hides public icon/profile",
+        "passed": true
+      },
+      {
+        "name": "blocking still hides comments",
+        "passed": true
+      },
+      {
+        "name": "account icon can be removed",
+        "passed": true
+      },
+      {
+        "name": "pet icon can be removed",
+        "passed": true
+      },
+      {
+        "name": "removed pet icon is absent publicly",
+        "passed": true
+      },
+      {
+        "name": "account avatar writes respect rate limit",
+        "passed": true
+      },
+      {
+        "name": "pet avatar writes respect rate limit",
+        "passed": true
+      },
+      {
+        "name": "retirement immediately erases all owner icons",
+        "passed": true
+      }
+    ],
+    "production": [
+      {
+        "name": "icons table is private",
+        "passed": true
+      },
+      {
+        "name": "anonymous cannot edit account icons",
+        "passed": true
+      },
+      {
+        "name": "anonymous cannot read account profiles",
+        "passed": true
+      },
+      {
+        "name": "base projections cannot bypass wrappers",
+        "passed": true
+      },
+      {
+        "name": "private icon helper cannot be called",
+        "passed": true
+      },
+      {
+        "name": "private profile helper is inaccessible",
+        "passed": true
+      },
+      {
+        "name": "account icon works without a pet",
+        "passed": true
+      },
+      {
+        "name": "account response has no authentication ID",
+        "passed": true
+      },
+      {
+        "name": "owner can reopen pet icon",
+        "passed": true
+      },
+      {
+        "name": "my-page projection includes pet icon",
+        "passed": true
+      },
+      {
+        "name": "private profile is not public",
+        "passed": true
+      },
+      {
+        "name": "oversized icon rejected",
+        "passed": true
+      },
+      {
+        "name": "failed icon save is atomic with profile edits",
+        "passed": true
+      },
+      {
+        "name": "invalid image rejected",
+        "passed": true
+      },
+      {
+        "name": "name-only edit preserves icon",
+        "passed": true
+      },
+      {
+        "name": "public profile includes explicitly selected pet icon",
+        "passed": true
+      },
+      {
+        "name": "other accounts cannot read own-profile data",
+        "passed": true
+      },
+      {
+        "name": "outsider cannot read private pet icon endpoint",
+        "passed": true
+      },
+      {
+        "name": "outsider cannot edit pet icon",
+        "passed": true
+      },
+      {
+        "name": "invited family can see pet icon",
+        "passed": true
+      },
+      {
+        "name": "family member cannot edit owner profile",
+        "passed": true
+      },
+      {
+        "name": "feed projection includes icon on visible post",
+        "passed": true
+      },
+      {
+        "name": "comments include account icon",
+        "passed": true
+      },
+      {
+        "name": "comment icons do not expose account UUID",
+        "passed": true
+      },
+      {
+        "name": "blocking still hides public icon/profile",
+        "passed": true
+      },
+      {
+        "name": "blocking still hides comments",
+        "passed": true
+      },
+      {
+        "name": "account icon can be removed",
+        "passed": true
+      },
+      {
+        "name": "pet icon can be removed",
+        "passed": true
+      },
+      {
+        "name": "removed pet icon is absent publicly",
+        "passed": true
+      },
+      {
+        "name": "account avatar writes respect rate limit",
+        "passed": true
+      },
+      {
+        "name": "pet avatar writes respect rate limit",
+        "passed": true
+      },
+      {
+        "name": "retirement immediately erases all owner icons",
+        "passed": true
+      }
+    ]
+  },
+  "http": [
+    {
+      "environment": "Development",
+      "feed": 200,
+      "public_profile": 200,
+      "anonymous_account_endpoints": [
+        401,
+        401
+      ]
+    },
+    {
+      "environment": "Production",
+      "feed": 200,
+      "public_profile": 200,
+      "anonymous_account_endpoints": [
+        401,
+        401
+      ]
+    }
+  ]
+}

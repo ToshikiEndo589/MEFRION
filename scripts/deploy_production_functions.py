@@ -22,6 +22,7 @@ FUNCTIONS = (
     "public-video",
     "shared-page",
     "cloud-worker",
+    "stock-worker",
     "asset-ingest",
     "database-backup",
     "offsite-backup",

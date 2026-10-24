@@ -6,8 +6,8 @@ struct PetForm: View {
     @Environment(\.dismiss) var dismiss
     @State private var name = ""
     @State private var species = Species.dog
+    @State private var speciesSelected=false
     @State private var breed = ""
-    @State private var breedUnknown = false
     @State private var introduction = ""
     @State private var sex=""
     @State private var birthday=""
@@ -21,17 +21,18 @@ struct PetForm: View {
                 Label("家族内のみ・写真0枚で作成できます。",systemImage:"lock").font(.caption)
             }
             TextField("犬・猫の名前（必須）", text: $name).accessibilityIdentifier("pet-name")
-            Picker("犬または猫", selection: $species) { ForEach(Species.allCases) { Text($0.title).tag($0) } }
-            BreedAutocompleteField(species:species == .dog ? "dog" : "cat",text:$breed,identifier:"private-pet-breed").disabled(breedUnknown)
-            Toggle("品種がわからない",isOn:$breedUnknown)
+            PetSpeciesSelectionField(species:Binding(get:{species.rawValue},set:{if let next=Species(rawValue:$0) {species=next}}),selected:$speciesSelected)
+            if speciesSelected {
+                BreedAutocompleteField(species:species.rawValue,text:$breed,identifier:"private-pet-breed")
+            }
             Picker("性別（任意）",selection:$sex) {Text("未設定").tag("");Text("男の子").tag("male");Text("女の子").tag("female")}.pickerStyle(.segmented)
             TextField("誕生日 YYYY / YYYY-MM / YYYY-MM-DD（任意）",text:$birthday).keyboardType(.numbersAndPunctuation)
             TextField("紹介文（任意）", text: $introduction,axis:.vertical)
             if let error { Text(error).foregroundStyle(.red) }
             Button("非公開で作成") {
-                do { let selectedBreed=breedUnknown ? "" : (PetBreedCatalog.canonical(breed,species:species == .cat ? "cat" : "dog") ?? breed.trimmingCharacters(in:.whitespacesAndNewlines));try store.createPet(name: name, species: species, breed: selectedBreed, introduction: introduction,sex:sex.isEmpty ? nil : sex,birthday:birthday.isEmpty ? nil : birthday); dismiss() }
+                do { let selectedBreed=PetBreedCatalog.canonical(breed,species:species == .cat ? "cat" : "dog") ?? breed.trimmingCharacters(in:.whitespacesAndNewlines);try store.createPet(name: name, species: species, breed: selectedBreed, introduction: introduction,sex:sex.isEmpty ? nil : sex,birthday:birthday.isEmpty ? nil : birthday); dismiss() }
                 catch { self.error = error.localizedDescription }
-            }.disabled(!(1...40).contains(name.trimmingCharacters(in:.whitespacesAndNewlines).count) || (!breedUnknown && !(1...100).contains(breed.trimmingCharacters(in:.whitespacesAndNewlines).count)))
+            }.disabled(!speciesSelected || !(1...40).contains(name.trimmingCharacters(in:.whitespacesAndNewlines).count) || !(1...100).contains(breed.trimmingCharacters(in:.whitespacesAndNewlines).count))
                 .frame(minHeight: 44).accessibilityIdentifier("save-private-pet")
         }.scrollContentBackground(.hidden).background(Theme.background).protectWhenInactive().navigationTitle("Petを作る").navigationBarTitleDisplayMode(.inline)
             .onChange(of:species) {_,_ in breed=""}
@@ -209,7 +210,7 @@ struct SettingsView:View {
                 NavigationLink {PrivacyInformationView()} label: {settingsRow("同意設定","利用規約・プライバシーについて","doc.text")}
             }
             Section {
-                NavigationLink {NotificationHubView()} label: {settingsRow("通知設定","いいね・コメント・フォロー","bell")}
+                NavigationLink {if CloudFamilyClient.shared.authenticated {CloudNotificationSettingsView(client:CloudFamilyClient.shared)} else {CloudFamilyView()}} label: {settingsRow("通知設定","いいね・コメント・家族アルバム","bell")}
                 NavigationLink {if CloudFamilyClient.shared.authenticated {CloudBlockedPetsView(client:CloudFamilyClient.shared)} else {CloudFamilyView()}} label: {settingsRow("ブロックしたユーザー","相手の管理するすべてのPetに適用","person.crop.circle.badge.xmark")}
             }
             Section {
@@ -219,7 +220,8 @@ struct SettingsView:View {
             Section {
                 NavigationLink {AccountRetirementView()} label: {Label("アカウントを削除する",systemImage:"trash").foregroundStyle(Theme.accent)}
             }
-        }.scrollContentBackground(.hidden).background(Theme.background).navigationTitle("設定").navigationBarTitleDisplayMode(.inline)
+        }.contentMargins(.bottom,88,for:.scrollContent)
+        .scrollContentBackground(.hidden).background(Theme.background).navigationTitle("設定").navigationBarTitleDisplayMode(.inline)
     }
     private func settingsRow(_ title:String,_ subtitle:String,_ icon:String)->some View {
         HStack(spacing:16) {Image(systemName:icon).font(.system(size:22)).frame(width:28);VStack(alignment:.leading,spacing:5) {Text(title).font(.subheadline);Text(subtitle).font(.caption2).foregroundStyle(.secondary)}}.padding(.vertical,8)

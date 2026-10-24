@@ -292,6 +292,8 @@ struct CloudDiscoveryView:View {
     @State private var videoID=""
     @State private var activeVideoMedia:String?
     @State private var mediaPageByPost:[String:Int]=[:]
+    @State private var pendingLikes:Set<String>=[]
+    @State private var likeBursts:[String:UUID]=[:]
     @State private var carouselSwipeInProgress=false
     @State private var detailPost:CloudPublicPost?
     @State private var detailImages:[String:UIImage]=[:]
@@ -510,7 +512,8 @@ struct CloudDiscoveryView:View {
             HStack(spacing:10) {
                 NavigationLink {CloudPublicPetView(petID:post.pet_id,client:client)} label: {
                     Group {
-                        if let media=post.media.first,let image=detailImages[media] ?? client.publicImages[media] {
+                        if let icon=post.icon {ProfileIconImage(encoded:icon,size:36)}
+                        else if let media=post.media.first,let image=detailImages[media] ?? client.publicImages[media] {
                             Image(uiImage:image).resizable().scaledToFill().frame(width:36,height:36).clipShape(Circle())
                         } else {
                             Circle().fill(Theme.accent.opacity(0.12)).frame(width:36,height:36)
@@ -547,12 +550,24 @@ struct CloudDiscoveryView:View {
                 } label: {Image(systemName:"ellipsis").font(.system(size:19)).frame(width:36,height:44)}
                     .accessibilityLabel("投稿のメニュー")
             }.padding(.horizontal,12).frame(minHeight:56)
-            if post.media.count>1 {homeMediaCarousel(post)}
-            else if let media=post.media.first {homeMedia(media,isVideo:post.video_media?.contains(media)==true)}
+            Group {
+                if post.media.count>1 {homeMediaCarousel(post)}
+                else if let media=post.media.first {homeMedia(media,isVideo:post.video_media?.contains(media)==true)}
+            }
+            .contentShape(Rectangle())
+            .simultaneousGesture(TapGesture(count:2).onEnded {like(post,doubleTap:true)})
+            .overlay {
+                if likeBursts[post.id] != nil {
+                    Image(systemName:"heart.fill").font(.system(size:84,weight:.bold))
+                        .foregroundStyle(.white).shadow(color:Theme.accent.opacity(0.7),radius:12)
+                        .overlay {Image(systemName:"pawprint.fill").font(.system(size:26)).foregroundStyle(Theme.accent)}
+                        .transition(.scale(scale:0.45).combined(with:.opacity))
+                        .allowsHitTesting(false).accessibilityHidden(true)
+                }
+            }
             HStack(spacing:16) {
                 Button {
-                    if client.authenticated {Task {await client.perform {let enabled = !post.liked;try await client.react(post:post.id,kind:"like",enabled:enabled);if detailPost?.id==post.id {detailPost?.liked=enabled;detailPost?.likes=max(0,post.likes+(enabled ? 1 : -1))}}}}
-                    else {beginAuthentication(post:post,action:"like")}
+                    like(post,doubleTap:false)
                 } label: {
                     HStack(spacing:5) {
                         ZStack {
@@ -628,6 +643,32 @@ struct CloudDiscoveryView:View {
             }
         }.padding(.bottom,14).background(.white)
             .overlay(alignment:.bottom) {Rectangle().fill(Color(.systemGray5)).frame(height:0.5)}
+    }
+    /// Double-tap always adds a like; only the heart button can remove one.
+    private func like(_ post:CloudPublicPost,doubleTap:Bool) {
+        guard client.authenticated else {beginAuthentication(post:post,action:"like");return}
+        let current=detailPost?.id==post.id ? detailPost! : client.publicPosts.first(where:{$0.id==post.id}) ?? post
+        if doubleTap {
+            let burst=UUID()
+            withAnimation(.spring(response:0.25,dampingFraction:0.65)) {likeBursts[post.id]=burst}
+            Task {@MainActor in
+                try? await Task.sleep(for:.milliseconds(800))
+                if likeBursts[post.id]==burst {withAnimation(.easeOut(duration:0.2)) {likeBursts.removeValue(forKey:post.id)}}
+            }
+        }
+        guard !pendingLikes.contains(post.id),!client.busy,!(doubleTap && current.liked) else{return}
+        pendingLikes.insert(post.id)
+        let enabled=doubleTap || !current.liked
+        Task {
+            defer {pendingLikes.remove(post.id)}
+            await client.perform {
+                try await client.react(post:post.id,kind:"like",enabled:enabled)
+                if detailPost?.id==post.id,detailPost?.liked != enabled {
+                    detailPost?.liked=enabled
+                    detailPost?.likes=max(0,(detailPost?.likes ?? 0)+(enabled ? 1 : -1))
+                }
+            }
+        }
     }
     private func isStockCaption(_ post:CloudPublicPost)->Bool {
         post.body.hasPrefix("【MEFRION運営・検証投稿】") || post.body.hasPrefix("運営セレクトの参考写真です。撮影:")
@@ -868,8 +909,7 @@ struct CloudCommentsView:View {
                 }
                 ForEach(records) {comment in
                     HStack(alignment:.top,spacing:10) {
-                        Image(systemName:"pawprint.fill").font(.caption).foregroundStyle(Theme.accent)
-                            .frame(width:34,height:34).background(Theme.accent.opacity(0.1),in:Circle())
+                        ProfileIconImage(encoded:comment.icon,size:34)
                         VStack(alignment:.leading,spacing:5) {
                             HStack {
                                 Text(comment.display_name).font(.subheadline.bold())
@@ -989,57 +1029,256 @@ struct CloudCommentReportView:View {
     }
 }
 
+// A serial writer survives navigation and coalesces rapid changes. A failed
+// write rolls back visibly; it never shows an unsaved switch as confirmed.
+@MainActor
+final class NotificationPreferenceDraft<Value:Equatable>:ObservableObject {
+    @Published private(set) var value:Value
+    @Published private(set) var ready=false
+    @Published private(set) var error:String?
+    private var confirmed:Value
+    private var retryValue:Value?
+    private var task:Task<Void,Never>?
+    private let write:(Value) async throws->Void
+    init(_ initial:Value,write:@escaping (Value) async throws->Void) {value=initial;confirmed=initial;self.write=write}
+    func load(_ loaded:Value) {guard !ready else{return};value=loaded;confirmed=loaded;ready=true;error=nil}
+    func loadFailed() {error="読み込めなかったよ。もう一度試してね"}
+    func change(_ next:Value) {
+        guard ready else{return};value=next;error=nil
+        if task==nil {task=Task {await drain()}}
+    }
+    func retry() {guard let retryValue else{return};change(retryValue)}
+    func waitUntilSaved() async {await task?.value}
+    private func drain() async {
+        defer {task=nil}
+        while value != confirmed {
+            let snapshot=value
+            do {try await write(snapshot);confirmed=snapshot;retryValue=nil}
+            catch {
+                if value != snapshot {continue}
+                retryValue=value;value=confirmed;self.error="保存できなかったよ。もう一度試してね";return
+            }
+        }
+    }
+}
+
+private enum NotificationPreview {
+    static var enabled:Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.arguments.contains("--ui-test-isolated") && ProcessInfo.processInfo.arguments.contains("--ui-notifications")
+        #else
+        return false
+        #endif
+    }
+    static let pets=[CloudPet(id:"preview-dog",name:"こむぎ",species:"dog",breed:"柴犬",introduction:"",role:"owner"),CloudPet(id:"preview-cat",name:"もち",species:"cat",breed:"",introduction:"",role:"member")]
+}
+
 struct CloudSocialNotificationsView:View {
     @ObservedObject var client:CloudFamilyClient
     @Environment(\.scenePhase) private var scenePhase
     @State private var records:[CloudSocialNotification]=[]
     @State private var family:[CloudFamilyNotification]=[]
     @State private var filter="all"
-    private func reload() async throws {
-        let freshRecords=try await client.socialNotifications()
-        let freshFamily=try await client.familyNotifications()
-        records=freshRecords;family=freshFamily
+    @State private var loading=true
+    @State private var failure=false
+    private struct Notice:Identifiable {
+        let id:String;let name:String;let text:String;let icon:String;let kind:String;let date:String;let pet:String;let post:String?
+    }
+    private var notices:[Notice] {
+        let social=records.map {n in
+            let who=n.name+((n.count ?? 1)>1 && ["like","follow"].contains(n.kind) ? "さんとほか\((n.count ?? 1)-1)人" : "さん")
+            let text=n.kind=="like" ? "\(n.pet_name)の投稿にいいね ♡" : n.kind=="follow" ? "\(n.pet_name)をフォローしたよ" : n.kind=="reply" ? "コメントにお返事が届いたよ" : (n.count ?? 1)>1 ? "\(n.pet_name)に\(n.count ?? 1)件のコメントが届いたよ" : "\(n.pet_name)にコメントが届いたよ"
+            return Notice(id:"social-"+n.id,name:who,text:text,icon:n.kind=="like" ? "heart.fill" : n.kind=="follow" ? "person.2.fill" : "bubble.left.and.bubble.right.fill",kind:n.kind=="reply" ? "comment" : n.kind,date:n.created_at,pet:n.pet_id,post:n.post_id)
+        }
+        let shared=family.map {n in Notice(id:"family-"+n.id,name:n.pet_name,text:n.kind=="milestone" ? "今日は\(n.title)だよ 🐾" : "アルバムに\(max(1,n.count))枚の思い出が増えたよ",icon:n.kind=="milestone" ? "calendar.badge.clock" : "photo.on.rectangle.angled",kind:"family",date:n.created_at,pet:n.pet_id,post:nil)}
+        return (social+shared).filter {filter=="all" || $0.kind==filter}.sorted {$0.date==$1.date ? $0.id<$1.id : $0.date>$1.date}
+    }
+    private func reload() async {
+        let identity=client.currentUserID
+        do {
+            if NotificationPreview.enabled {
+                let now=Date();let format=ISO8601DateFormatter()
+                records=[CloudSocialNotification(id:"one",kind:"like",name:"もち",pet_name:"こむぎ",pet_id:"preview-dog",post_id:nil,created_at:format.string(from:now.addingTimeInterval(-180)),count:3),CloudSocialNotification(id:"two",kind:"comment",name:"まる",pet_name:"こむぎ",pet_id:"preview-dog",post_id:nil,created_at:format.string(from:now.addingTimeInterval(-3600)))]
+                family=[CloudFamilyNotification(id:"three",kind:"family_photo",pet_id:"preview-cat",pet_name:"もち",title:"",count:4,created_at:format.string(from:now.addingTimeInterval(-600)))];loading=false;return
+            }
+            async let freshRecords=client.socialNotifications()
+            async let freshFamily=client.familyNotifications()
+            let fresh=try await (freshRecords,freshFamily)
+            guard identity==client.currentUserID,client.authenticated else{return}
+            records=fresh.0;family=fresh.1;failure=false
+        } catch {failure=true}
+        loading=false
     }
     var body:some View {
-        List {
-            Text("アプリ内のお知らせです。端末へのプッシュ通知はまだ接続していません。").font(.footnote)
-            NavigationLink("通知設定") {CloudNotificationSettingsView(client:client)}
-            ScrollView(.horizontal,showsIndicators:false) {HStack {ForEach([("all","すべて"),("like","いいね"),("comment","コメント"),("follow","フォロー")],id:\.0) {value,title in Button {filter=value} label: {Text(title).font(.caption).padding(.horizontal,14).frame(minHeight:34).background(filter==value ? Theme.accent.opacity(0.12) : .white).clipShape(Capsule())}.buttonStyle(.borderless)}}}
-            ForEach(records.filter{filter=="all" || $0.kind==filter || (filter=="comment" && $0.kind=="reply")}) {notice in HStack(spacing:12) {Image(systemName:notice.kind=="like" ? "heart.circle.fill" : notice.kind=="follow" ? "person.crop.circle.badge.plus" : "bubble.right.circle").font(.system(size:34)).foregroundStyle(Theme.actionText);VStack(alignment:.leading,spacing:5) {
-                Text(notice.name).font(.headline)
-                if let count=notice.count,count>1 {Text("同じ種類のお知らせ \(count)件").font(.caption)}
-                Text(notice.kind=="like" ? "\(notice.pet_name)の投稿にいいねしました" : notice.kind=="follow" ? "\(notice.pet_name)をフォローしました" : notice.kind=="reply" ? "コメントに返信しました" : "\(notice.pet_name)の投稿にコメントしました")
-                Text(notice.created_at).font(.caption).foregroundStyle(.secondary)
-            };Spacer()}}
-            if filter=="all" {ForEach(family) {notice in NavigationLink {CloudAlbumLibraryView()} label: {VStack(alignment:.leading) {Text(notice.pet_name).font(.headline);Text(notice.title);if notice.count>1 {Text("\(notice.count)件")}}}}}
-            if records.isEmpty && family.isEmpty && !client.busy {Text("新しいお知らせはありません")}
-            if client.busy {ProgressView()}
-            if let error=client.error {Text(error).foregroundStyle(.red)}
-        }.scrollContentBackground(.hidden).background(Theme.background).navigationTitle("通知").task {await client.perform {try await reload()}}
-        .refreshable {await client.perform {try await reload()}}
-        .onDisappear {records=[];family=[]}
-        .onChange(of:client.authenticated) {_,authenticated in if !authenticated {records=[];family=[]}}
-        .onChange(of:scenePhase) {_,phase in if phase == .active {Task {await client.perform {try await reload()}}}}
+        ScrollView {LazyVStack(spacing:12) {
+            ScrollView(.horizontal,showsIndicators:false) {HStack(spacing:6) {
+                ForEach([("all","すべて"),("like","いいね"),("comment","コメント"),("follow","フォロー"),("family","アルバム")],id:\.0) {value,title in
+                    Button {filter=value} label: {Text(title).font(.system(size:12,weight:.semibold)).padding(.horizontal,12).frame(minHeight:36)
+                        .foregroundStyle(filter==value ? .white : Theme.secondaryText)
+                        .background(filter==value ? Theme.accent : Color.white,in:Capsule())}
+                        .buttonStyle(.plain).accessibilityIdentifier("notice-filter-"+value)
+                        .accessibilityAddTraits(filter==value ? .isSelected : [])
+                }
+            }}.padding(.bottom,4)
+            if loading && records.isEmpty && family.isEmpty {PawLoadingView(title:"お知らせを集めているよ",compact:true).padding(.top,50)}
+            ForEach(notices) {n in
+                NavigationLink {
+                    if n.kind=="family" {CloudAlbumLibraryView()}
+                    else if let post=n.post {CloudDiscoveryView(client:client,detail:post)}
+                    else {CloudPublicPetView(petID:n.pet,client:client)}
+                } label: {
+                    HStack(spacing:12) {
+                        Image(systemName:n.icon).font(.system(size:22,weight:.semibold)).foregroundStyle(Theme.actionText)
+                            .frame(width:48,height:48).background(Theme.accent.opacity(0.1),in:RoundedRectangle(cornerRadius:17))
+                        VStack(alignment:.leading,spacing:5) {
+                            Text(n.name).font(.system(size:14,weight:.bold,design:.rounded))
+                            Text(n.text).font(.system(size:13)).fixedSize(horizontal:false,vertical:true)
+                            Text(PostTime.label(n.date)).font(.system(size:11)).foregroundStyle(Theme.secondaryText)
+                        }.frame(maxWidth:.infinity,alignment:.leading)
+                        Image(systemName:"chevron.right").font(.system(size:10,weight:.bold)).foregroundStyle(Theme.accent.opacity(0.6))
+                    }.foregroundStyle(Theme.text).padding(14).background(.white,in:RoundedRectangle(cornerRadius:22))
+                }.buttonStyle(.plain).accessibilityIdentifier("notice-"+n.id)
+            }
+            if !loading && notices.isEmpty && !failure {
+                VStack(spacing:12) {
+                    Image(systemName:"bell.badge.fill").font(.system(size:32)).foregroundStyle(Theme.accent)
+                        .frame(width:86,height:86).background(Theme.accent.opacity(0.08),in:Circle())
+                    Text("まだお知らせはないよ").font(.headline)
+                    Text("うれしいお知らせ、ここに届くよ ♡").font(.subheadline).foregroundStyle(Theme.secondaryText)
+                }.frame(maxWidth:.infinity).padding(.vertical,70)
+            }
+            if failure {Button("もう一度読み込む") {Task {await reload()}}.padding(12)}
+        }.padding(16)}.background(Theme.background).navigationTitle("お知らせ").navigationBarTitleDisplayMode(.inline)
+        .toolbar {ToolbarItem(placement:.topBarTrailing) {NavigationLink {CloudNotificationSettingsView(client:client)} label: {Image(systemName:"slider.horizontal.3").frame(width:40,height:40)}.accessibilityLabel("通知設定")}}
+        .task {await reload()}.refreshable {await reload()}
+        .onChange(of:client.currentUserID) {_,_ in records=[];family=[]}
+        .onChange(of:scenePhase) {_,phase in if phase == .active {Task {await reload()}}}
     }
 }
 
 struct CloudNotificationSettingsView:View {
     @ObservedObject var client:CloudFamilyClient
-    @State private var preferences=CloudNotificationPreferences(like:true,comment:true,follow:true,twins:false)
-    @State private var loaded=false
-    @State private var saved=false
+    @StateObject private var draft:NotificationPreferenceDraft<CloudNotificationPreferences>
+    @Environment(\.dismiss) private var dismiss
+    private var pets:[CloudPet] {NotificationPreview.enabled ? NotificationPreview.pets : client.pets}
+    init(client:CloudFamilyClient) {
+        self.client=client
+        let identity=client.currentUserID
+        _draft=StateObject(wrappedValue:NotificationPreferenceDraft(CloudNotificationPreferences(like:true,comment:true,follow:true,twins:false)) {value in
+            if NotificationPreview.enabled {return}
+            guard client.authenticated,client.currentUserID==identity else{throw URLError(.userAuthenticationRequired)}
+            try await client.setNotificationPreferences(value)
+        })
+    }
+    private func load() async {
+        do {
+            let identity=client.currentUserID
+            let value=NotificationPreview.enabled ? CloudNotificationPreferences(like:true,comment:true,follow:true,twins:false) : try await client.notificationPreferences()
+            guard NotificationPreview.enabled || (client.authenticated && client.currentUserID==identity) else{return}
+            draft.load(value)
+        } catch {draft.loadFailed()}
+    }
+    private func binding(_ key:WritableKeyPath<CloudNotificationPreferences,Bool>)->Binding<Bool> {
+        Binding(get:{draft.value[keyPath:key]},set:{next in var value=draft.value;value[keyPath:key]=next;draft.change(value)})
+    }
     var body:some View {
-        Form {
-            Text("アプリ内通知の表示を設定します。プッシュ通知はまだ接続していません。家族アルバムの通知設定は別です。").font(.footnote)
-            Toggle("いいね",isOn:$preferences.like)
-            Toggle("コメント・返信",isOn:$preferences.comment)
-            Toggle("フォロー",isOn:$preferences.follow)
-            Text("Twinsのクラウド通知は準備中です。").font(.footnote)
-            Button("設定を保存") {let snapshot=preferences;Task {await client.perform {try await client.setNotificationPreferences(snapshot);saved=true}}}.disabled(client.busy || !loaded)
-            if saved {Text("通知設定を保存しました")}
-            if let error=client.error {Text(error).foregroundStyle(.red)}
-        }.disabled(client.busy || !loaded).navigationTitle("通知設定")
-        .task {await client.perform {preferences=try await client.notificationPreferences();loaded=true}}
-        .onChange(of:preferences.like) {_,_ in saved=false}.onChange(of:preferences.comment) {_,_ in saved=false}.onChange(of:preferences.follow) {_,_ in saved=false}
+        ScrollView {VStack(alignment:.leading,spacing:20) {
+            VStack(spacing:0) {
+                notificationToggle("いいね",icon:"heart.fill",value:binding(\.like)).accessibilityIdentifier("notice-setting-like")
+                Divider().padding(.leading,58)
+                notificationToggle("コメント・返信",icon:"bubble.left.and.bubble.right.fill",value:binding(\.comment))
+                Divider().padding(.leading,58)
+                notificationToggle("フォロー",icon:"person.2.fill",value:binding(\.follow))
+            }.padding(.horizontal,14).background(.white,in:RoundedRectangle(cornerRadius:24)).disabled(!draft.ready)
+            if let error=draft.error {noticeSaveError(error) {if draft.ready {draft.retry()} else {Task {await load()}}}}
+            if !draft.ready && draft.error==nil {PawLoadingView(title:"",compact:true)}
+            if !pets.isEmpty {
+                Label("家族アルバム",systemImage:"photo.on.rectangle.angled").font(.system(size:15,weight:.bold,design:.rounded)).padding(.horizontal,4)
+                ForEach(pets) {pet in CloudFamilyNotificationSettingsCard(pet:pet,client:client)}
+            }
+        }.padding(16)}.background(Theme.background).navigationTitle("通知設定").navigationBarTitleDisplayMode(.inline)
+        .task {await load()}
+        .onChange(of:client.currentUserID) {_,_ in dismiss()}
     }
 }
+
+private func notificationToggle(_ title:String,icon:String,value:Binding<Bool>)->some View {
+    Toggle(isOn:value) {Label {Text(title).font(.system(size:14,weight:.semibold))} icon: {
+        Image(systemName:icon).font(.system(size:17)).foregroundStyle(Theme.actionText).frame(width:30,height:36)
+    }}.tint(Theme.accent).padding(.vertical,12)
+}
+private func noticeSaveError(_ text:String,retry:@escaping()->Void)->some View {
+    HStack {Text(text).font(.caption);Spacer();Button("再試行",action:retry).font(.caption.bold())}.foregroundStyle(Theme.actionText).padding(12)
+}
+
+private struct CloudFamilyNotificationSettingsCard:View {
+    let pet:CloudPet
+    @ObservedObject var client:CloudFamilyClient
+    @StateObject private var draft:NotificationPreferenceDraft<CloudPetNotifications>
+    init(pet:CloudPet,client:CloudFamilyClient) {
+        self.pet=pet;self.client=client;let identity=client.currentUserID
+        _draft=StateObject(wrappedValue:NotificationPreferenceDraft(CloudPetNotifications(frequency:"off",milestones:false,paused_until:nil)) {value in
+            if NotificationPreview.enabled {return}
+            guard client.authenticated,client.currentUserID==identity else{throw URLError(.userAuthenticationRequired)}
+            try await client.savePetNotifications(pet:pet.id,frequency:value.frequency,milestones:value.milestones,paused:value.paused_until)
+        })
+    }
+    private func change(_ change:(inout CloudPetNotifications)->Void) {var value=draft.value;change(&value);draft.change(value)}
+    private var pausedDate:Date? {draft.value.paused_until.flatMap {value in
+        let parser=ISO8601DateFormatter();parser.formatOptions=[.withInternetDateTime,.withFractionalSeconds]
+        return parser.date(from:value) ?? ISO8601DateFormatter().date(from:value)
+    }}
+    private func load() async {
+        let identity=client.currentUserID
+        do {
+            var value=NotificationPreview.enabled ? CloudPetNotifications(frequency:"immediate",milestones:true,paused_until:nil) : try await client.petNotifications(pet:pet.id)
+            guard NotificationPreview.enabled || (client.authenticated && client.currentUserID==identity) else{return}
+            if let stamp=value.paused_until {
+                let parser=ISO8601DateFormatter();parser.formatOptions=[.withInternetDateTime,.withFractionalSeconds]
+                if let date=parser.date(from:stamp) ?? ISO8601DateFormatter().date(from:stamp),date<=Date() {value.paused_until=nil}
+            }
+            draft.load(value)
+        } catch {draft.loadFailed()}
+    }
+    var body:some View {
+        VStack(alignment:.leading,spacing:0) {
+            HStack(spacing:10) {
+                Text(pet.species=="cat" ? "🐱" : "🐶").font(.system(size:25)).frame(width:42,height:42).background(Theme.accent.opacity(0.08),in:RoundedRectangle(cornerRadius:15))
+                Text(pet.name).font(.system(size:16,weight:.bold,design:.rounded))
+            }.padding(.vertical,14)
+            VStack(spacing:0) {
+                HStack {
+                    Label {Text("新しい写真・動画").font(.system(size:14,weight:.semibold))} icon: {
+                        Image(systemName:"photo.on.rectangle.angled").foregroundStyle(Theme.actionText).frame(width:30)
+                    }
+                    Spacer(minLength:4)
+                    Picker("新しい写真・動画",selection:Binding(get:{draft.value.frequency},set:{next in change {$0.frequency=next}})) {
+                        Text("オフ").tag("off");Text("そのつど").tag("immediate");Text("1日分まとめて").tag("batched")
+                    }.labelsHidden().font(.system(size:13)).tint(Theme.actionText)
+                }.padding(.vertical,10)
+
+                Divider()
+                notificationToggle("記念日",icon:"birthday.cake.fill",value:Binding(get:{draft.value.milestones},set:{next in change {$0.milestones=next}}))
+                Divider()
+                notificationToggle("しばらくおやすみ",icon:"moon.stars.fill",value:Binding(get:{pausedDate != nil},set:{next in change {$0.paused_until=next ? ISO8601DateFormatter().string(from:Date().addingTimeInterval(86400*7)) : nil}}))
+                if let date=pausedDate {
+                    DatePicker("いつまで？",selection:Binding(get:{max(Date(),date)},set:{next in change {$0.paused_until=ISO8601DateFormatter().string(from:next)}}),in:Date()...Date().addingTimeInterval(86400*365),displayedComponents:.date)
+                        .font(.system(size:14)).tint(Theme.actionText).padding(.bottom,12)
+                }
+            }.disabled(!draft.ready)
+            if let error=draft.error {noticeSaveError(error) {if draft.ready {draft.retry()} else {Task {await load()}}}}
+        }.padding(.horizontal,16).background(.white,in:RoundedRectangle(cornerRadius:24))
+            .accessibilityIdentifier("family-notification-"+pet.id).task {await load()}
+    }
+}
+
+#if DEBUG
+struct NotificationPreviewNavigation:View {
+    var body:some View {
+        List {
+            NavigationLink("通知設定") {CloudNotificationSettingsView(client:CloudFamilyClient.shared)}
+            NavigationLink("お知らせ") {CloudSocialNotificationsView(client:CloudFamilyClient.shared)}
+        }.navigationTitle("通知プレビュー")
+    }
+}
+#endif

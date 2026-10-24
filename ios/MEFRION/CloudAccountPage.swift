@@ -24,13 +24,27 @@ struct CloudAccountPage:View {
     var body:some View {
         ScrollView {VStack(alignment:.leading,spacing:16) {
             HStack(spacing:14) {
-                Text("🐾").font(.system(size:31))
-                    .frame(width:48,height:48).background(Theme.accent.opacity(0.1),in:Circle())
-                VStack(alignment:.leading,spacing:3) {
-                    Text("こんにちは ♡").font(.title3.bold())
-                    Text("うちの子も、推しの子も。").font(.subheadline).foregroundStyle(Theme.secondaryText)
+                if client.authenticated {
+                    NavigationLink {CloudAccountProfileEditor(client:client)} label: {
+                        HStack(spacing:12) {
+                            ProfileIconImage(encoded:client.accountProfile.icon,size:52,fallback:"person.fill")
+                            VStack(alignment:.leading,spacing:4) {
+                                Text(client.accountProfile.name.isEmpty ? "マイプロフィール" : client.accountProfile.name)
+                                    .font(.headline).foregroundStyle(Theme.text)
+                                Text("プロフィールを編集").font(.caption.weight(.semibold)).foregroundStyle(Theme.actionText)
+                            }
+                            Spacer(minLength:0)
+                        }
+                    }.buttonStyle(.plain).accessibilityIdentifier("open-account-profile")
+                } else {
+                    Text("🐾").font(.system(size:31))
+                        .frame(width:48,height:48).background(Theme.accent.opacity(0.1),in:Circle())
+                    VStack(alignment:.leading,spacing:3) {
+                        Text("こんにちは ♡").font(.title3.bold())
+                        Text("うちの子も、推しの子も。").font(.subheadline).foregroundStyle(Theme.secondaryText)
+                    }
+                    Spacer()
                 }
-                Spacer()
                 NavigationLink {SettingsView()} label: {Image(systemName:"gearshape").font(.title3).frame(width:44,height:44)}
                     .accessibilityLabel("設定")
             }.padding(16).background(.white,in:RoundedRectangle(cornerRadius:20))
@@ -52,19 +66,20 @@ struct CloudAccountPage:View {
                         else {CloudAlbumLibraryView()}
                     } label: {
                         HStack(spacing:13) {
-                            Text(pet.species=="cat" ? "🐱" : "🐶").font(.system(size:28))
-                                .frame(width:48,height:48).background(Theme.accent.opacity(0.1),in:RoundedRectangle(cornerRadius:14))
+                            ProfileIconImage(encoded:pet.icon,size:48)
+
                             VStack(alignment:.leading,spacing:3) {
                                 Text(pet.name).font(.headline)
-                                Text(pet.breed.isEmpty ? "プロフィール" : pet.breed).font(.caption).foregroundStyle(Theme.secondaryText)
+                                if !pet.breed.isEmpty {Text(pet.breed).font(.caption).foregroundStyle(Theme.secondaryText)}
+                                Text(pet.role=="owner" ? "プロフィールを編集" : "写真を見る").font(.caption).foregroundStyle(Theme.actionText)
                             }
                             Spacer();Image(systemName:"chevron.right").font(.caption).foregroundStyle(Theme.secondaryText)
                         }.foregroundStyle(Theme.text).padding(14).frame(maxWidth:.infinity)
                             .background(.white,in:RoundedRectangle(cornerRadius:18))
                     }.accessibilityIdentifier("cloud-pet-"+pet.id)}
                 }
-                NavigationLink {CloudFamilyView()} label: {
-                    Label(client.pets.isEmpty ? "うちの子を登録する（任意）" : "うちの子を追加",systemImage:"plus.circle.fill")
+                NavigationLink {CloudFamilyView(registrationOnly:true)} label: {
+                    Label(client.pets.isEmpty ? "うちの子を登録" : "うちの子を追加",systemImage:"plus.circle.fill")
                         .frame(maxWidth:.infinity)
                 }.buttonStyle(.bordered).tint(Theme.actionText).accessibilityIdentifier("open-cloud-family")
                 HStack(spacing:10) {
@@ -94,6 +109,11 @@ struct CloudAccountPage:View {
                         .frame(maxWidth:.infinity,alignment:.leading).padding(16)
                         .background(.white,in:RoundedRectangle(cornerRadius:18))
                 }.foregroundStyle(Theme.text).accessibilityIdentifier("open-twins-history")
+                NavigationLink {CloudNotificationSettingsView(client:client)} label: {
+                    Label("通知設定",systemImage:"bell.badge.fill")
+                        .frame(maxWidth:.infinity,alignment:.leading).padding(16)
+                        .background(.white,in:RoundedRectangle(cornerRadius:18))
+                }.foregroundStyle(Theme.text).accessibilityIdentifier("open-notification-settings")
                 NavigationLink {CloudAlbumSettingsView(client:client)} label: {
                     Label("アルバムの設定",systemImage:"slider.horizontal.3")
                         .frame(maxWidth:.infinity,alignment:.leading).padding(16)
@@ -112,7 +132,7 @@ struct CloudAccountPage:View {
                     .background(.white,in:RoundedRectangle(cornerRadius:18))
                 DisclosureGroup("設定・管理",isExpanded:$showingManagement) {
                     VStack(alignment:.leading,spacing:16) {
-                        NavigationLink("家族の招待・メンバー") {CloudFamilyView()}
+                        NavigationLink("家族の招待・メンバー") {CloudAlbumSettingsView(client:client)}
                         NavigationLink("写真の公開許可") {ProviderConsentView(client:client)}
                         NavigationLink("運営からのお知らせ") {CloudModerationNoticesView(client:client)}
                         Button("ログアウト",role:.destructive) {Task {await client.signOut()}}
@@ -141,9 +161,69 @@ struct CloudAccountPage:View {
                 }.accessibilityIdentifier("open-cloud-family")
             }
             if let error=client.error {Text(error).foregroundStyle(.red)}
-        }.padding(16)}.background(Theme.background).navigationTitle("マイページ").navigationBarTitleDisplayMode(.inline)
-        .task {await client.restore();if client.authenticated {await client.performRefresh {try await client.loadPets()}}}
+        }.padding(16)}
+        // TabView's floating bar is hosted outside this navigation stack. Keep
+        // trailing rows above it after the scroll view finishes bouncing.
+        .contentMargins(.bottom,88,for:.scrollContent)
+        .background(Theme.background).navigationTitle("マイページ").navigationBarTitleDisplayMode(.inline)
+        .task {await client.restore();if client.authenticated {await client.performRefresh {async let pets:Void=client.loadPets();async let profile:Void=client.loadAccountProfile();_ = try await (pets,profile)}}}
         .protectWhenInactive()
+    }
+}
+
+private struct CloudAccountProfileEditor:View {
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject var client:CloudFamilyClient
+    @State private var name=""
+    @State private var originalName=""
+    @State private var icon:String?
+    @State private var iconChanged=false
+    @State private var importingIcon=false
+    @State private var saved=false
+    @State private var initialized=false
+    private var valid:Bool {name.trimmingCharacters(in:.whitespacesAndNewlines).count<=40 && (originalName.isEmpty || !name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)}
+    var body:some View {
+        Form {
+            Section {EditableProfileIcon(encoded:$icon,changed:$iconChanged,importing:$importingIcon)}
+            Section("ニックネーム") {
+                TextField("コメントで使う名前",text:$name).accessibilityIdentifier("account-profile-name")
+                Text("うちの子の名前・写真は、マイページの「うちの子」から変更できます。")
+                    .font(.caption).foregroundStyle(Theme.secondaryText)
+            }
+            Section {
+                if !valid {Text("ニックネームは1〜40文字で入力してね").font(.caption).foregroundStyle(Theme.actionText)}
+                if let error=client.error {Text(error).font(.footnote).foregroundStyle(.red)}
+            }
+        }.disabled(client.busy).scrollContentBackground(.hidden).background(Theme.background)
+            .navigationTitle("マイプロフィール").navigationBarTitleDisplayMode(.inline).protectWhenInactive()
+            .safeAreaInset(edge:.top,spacing:0) {
+                if saved {
+                    Label("保存したよ ♡",systemImage:"checkmark.circle.fill").font(.subheadline.weight(.medium))
+                        .foregroundStyle(Theme.actionText).frame(maxWidth:.infinity).padding(.vertical,9)
+                        .background(Theme.accent.opacity(0.08)).accessibilityIdentifier("account-profile-saved")
+                }
+            }
+            .toolbar {ToolbarItem(placement:.topBarTrailing) {
+                Button(importingIcon ? "写真を準備中…" : client.busy ? "保存中…" : "保存") {
+                    Task {await client.perform {
+                        try await client.saveAccountProfile(name:name,icon:icon,iconChanged:iconChanged)
+                        originalName=client.accountProfile.name;iconChanged=false;saved=true
+                    }}
+                }.fontWeight(.semibold).disabled(client.busy || importingIcon || !valid)
+                    .accessibilityIdentifier("account-profile-save")
+            }}
+            .onChange(of:name) {_,_ in saved=false}
+            .onChange(of:icon) {_,_ in saved=false}
+            .onChange(of:client.currentUserID) {_,_ in dismiss()}
+            .onChange(of:[client.accountProfile.name,client.accountProfile.icon ?? ""]) {_,_ in
+                if name==originalName && !iconChanged && !saved {
+                    name=client.accountProfile.name;originalName=name;icon=client.accountProfile.icon
+                }
+            }
+            .task {
+                guard !initialized else{return};initialized=true
+                name=client.accountProfile.name;originalName=name;icon=client.accountProfile.icon
+            }
     }
 }
 
@@ -231,8 +311,24 @@ private struct CloudAlbumSettingsView:View {
     var body:some View {
         ScrollView {VStack(alignment:.leading,spacing:16) {
             Text("家族と楽しむアルバム").font(.title3.bold())
-            Text("写真・動画の追加は投稿タブから。ここでは、うちの子や家族を管理できます。")
+            Text("アルバムを一緒に楽しむ家族を管理できます。")
                 .font(.subheadline).foregroundStyle(Theme.secondaryText)
+            if client.pets.isEmpty {
+                if client.busy {
+                    PawLoadingView(title:"家族アルバムを確認中",compact:true)
+                } else if client.error==nil {
+                    VStack(alignment:.leading,spacing:12) {
+                        Text("うちの子を登録して、家族を招待しよう 🐾").font(.headline)
+                        Text("登録した子のアルバムに、家族を招待できます。")
+                            .font(.subheadline).foregroundStyle(Theme.secondaryText)
+                        NavigationLink {CloudFamilyView(registrationOnly:true)} label: {
+                            Label("うちの子を登録",systemImage:"plus.circle.fill")
+                                .frame(maxWidth:.infinity)
+                        }.buttonStyle(CoralButtonStyle())
+                    }.padding(16).frame(maxWidth:.infinity,alignment:.leading)
+                        .background(.white,in:RoundedRectangle(cornerRadius:18))
+                }
+            }
             ForEach(client.pets) {pet in
                 VStack(alignment:.leading,spacing:10) {
                     Text(pet.name).font(.headline)
@@ -243,13 +339,14 @@ private struct CloudAlbumSettingsView:View {
                         NavigationLink {FamilyInviteView(pet:pet,client:client)} label: {
                             Label("家族を招待",systemImage:"person.badge.plus")
                         }
-                        NavigationLink {CloudProfileEditor(pet:pet,client:client)} label: {
-                            Label("プロフィール",systemImage:"pawprint")
-                        }
+                    } else {
+                        Text("招待リンクは、アルバムを作った人から送ってもらってね。")
+                            .font(.caption).foregroundStyle(Theme.secondaryText)
                     }
                 }.frame(maxWidth:.infinity,alignment:.leading).padding(16)
                     .background(.white,in:RoundedRectangle(cornerRadius:18))
             }
+            if let error=client.error {Text(error).font(.subheadline).foregroundStyle(.red)}
         }.padding(16)}.background(Theme.background).navigationTitle("アルバムの設定")
             .navigationBarTitleDisplayMode(.inline)
             .task {await client.performRefresh {try await client.loadPets()}}
@@ -473,7 +570,7 @@ struct CloudAlbumManagerView:View {
                     }.accessibilityIdentifier("album-library-pet-"+pet.id)
                 }
                 if client.pets.isEmpty {ContentUnavailableView("まだアルバムがありません",systemImage:"pawprint",description:Text("犬猫がいなくてもMEFRIONを楽しめます"))}
-                NavigationLink {CloudFamilyView()} label: {Label("うちの子を追加",systemImage:"plus.circle.fill").frame(maxWidth:.infinity)}.buttonStyle(.bordered).tint(Theme.actionText)
+                NavigationLink {CloudFamilyView(registrationOnly:true)} label: {Label("うちの子を追加",systemImage:"plus.circle.fill").frame(maxWidth:.infinity)}.buttonStyle(.bordered).tint(Theme.actionText)
             } else {
                 ContentUnavailableView("思い出を、家族と一緒に",systemImage:"photo.on.rectangle.angled",description:Text("ログインすると、非公開アルバムを作れます"))
                 NavigationLink("ログインしてアルバムを使う") {CloudFamilyView()}.buttonStyle(CoralButtonStyle()).frame(maxWidth:.infinity)

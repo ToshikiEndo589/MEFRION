@@ -4,84 +4,89 @@ import Photos
 import ImageIO
 
 struct CloudFamilyView:View {
+    var registrationOnly=false
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var client=CloudFamilyClient.shared
     @State private var publicKey=""
     @State private var petName=""
     @State private var species="dog"
+    @State private var speciesSelected=false
     @State private var petBreed=""
-    @State private var breedUnknown=false
     @State private var showingPetForm=false
     @State private var inviteToken=""
     @State private var confirmScope=false
     var body:some View {
         List {
-            Section {Text("家族アルバム").font(.headline);Text("写真は、参加している家族だけで共有します。アルバムへの追加だけでは公開投稿に配信しません。").font(.footnote)}
-            if !client.authenticated {
-                if !client.configured {
-                    #if DEBUG
-                    Section("接続設定") {SecureField("接続用キー",text:$publicKey);Button("接続設定を保存") { if publicKey.hasPrefix("sb_publishable_") || publicKey.hasPrefix("eyJ") {UserDefaults.standard.set(publicKey,forKey:"MEFRIONCloudPublicKey");publicKey=""} } }
-                    #else
-                    Section {Text("現在アカウントサービスに接続できません。時間をおいて再試行してください。")}
-                    #endif
-                }
-                Section {
-                    NavigationLink("メールで新規登録") {EmailAccountView(client:client,initialMode:"signup")}
-                    NavigationLink("メールでログイン") {EmailAccountView(client:client)}
-                    Text("犬猫を飼っていなくても登録できます。うちの子はあとから追加できます。")
-                        .font(.footnote).foregroundStyle(.secondary)
-                }
+            if registrationOnly && client.authenticated {
+                Section {petCreationFields}
             } else {
-                Section("家族のPet") {
-                    Text("サーバー認証済み").accessibilityIdentifier("cloud-authenticated")
-                    if client.pets.isEmpty {
-                        Text("まだ犬猫を登録していません。投稿を見る・フォロー・そっくりはこのまま使えます。")
-                            .font(.subheadline).foregroundStyle(.secondary)
+                Section {Text("家族アルバム").font(.headline);Text("写真は、参加している家族だけで共有します。アルバムへの追加だけでは公開投稿に配信しません。").font(.footnote)}
+                if !client.authenticated {
+                    if !client.configured {
+                        #if DEBUG
+                        Section("接続設定") {SecureField("接続用キー",text:$publicKey);Button("接続設定を保存") { if publicKey.hasPrefix("sb_publishable_") || publicKey.hasPrefix("eyJ") {UserDefaults.standard.set(publicKey,forKey:"MEFRIONCloudPublicKey");publicKey=""} } }
+                        #else
+                        Section {Text("現在アカウントサービスに接続できません。時間をおいて再試行してください。")}
+                        #endif
                     }
-                    ForEach(client.pets) {pet in NavigationLink {CloudAlbumLibraryView()} label:{HStack {Image(systemName:"pawprint.fill").foregroundStyle(Theme.accent);VStack(alignment:.leading){Text(pet.name);Text(pet.role=="owner" ? "オーナー" : "家族メンバー").font(.caption).foregroundStyle(.secondary)}}}.accessibilityIdentifier("cloud-pet-"+pet.id)}
-                    Button("一覧を更新") {Task {await client.perform {try await client.loadPets()} } }
-                }
-                Section("運営からの通知") {NavigationLink("対応の確認・異議申し立て") {CloudModerationNoticesView(client:client)}}
-                Section("提供した写真") {NavigationLink("公開用途の同意を管理") {ProviderConsentView(client:client)}.accessibilityIdentifier("cloud-provider-management")}
-                Section {
-                    if client.pets.isEmpty {
-                        DisclosureGroup("うちの子を登録する（任意）",isExpanded:$showingPetForm) {
+                    Section {
+                        NavigationLink("メールで新規登録") {EmailAccountView(client:client,initialMode:"signup")}
+                        NavigationLink("メールでログイン") {EmailAccountView(client:client)}
+                        Text("犬猫を飼っていなくても登録できます。うちの子はあとから追加できます。")
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
+                } else {
+                    Section("家族のPet") {
+                        Text("サーバー認証済み").accessibilityIdentifier("cloud-authenticated")
+                        if client.pets.isEmpty {
+                            Text("まだ犬猫を登録していません。投稿を見る・フォロー・そっくりはこのまま使えます。")
+                                .font(.subheadline).foregroundStyle(.secondary)
+                        }
+                        ForEach(client.pets) {pet in NavigationLink {CloudAlbumLibraryView()} label:{HStack {Image(systemName:"pawprint.fill").foregroundStyle(Theme.accent);VStack(alignment:.leading){Text(pet.name);Text(pet.role=="owner" ? "オーナー" : "家族メンバー").font(.caption).foregroundStyle(.secondary)}}}.accessibilityIdentifier("cloud-pet-"+pet.id)}
+                        Button("一覧を更新") {Task {await client.perform {try await client.loadPets()} } }
+                    }
+                    Section("運営からの通知") {NavigationLink("対応の確認・異議申し立て") {CloudModerationNoticesView(client:client)}}
+                    Section("提供した写真") {NavigationLink("公開用途の同意を管理") {ProviderConsentView(client:client)}.accessibilityIdentifier("cloud-provider-management")}
+                    Section {
+                        if client.pets.isEmpty {
+                            DisclosureGroup("うちの子を登録する（任意）",isExpanded:$showingPetForm) {
+                                petCreationFields
+                            }
+                        } else {
                             petCreationFields
                         }
-                    } else {
-                        petCreationFields
+                    } header: {
+                        if !client.pets.isEmpty {Text("Petを非公開で作成")}
                     }
-                } header: {
-                    if !client.pets.isEmpty {Text("Petを非公開で作成")}
+                    Section("招待を受け取ったら") {
+                        TextField("招待トークン",text:$inviteToken).textInputAutocapitalization(.never).autocorrectionDisabled()
+                        Toggle("家族内の写真を閲覧・追加する範囲に同意する",isOn:$confirmScope)
+                        Text("SNS・そっくり・外部共有の公開権限は付与されません。").font(.caption)
+                        Button("家族に参加") {Task {await client.perform {try await client.accept(token:inviteToken,confirmed:confirmScope);inviteToken="";confirmScope=false} } }.disabled(!confirmScope)
+                    }
+                    Button("ログアウト",role:.destructive) {Task {await client.signOut()} }
                 }
-                Section("招待を受け取ったら") {
-                    TextField("招待トークン",text:$inviteToken).textInputAutocapitalization(.never).autocorrectionDisabled()
-                    Toggle("家族内の写真を閲覧・追加する範囲に同意する",isOn:$confirmScope)
-                    Text("SNS・Twins・外部共有の公開権限は付与されません。").font(.caption)
-                    Button("家族に参加") {Task {await client.perform {try await client.accept(token:inviteToken,confirmed:confirmScope);inviteToken="";confirmScope=false} } }.disabled(!confirmScope)
-                }
-                Button("ログアウト",role:.destructive) {Task {await client.signOut()} }
             }
             if client.busy {ProgressView("確認中")}
             if let error=client.error {Text(error).foregroundStyle(.red).accessibilityIdentifier("cloud-error")}
-        }.scrollContentBackground(.hidden).background(Theme.background).navigationTitle("家族で共有").navigationBarTitleDisplayMode(.inline).task {await client.restore()}.protectWhenInactive()
+        }.scrollContentBackground(.hidden).background(Theme.background).navigationTitle(registrationOnly ? "うちの子を登録" : "家族で共有").navigationBarTitleDisplayMode(.inline).task {await client.restore()}.protectWhenInactive()
             .onChange(of:species) {_,_ in petBreed=""}
     }
 
     @ViewBuilder private var petCreationFields:some View {
         TextField("犬・猫の名前",text:$petName).accessibilityIdentifier("cloud-pet-name")
-        Picker("犬・猫",selection:$species) {Text("犬").tag("dog");Text("猫").tag("cat")}
-        BreedAutocompleteField(species:species,text:$petBreed,identifier:"cloud-pet-breed")
-            .disabled(breedUnknown)
-        Toggle("品種がわからない",isOn:$breedUnknown)
-        Text("投稿には犬・猫の名前を表示します。品種がわからない場合は名前だけを表示します。")
-            .font(.caption)
+        PetSpeciesSelectionField(species:$species,selected:$speciesSelected)
+        if speciesSelected {
+            BreedAutocompleteField(species:species,text:$petBreed,identifier:"cloud-pet-breed")
+        }
         Button("この子を登録") {Task {await client.perform {
             if client.pets.isEmpty {try await client.setSocialName(petName.trimmingCharacters(in:.whitespacesAndNewlines))}
-            let breed=breedUnknown ? "" : (PetBreedCatalog.canonical(petBreed,species:species) ?? petBreed.trimmingCharacters(in:.whitespacesAndNewlines))
+            let breed=PetBreedCatalog.canonical(petBreed,species:species) ?? petBreed.trimmingCharacters(in:.whitespacesAndNewlines)
             try await client.createPet(name:petName,species:species,breed:breed)
-            petName="";petBreed="";breedUnknown=false;showingPetForm=false
+            petName="";petBreed="";speciesSelected=false;showingPetForm=false
+            if registrationOnly {dismiss()}
         } } }
-        .disabled(!(1...40).contains(petName.trimmingCharacters(in:.whitespacesAndNewlines).count) || (!breedUnknown && !(1...100).contains(petBreed.trimmingCharacters(in:.whitespacesAndNewlines).count)))
+        .disabled(!speciesSelected || !(1...40).contains(petName.trimmingCharacters(in:.whitespacesAndNewlines).count) || !(1...100).contains(petBreed.trimmingCharacters(in:.whitespacesAndNewlines).count))
         .accessibilityIdentifier("cloud-create-pet")
     }
 }
@@ -96,7 +101,7 @@ struct ProviderConsentView:View {
             ForEach(client.providedPhotos) {photo in
                 Section(photo.title.isEmpty ? "提供写真 "+String(photo.id.prefix(8)) : photo.title) {
                     Text(photo.captured ?? "日付不明")
-                    ForEach([("sns","SNS",photo.sns),("twins","Twins",photo.twins),("external_share","外部共有",photo.external_share)],id:\.0) {purpose,title,allowed in
+                    ForEach([("sns","SNS",photo.sns),("twins","そっくり",photo.twins),("external_share","外部共有",photo.external_share)],id:\.0) {purpose,title,allowed in
                         HStack {Text(title+"："+(allowed ? "同意中" : "同意なし"));Spacer();if allowed {Button("取り消す",role:.destructive) {withdrawing=(photo.id,purpose)}.disabled(client.busy).accessibilityIdentifier("provider-withdraw-"+purpose)}}
                     }
                     Button("提供した写真を削除",role:.destructive) {deleting=photo.id}.disabled(client.busy).accessibilityIdentifier("provider-delete-"+photo.id)
@@ -166,7 +171,7 @@ struct CloudAlbumView:View {
                         Button("端末に保存") {savingPhoto=photo.id}.disabled(client.busy).accessibilityIdentifier("cloud-save-photo-"+photo.id)
                         if photo.mine {
                             NavigationLink("写真・節目を編集") {CloudPhotoEditor(photo:photo,pet:pet.id,client:client)}
-                            DisclosureGroup("写真の公開許可") {ForEach([("sns","SNS"),("twins","Twins"),("external_share","外部共有")],id:\.0) {purpose,title in
+                            DisclosureGroup("写真の公開許可") {ForEach([("sns","SNS"),("twins","そっくり"),("external_share","外部共有")],id:\.0) {purpose,title in
                                 HStack {Button(title+"への写真提供に同意") {confirmingConsent=(photo.id,purpose,true)};Button("同意を取り消す",role:.destructive) {confirmingConsent=(photo.id,purpose,false)}}.font(.caption)
                             }}.font(.caption)
                         }
@@ -189,7 +194,7 @@ struct CloudAlbumView:View {
                     DisclosureGroup("その他の管理") {
                         VStack(alignment:.leading,spacing:16) {
                             NavigationLink("家族の記録") {CloudFamilyActivityView(pet:pet,client:client)}
-                            NavigationLink("節目・通知休止") {CloudEventsView(pet:pet,client:client)}
+                            NavigationLink("記念日") {CloudEventsView(pet:pet,client:client)}
                             if pet.role=="owner" {
                                 Button("Petの公開プロフィールを停止",role:.destructive) {stoppingProfile=true}.disabled(client.busy).accessibilityIdentifier("cloud-stop-public-profile")
                                 if let invite=client.invitation {

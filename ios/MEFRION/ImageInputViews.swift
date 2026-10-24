@@ -101,6 +101,6 @@ struct TwinsHistoryView:View {
             if let error {Text(error).foregroundStyle(.red)}
             if !store.twinsHistory.isEmpty {Button("履歴をすべて削除",role:.destructive) {clearing=true}.accessibilityIdentifier("twins-clear-history")}
         }.scrollContentBackground(.hidden).background(Theme.background).navigationTitle("検索履歴").navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog("この端末のTwins検索履歴を削除しますか？",isPresented:$clearing,titleVisibility:.visible) {Button("検索履歴を削除する",role:.destructive) {do {try store.clearTwinsHistory()} catch {self.error=error.localizedDescription}}}
+        .confirmationDialog("この端末のそっくり検索履歴を削除しますか？",isPresented:$clearing,titleVisibility:.visible) {Button("検索履歴を削除する",role:.destructive) {do {try store.clearTwinsHistory()} catch {self.error=error.localizedDescription}}}
     }
 }

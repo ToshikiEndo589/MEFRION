@@ -1,9 +1,66 @@
 import XCTest
 import UIKit
+import ImageIO
 @testable import MEFRION
 
 @MainActor
 final class PrototypeTests: XCTestCase {
+    func testProfileIconIsSquareBoundedAndStripsLocationMetadata() throws {
+        let format=UIGraphicsImageRendererFormat();format.scale=1
+        let image=UIGraphicsImageRenderer(size:CGSize(width:1200,height:600),format:format).image {ctx in
+            UIColor.systemPink.setFill();ctx.fill(CGRect(x:0,y:0,width:1200,height:600))
+        }
+        let original=NSMutableData()
+        let destination=try XCTUnwrap(CGImageDestinationCreateWithData(original,"public.jpeg" as CFString,1,nil))
+        CGImageDestinationAddImage(destination,try XCTUnwrap(image.cgImage),[kCGImagePropertyGPSDictionary:[kCGImagePropertyGPSLatitude:35.0,kCGImagePropertyGPSLatitudeRef:"N",kCGImagePropertyGPSLongitude:139.0,kCGImagePropertyGPSLongitudeRef:"E"]] as CFDictionary)
+        XCTAssertTrue(CGImageDestinationFinalize(destination))
+        let value=try XCTUnwrap(ProfileIconCodec.encode(data:original as Data))
+        let bytes=try XCTUnwrap(Data(base64Encoded:value))
+        XCTAssertLessThanOrEqual(bytes.count,16384)
+        let source=try XCTUnwrap(CGImageSourceCreateWithData(bytes as CFData,nil))
+        let props=try XCTUnwrap(CGImageSourceCopyPropertiesAtIndex(source,0,nil) as? [CFString:Any])
+        XCTAssertEqual(props[kCGImagePropertyPixelWidth] as? Int,props[kCGImagePropertyPixelHeight] as? Int)
+        XCTAssertLessThanOrEqual(try XCTUnwrap(props[kCGImagePropertyPixelWidth] as? Int),256)
+        XCTAssertNil(props[kCGImagePropertyGPSDictionary])
+        XCTAssertNotNil(ProfileIconCodec.image(value))
+    }
+    func testProfileIconRejectsInvalidAndOversizedInputsAndDecodesLegacyModels() throws {
+        XCTAssertNil(ProfileIconCodec.encode(data:Data("not an image".utf8)))
+        XCTAssertNil(ProfileIconCodec.image(String(repeating:"a",count:22501)))
+        let pet=try JSONDecoder().decode(CloudPet.self,from:Data(#"{"id":"p","name":"こむぎ","species":"dog","breed":"柴犬","introduction":"","role":"owner"}"#.utf8))
+        XCTAssertNil(pet.icon)
+        let comment=try JSONDecoder().decode(CloudComment.self,from:Data(#"{"id":"c","body":"かわいい","parent":null,"display_name":"こむぎ","mine":true,"deleted":false,"created_at":"2026-10-24T00:00:00Z"}"#.utf8))
+        XCTAssertNil(comment.icon)
+    }
+    func testNotificationDraftSerializesAndCoalescesInFlightChanges() async {
+        var writes:[Int]=[];var first:CheckedContinuation<Void,Never>?
+        let draft=NotificationPreferenceDraft(0) {value in
+            writes.append(value)
+            if writes.count==1 {await withCheckedContinuation {first=$0}}
+        }
+        draft.load(0);draft.change(1)
+        while first==nil {await Task.yield()}
+        draft.change(2);draft.change(3);first?.resume()
+        await draft.waitUntilSaved()
+        XCTAssertEqual(writes,[1,3]);XCTAssertEqual(draft.value,3);XCTAssertNil(draft.error)
+    }
+    func testNotificationDraftRollsBackFailedWriteAndRetriesIntent() async {
+        var writes:[Int]=[]
+        let draft=NotificationPreferenceDraft(0) {value in
+            writes.append(value);if writes.count==1 {throw URLError(.notConnectedToInternet)}
+        }
+        draft.load(0);draft.change(2);await draft.waitUntilSaved()
+        XCTAssertEqual(draft.value,0);XCTAssertNotNil(draft.error)
+        draft.retry();await draft.waitUntilSaved()
+        XCTAssertEqual(writes,[2,2]);XCTAssertEqual(draft.value,2);XCTAssertNil(draft.error)
+    }
+    func testNotificationLoadingDoesNotOverwriteServerPreferences() async {
+        var writes:[Int]=[]
+        let draft=NotificationPreferenceDraft(0) {writes.append($0)}
+        draft.change(1);draft.load(4);await draft.waitUntilSaved()
+        XCTAssertEqual(draft.value,4);XCTAssertTrue(writes.isEmpty)
+    }
+
     func testBreedAutocompleteUsesSpeciesAndCanonicalNames() {
         XCTAssertEqual(PetBreedCatalog.canonical("といぷー",species:"dog"),"トイ・プードル")
         XCTAssertEqual(PetBreedCatalog.canonical("アメショ",species:"cat"),"アメリカン・ショートヘア")
@@ -31,6 +88,13 @@ final class PrototypeTests: XCTestCase {
         XCTAssertTrue(Set(first.prefix(12).map(\.id)).isDisjoint(with:Set(second.prefix(12).map(\.id))))
         XCTAssertTrue(zip(second,second.dropFirst()).prefix(20).allSatisfy{pair in pair.0.species != pair.1.species})
         XCTAssertEqual(CloudFamilyClient.recommendedOrder(Array(posts.prefix(1)),impressions:seen,seed:3).map(\.id),["post-0"])
+    }
+    func testSignupReportsTheUnmetConditionInsteadOfSilentlyDisabling() {
+        XCTAssertTrue(SignupRequirements.validEmail("pet.owner@docomo.ne.jp"))
+        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345",confirmation:"Paw12345",adult:true,confirmed:true),"パスワードは12文字以上にしてね")
+        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345more",confirmation:"",adult:true,confirmed:true),"確認用のパスワードも入力してね")
+        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345more",confirmation:"Paw12345other",adult:true,confirmed:true),"2つのパスワードを同じにしてね")
+        XCTAssertNil(SignupRequirements.validationMessage(email:"pet.owner@docomo.ne.jp",password:"Paw12345more",confirmation:"Paw12345more",adult:true,confirmed:true))
     }
     func testSignupRequiresMatchingPasswordAndExplicitChecks() {
         let valid=SignupRequirements.valid(email:"person@example.com",password:"long-password-123",confirmation:"long-password-123",adult:true,confirmed:true)

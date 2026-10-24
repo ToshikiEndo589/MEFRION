@@ -1,9 +1,49 @@
 import XCTest
 import UIKit
 import AVFoundation
+import Vision
 @testable import MEFRION
 
 @MainActor final class ReferenceTwinsTests:XCTestCase {
+    func testCloseUpRecognitionRecoversRejectedDogAndCatPhotosThroughQueryEncoding() async throws {
+        var baselineAccepted=0,improvedAccepted=0
+        let encoder=ReferenceQueryEncoder()
+        for (name,species) in [("appstore-dog-one","dog"),("appstore-dog-two","dog"),("appstore-cat-one","cat")] {
+            let image=try XCTUnwrap(UIImage(named:name)?.cgImage)
+            for fraction in [1.0,0.7,0.45] {
+                let width=CGFloat(image.width)*fraction,height=CGFloat(image.height)*fraction
+                let zoom=try XCTUnwrap(image.cropping(to:CGRect(x:(CGFloat(image.width)-width)/2,y:(CGFloat(image.height)-height)/2,width:width,height:height)))
+                let old=VNRecognizeAnimalsRequest();old.revision=2;old.usesCPUOnly=true
+                try VNImageRequestHandler(cgImage:zoom).perform([old])
+                let accepted=(old.results ?? []).contains{$0.labels.contains{$0.identifier.lowercased()==species && $0.confidence>=0.35}}
+                if accepted {baselineAccepted+=1}
+                let detected=try await PetSpeciesDetection.shared.detect(zoom)
+                XCTAssertEqual(detected,species,"\(name) at \(fraction)")
+                let subjects=try PetSubjectCrop.locate(zoom,species:species)
+                XCTAssertTrue(subjects.allSatisfy{$0.boundingBox.minX>=0 && $0.boundingBox.minY>=0 && $0.boundingBox.maxX<=1.0001 && $0.boundingBox.maxY<=1.0001})
+                let crop=try PetSubjectCrop.crop(zoom,species:species,subjects:subjects)
+                XCTAssertGreaterThanOrEqual(min(crop.image.width,crop.image.height),32)
+                improvedAccepted+=1
+                if !accepted {
+                    let query=try await encoder.encode(zoom,species:species)
+                    XCTAssertEqual(query.values.count,PetVisualFeature.elements)
+                    XCTAssertEqual(query.resemblance.count,384)
+                    XCTAssertTrue(query.values.allSatisfy(\.isFinite))
+                }
+            }
+        }
+        print("CLOSEUP_REGRESSION old=\(baselineAccepted)/9 improved=\(improvedAccepted)/9")
+        XCTAssertEqual(improvedAccepted,9)
+        XCTAssertGreaterThan(improvedAccepted,baselineAccepted,"Include a close-up that genuinely failed the previous detector")
+    }
+    func testCloseUpClassificationRequiresClearExactPetEvidence() throws {
+        XCTAssertEqual(PetSubjectCrop.classificationSpecies(["cat":0.8,"dog":0.02,"animal":0.9]),"cat")
+        XCTAssertEqual(PetSubjectCrop.classificationSpecies(["dog":0.8,"cat":0.02]),"dog")
+        XCTAssertNil(PetSubjectCrop.classificationSpecies(["hotdog":0.99,"prairie_dog":0.98,"caterpillar":0.9]))
+        XCTAssertNil(PetSubjectCrop.classificationSpecies(["dog":0.6,"cat":0.55]))
+        XCTAssertNil(PetSubjectCrop.classificationSpecies(["dog":0.4,"cat":0.1]))
+        XCTAssertNil(PetSubjectCrop.classificationSpecies(["dog":0.6,"people":0.95]))
+    }
     func testAutomaticSpeciesDetectionAndBlankRejection() async throws {
         let engine=ReferenceTwinsEngine()
         for species in ["dog","cat"] {
@@ -146,6 +186,49 @@ import AVFoundation
         do {_=try PetVisualFeature.extract(try XCTUnwrap(blank.cgImage),species:"dog");XCTFail("Blank photo must not return animal features")} catch {XCTAssertTrue(error is PetVisualError)}
         let engine=ReferenceTwinsEngine(root:FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString))
         do {_=try await engine.assets(species:"dog");XCTFail("Missing index is a system failure")} catch {}
+    }
+    func testReferenceHistoryStoresSmallQueryPhotoAndDeletesItWithHistory() throws {
+        let path=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString+".json")
+        defer {try? FileManager.default.removeItem(at:path)}
+        let store=PrototypeStore(storageURL:path)
+        let format=UIGraphicsImageRendererFormat();format.scale=1
+        let photo=UIGraphicsImageRenderer(size:CGSize(width:1600,height:800),format:format).image {context in
+            UIColor.systemPink.setFill();context.fill(CGRect(x:0,y:0,width:1600,height:800))
+        }
+        try store.saveReferenceSearch(owner:"owner-1",species:"dog",candidates:["pexels-1"],queryImage:photo)
+        let record=try XCTUnwrap(PrototypeStore(storageURL:path).referenceTwinsHistory.first)
+        let bytes=try XCTUnwrap(record.queryThumbnail),restored=try XCTUnwrap(UIImage(data:bytes))
+        XCTAssertEqual(restored.size.width,512);XCTAssertEqual(restored.size.height,256)
+        XCTAssertLessThan(bytes.count,100_000)
+        var legacy=try XCTUnwrap(JSONSerialization.jsonObject(with:JSONEncoder().encode(record)) as? [String:Any])
+        legacy.removeValue(forKey:"queryThumbnail")
+        let decoded=try JSONDecoder().decode(ReferenceSearchRecord.self,from:JSONSerialization.data(withJSONObject:legacy))
+        XCTAssertNil(decoded.queryThumbnail,"Older histories must still load")
+        try store.eraseReferenceHistory(owner:"owner-1")
+        XCTAssertTrue(PrototypeStore(storageURL:path).referenceTwinsHistory.isEmpty)
+        try store.saveReferenceSearch(owner:"owner-1",species:"dog",candidates:["pexels-1"],now:Date().addingTimeInterval(-90000),queryImage:photo)
+        let expired=PrototypeStore(storageURL:path)
+        XCTAssertTrue(expired.referenceTwinsHistory.isEmpty)
+        let disk=try XCTUnwrap(JSONSerialization.jsonObject(with:Data(contentsOf:path)) as? [String:Any])
+        XCTAssertEqual((disk["referenceTwinsHistory"] as? [[String:Any]])?.count,0,"Expiry removes the stored thumbnail, not only the row on screen")
+    }
+    func testReferenceHistoryKeepsEverySearchFor24HoursAndDeduplicatesRetries() throws {
+        let path=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString+".json")
+        defer {try? FileManager.default.removeItem(at:path)}
+        let store=PrototypeStore(storageURL:path),now=Date()
+        let retryID=UUID()
+        for index in 0..<35 {
+            try store.saveReferenceSearch(owner:"owner-1",species:"dog",candidates:["pexels-\(index+1)"],now:now.addingTimeInterval(Double(index-100)))
+        }
+        try store.saveReferenceSearch(owner:"owner-1",species:"cat",candidates:["pexels-99"],now:now,id:retryID)
+        try store.saveReferenceSearch(owner:"owner-1",species:"cat",candidates:["pexels-99"],now:now,id:retryID)
+        XCTAssertEqual(store.referenceTwinsHistory.count,36,"All searches must survive, including those beyond the former 20-record limit")
+        XCTAssertEqual(PrototypeStore(storageURL:path).referenceTwinsHistory.count,36)
+        try store.saveReferenceSearch(owner:"owner-2",species:"cat",candidates:["pexels-100"],now:now)
+        try store.eraseReferenceHistory(owner:"owner-2")
+        XCTAssertEqual(store.referenceTwinsHistory.count,36,"Deleting one account's history must not affect another")
+        try store.saveReferenceSearch(owner:"owner-1",species:"dog",candidates:["pexels-101"],now:now.addingTimeInterval(86400))
+        XCTAssertEqual(store.referenceTwinsHistory.count,1,"The 24-hour boundary must expire older results")
     }
     func testReferenceHistoryOptInTTLAndErase() throws {
         let path=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString+".json")

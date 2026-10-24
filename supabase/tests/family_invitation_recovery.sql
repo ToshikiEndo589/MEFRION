@@ -1,0 +1,68 @@
+-- Synthetic identities only. This standalone suite always rolls back its fixtures.
+begin;
+create temporary table invite_test_result(name text,passed boolean);
+create function pg_temp.invite_assert(label text,ok boolean) returns void language plpgsql security definer as $$
+begin
+ if ok is distinct from true then raise exception 'invitation assertion failed: %',label;end if;
+ insert into invite_test_result values(label,true);
+end $$;
+do $$
+declare a uuid:=gen_random_uuid();b uuid:=gen_random_uuid();c uuid:=gen_random_uuid();pet uuid;other_pet uuid;
+ first_invite jsonb;replacement jsonb;pending jsonb;denied boolean;j integer;
+begin
+ insert into auth.users(id,aud,role,email) values(a,'authenticated','authenticated',a||'@example.invalid'),(b,'authenticated','authenticated',b||'@example.invalid'),(c,'authenticated','authenticated',c||'@example.invalid');
+ perform pg_temp.invite_assert('anonymous cannot list invites',not has_function_privilege('anon','public.mefrion_pending_invites(uuid)','execute'));
+ perform pg_temp.invite_assert('anonymous cannot replace invites',not has_function_privilege('anon','public.mefrion_replace_invites(uuid,boolean)','execute'));
+ perform set_config('request.jwt.claim.sub',a::text,true);perform set_config('request.jwt.claims',json_build_object('sub',a,'role','authenticated')::text,true);
+ execute 'set local role authenticated';
+ pet:=(public.mefrion_create_pet('招待ロールバック試験','dog')->>'id')::uuid;
+ other_pet:=(public.mefrion_create_pet('別アルバム試験','cat')->>'id')::uuid;
+ perform public.mefrion_invite(other_pet);
+ first_invite:=public.mefrion_invite(pet);
+ execute 'reset role';
+ perform set_config('request.jwt.claim.sub',b::text,true);perform set_config('request.jwt.claims',json_build_object('sub',b,'role','authenticated')::text,true);
+ execute 'set local role authenticated';
+ perform public.mefrion_accept_invite(first_invite->>'token',true);
+ denied:=false;begin perform public.mefrion_pending_invites(pet);exception when insufficient_privilege then denied:=true;end;
+ perform pg_temp.invite_assert('family member cannot list owner invites',denied);
+ execute 'reset role';
+ perform set_config('request.jwt.claim.sub',a::text,true);perform set_config('request.jwt.claims',json_build_object('sub',a,'role','authenticated')::text,true);
+ execute 'set local role authenticated';
+ for j in 1..5 loop perform public.mefrion_invite(pet);end loop;
+ denied:=false;begin perform public.mefrion_invite(pet);exception when raise_exception then if sqlerrm='invitation_limit' then denied:=true;else raise;end if;end;
+ perform pg_temp.invite_assert('five pending links reproduce original limit',denied);
+ pending:=public.mefrion_pending_invites(pet);
+ perform pg_temp.invite_assert('owner can validate five cached links',jsonb_array_length(pending)=5);
+ perform pg_temp.invite_assert('metadata has no invitation secrets',pending::text not like '%token%');
+ denied:=false;begin perform public.mefrion_replace_invites(pet,false);exception when insufficient_privilege then denied:=true;end;
+ perform pg_temp.invite_assert('explicit confirmation required',denied);
+ perform pg_temp.invite_assert('cancel keeps all pending links',jsonb_array_length(public.mefrion_pending_invites(pet))=5);
+ execute 'reset role';
+ perform set_config('request.jwt.claim.sub',c::text,true);perform set_config('request.jwt.claims',json_build_object('sub',c,'role','authenticated')::text,true);
+ execute 'set local role authenticated';
+ denied:=false;begin perform public.mefrion_replace_invites(pet,true);exception when insufficient_privilege then denied:=true;end;
+ perform pg_temp.invite_assert('outsider cannot replace links',denied);
+ execute 'reset role';
+ perform set_config('request.jwt.claim.sub',a::text,true);perform set_config('request.jwt.claims',json_build_object('sub',a,'role','authenticated')::text,true);
+ execute 'set local role authenticated';
+ replacement:=public.mefrion_replace_invites(pet,true);
+ perform pg_temp.invite_assert('replacement returns a usable secret',length(replacement->>'token')=64);
+ perform pg_temp.invite_assert('replacement leaves exactly one pending link',jsonb_array_length(public.mefrion_pending_invites(pet))=1);
+ perform pg_temp.invite_assert('other albums retain their links',jsonb_array_length(public.mefrion_pending_invites(other_pet))=1);
+ execute 'reset role';
+ perform pg_temp.invite_assert('accepted invite is untouched',exists(select 1 from mefrion_private.invites where id=(first_invite->>'id')::uuid and state='accepted'));
+ perform pg_temp.invite_assert('old pending links are revoked',(select count(*) from mefrion_private.invites where pet_id=pet and state='revoked')=5);
+ perform set_config('request.jwt.claim.sub',b::text,true);perform set_config('request.jwt.claims',json_build_object('sub',b,'role','authenticated')::text,true);
+ execute 'set local role authenticated';
+ perform pg_temp.invite_assert('existing member still has family access',public.mefrion_family_access(pet));
+ execute 'reset role';
+ perform set_config('request.jwt.claim.sub',c::text,true);perform set_config('request.jwt.claims',json_build_object('sub',c,'role','authenticated')::text,true);
+ execute 'set local role authenticated';
+ perform public.mefrion_accept_invite(replacement->>'token',true);
+ perform pg_temp.invite_assert('new link joins the family',public.mefrion_family_access(pet));
+ denied:=false;begin perform public.mefrion_accept_invite(replacement->>'token',true);exception when raise_exception then if sqlerrm='invalid_invitation' then denied:=true;else raise;end if;end;
+ perform pg_temp.invite_assert('new link is still single use',denied);
+ execute 'reset role';
+end $$;
+select count(*) as checks,bool_and(passed) as passed from invite_test_result;
+rollback;

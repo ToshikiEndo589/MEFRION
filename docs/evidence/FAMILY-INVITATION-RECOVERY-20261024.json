@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-24",
+  "finding": "Five pending, unexpired invitations exhausted the per-album creation cap; the client replaced invitation_limit with a generic permissions error.",
+  "development": {
+    "deployed": true,
+    "sql_checks": 17,
+    "sql_passed": true,
+    "anonymous_http_statuses": [
+      401,
+      401
+    ]
+  },
+  "production": {
+    "deployed": true,
+    "sql_checks": 17,
+    "sql_passed": true,
+    "anonymous_http_statuses": [
+      401,
+      401
+    ]
+  },
+  "ui": {
+    "passed": true,
+    "fixture_only": true,
+    "scenario": "Cancel replacement, explicitly replace unused links, reopen invitation and retain the created link.",
+    "result": ".local/family-invite-recovery-v2-20261024.xcresult"
+  },
+  "device": {
+    "installed": true,
+    "normal_launch": false,
+    "launch_blocked_by_device_lock": true
+  },
+  "existing_customer_invites_revoked_by_agent": false,
+  "customer_confirmation_required_before_replacement": true,
+  "authenticated_http_delivery_not_tested": true
+}

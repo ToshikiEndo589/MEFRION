@@ -1,0 +1,416 @@
+{
+  "date": "2026-10-24",
+  "scope": "owned production and development stock feed; no customer post removal",
+  "projects": {
+    "production": {
+      "published": 1000,
+      "visible": 1000,
+      "failed_tasks": 0,
+      "unfinished_tasks": 0,
+      "policy": {
+        "daily": 100,
+        "target": 1000,
+        "enabled": true,
+        "last_day": "2026-10-24",
+        "next_jst": "2026-10-25 00:05:00"
+      },
+      "catalogue": 14915,
+      "cron_active": true,
+      "database_bytes": 244233907,
+      "storage_bytes": "236836582",
+      "daily_plan_rollback": {
+        "goal": 100,
+        "tasks": 100,
+        "published": 1000,
+        "daily_runs": 1
+      },
+      "encrypted_snapshot": {
+        "plaintext_bytes": 10235938,
+        "encrypted_bytes": 1294306
+      }
+    },
+    "development": {
+      "published": 1000,
+      "visible": 1000,
+      "failed_tasks": 0,
+      "unfinished_tasks": 0,
+      "policy": {
+        "daily": 100,
+        "target": 1000,
+        "enabled": true,
+        "last_day": "2026-10-24",
+        "next_jst": "2026-10-25 00:05:00"
+      },
+      "catalogue": 14914,
+      "cron_active": true,
+      "database_bytes": 254604979,
+      "storage_bytes": "288011201",
+      "daily_plan_rollback": {
+        "goal": 100,
+        "tasks": 100,
+        "published": 1000,
+        "daily_runs": 1
+      },
+      "encrypted_snapshot": {
+        "plaintext_bytes": 17793665,
+        "encrypted_bytes": 2354739
+      }
+    }
+  },
+  "media_checks": [
+    {
+      "project": "production",
+      "images": [
+        {
+          "status": 200,
+          "bytes": 9981,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 5.33,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 14344,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 5.32,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 10947,
+          "dimensions": [
+            240,
+            320
+          ],
+          "seconds": 5.33,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 10397,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 4.85,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 24499,
+          "dimensions": [
+            320,
+            213
+          ],
+          "seconds": 5.32,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 8723,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 4.85,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "project": "development",
+      "images": [
+        {
+          "status": 200,
+          "bytes": 13972,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 0.57,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 16099,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 0.53,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 17431,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 0.65,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 9008,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 0.67,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 11535,
+          "dimensions": [
+            213,
+            320
+          ],
+          "seconds": 0.89,
+          "passed": true
+        },
+        {
+          "status": 200,
+          "bytes": 13703,
+          "dimensions": [
+            320,
+            213
+          ],
+          "seconds": 0.88,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "sql_tests": {
+    "production": {
+      "checks": 24,
+      "passed": true,
+      "results": [
+        {
+          "name": "one reserved catalogue asset",
+          "passed": true
+        },
+        {
+          "name": "no duplicate reservation",
+          "passed": true
+        },
+        {
+          "name": "wrong lease cannot publish",
+          "passed": true
+        },
+        {
+          "name": "missing files rejected",
+          "passed": true
+        },
+        {
+          "name": "bootstrap finalizes",
+          "passed": true
+        },
+        {
+          "name": "published feed boundary accepts ready stock",
+          "passed": true
+        },
+        {
+          "name": "idempotent completion",
+          "passed": true
+        },
+        {
+          "name": "zero engagement eligible",
+          "passed": true
+        },
+        {
+          "name": "one like protects",
+          "passed": true
+        },
+        {
+          "name": "one comment protects",
+          "passed": true
+        },
+        {
+          "name": "save alone follows specified zero-like-zero-comment rule",
+          "passed": true
+        },
+        {
+          "name": "UGC never eligible",
+          "passed": true
+        },
+        {
+          "name": "daily reserves replacement",
+          "passed": true
+        },
+        {
+          "name": "daily swap finalizes",
+          "passed": true
+        },
+        {
+          "name": "old post stopped only after new ready",
+          "passed": true
+        },
+        {
+          "name": "old original queued for deletion",
+          "passed": true
+        },
+        {
+          "name": "exactly one removed and added",
+          "passed": true
+        },
+        {
+          "name": "second daily task staged",
+          "passed": true
+        },
+        {
+          "name": "late like cancels unsafe replacement",
+          "passed": true
+        },
+        {
+          "name": "liked post remains published",
+          "passed": true
+        },
+        {
+          "name": "cancelled replacement not published",
+          "passed": true
+        },
+        {
+          "name": "one run per day",
+          "passed": true
+        },
+        {
+          "name": "worker RPCs private",
+          "passed": true
+        },
+        {
+          "name": "anonymous worker calls denied",
+          "passed": true
+        }
+      ]
+    },
+    "development": {
+      "checks": 24,
+      "passed": true,
+      "results": [
+        {
+          "name": "one reserved catalogue asset",
+          "passed": true
+        },
+        {
+          "name": "no duplicate reservation",
+          "passed": true
+        },
+        {
+          "name": "wrong lease cannot publish",
+          "passed": true
+        },
+        {
+          "name": "missing files rejected",
+          "passed": true
+        },
+        {
+          "name": "bootstrap finalizes",
+          "passed": true
+        },
+        {
+          "name": "published feed boundary accepts ready stock",
+          "passed": true
+        },
+        {
+          "name": "idempotent completion",
+          "passed": true
+        },
+        {
+          "name": "zero engagement eligible",
+          "passed": true
+        },
+        {
+          "name": "one like protects",
+          "passed": true
+        },
+        {
+          "name": "one comment protects",
+          "passed": true
+        },
+        {
+          "name": "save alone follows specified zero-like-zero-comment rule",
+          "passed": true
+        },
+        {
+          "name": "UGC never eligible",
+          "passed": true
+        },
+        {
+          "name": "daily reserves replacement",
+          "passed": true
+        },
+        {
+          "name": "daily swap finalizes",
+          "passed": true
+        },
+        {
+          "name": "old post stopped only after new ready",
+          "passed": true
+        },
+        {
+          "name": "old original queued for deletion",
+          "passed": true
+        },
+        {
+          "name": "exactly one removed and added",
+          "passed": true
+        },
+        {
+          "name": "second daily task staged",
+          "passed": true
+        },
+        {
+          "name": "late like cancels unsafe replacement",
+          "passed": true
+        },
+        {
+          "name": "liked post remains published",
+          "passed": true
+        },
+        {
+          "name": "cancelled replacement not published",
+          "passed": true
+        },
+        {
+          "name": "one run per day",
+          "passed": true
+        },
+        {
+          "name": "worker RPCs private",
+          "passed": true
+        },
+        {
+          "name": "anonymous worker calls denied",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "deno_tests": {
+    "passed": 4,
+    "failed": 0
+  },
+  "python_tests": {
+    "passed": 99,
+    "failed": 0
+  },
+  "passed": true,
+  "initial_cleanup": {
+    "development_inactive_managed_posts_stopped": 20,
+    "likes": 0,
+    "active_comments": 0,
+    "customer_posts_removed": 0
+  },
+  "resolution": "Existing longest-edge-320px stock previews reused; no new high-resolution source acquisition"
+}
