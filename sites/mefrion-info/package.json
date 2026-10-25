@@ -1,0 +1,7 @@
+{
+  "name": "mefrion-public-site",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "22.x" },
+  "scripts": { "test": "node --test scripts/*.test.mjs" }
+}

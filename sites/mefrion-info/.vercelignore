@@ -1,0 +1,7 @@
+.openai
+.vercel
+dist
+node_modules
+scripts
+worker/backup.js
+README.md
