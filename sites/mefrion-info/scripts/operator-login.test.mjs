@@ -6,7 +6,7 @@ import test from 'node:test';
 const source = await readFile(new URL('../worker/index.js', import.meta.url), 'utf8');
 const pages = JSON.parse(source.split('\n')[0].slice('const PAGES='.length, -1));
 
-function fixture() {
+function fixture({ failSettings = false } = {}) {
   const elements = new Map();
   const element = id => {
     if (!elements.has(id)) elements.set(id, { value: '', hidden: false, checked: false, textContent: '', handlers: {}, addEventListener(name, callback) { this.handlers[name] = callback; }, replaceChildren() {} });
@@ -15,10 +15,11 @@ function fixture() {
   const calls = [];
   const context = vm.createContext({
     document: { getElementById: element, querySelector: () => ({ content: '/console/config.json' }), querySelectorAll: () => [], addEventListener() {} },
-    window: { addEventListener() {} }, Date, Error,
+    window: { addEventListener() {} }, Date, Error, TypeError,
     fetch: async (url, options = {}) => {
       const body = options.body ? JSON.parse(options.body) : null;
       calls.push({ url, body, options });
+      if (failSettings && url.endsWith('/auth/v1/settings')) throw new TypeError('Failed to fetch');
       if (url === '/console/config.json') return { ok: true, json: async () => ({ url: 'https://auth.invalid', anon_key: 'public-fixture' }) };
       let data = {};
       if (url.endsWith('/auth/v1/verify')) data = { access_token: 'fixture-session', expires_in: 1800 };
@@ -68,4 +69,22 @@ test('email code flow retains mandatory MFA and cannot self-grant moderator acce
   await f.trigger('cancel-login', 'click');
   assert.equal(vm.runInContext('token', f.context), null);
   assert.equal(vm.runInContext('pendingEmail', f.context), null);
+});
+
+test('connectivity check sends no mail and cannot create an account', async () => {
+  const f = fixture();
+  await f.trigger('check-connection', 'click');
+  assert.match(f.element('status').textContent, /通信を確認できました/);
+  const probe = f.calls.find(call => call.url.endsWith('/auth/v1/otp'));
+  assert.equal(probe.body.create_user, false);
+  assert.equal(probe.body.email, 'mefrion-connectivity-check@example.invalid');
+  assert.equal(f.calls.some(call => call.url.includes('verify')), false);
+});
+
+test('network failure has a readable recovery instruction', async () => {
+  const f = fixture({ failSettings: true });
+  await f.trigger('check-connection', 'click');
+  assert.match(f.element('status').textContent, /もう一度/);
+  assert.doesNotMatch(f.element('status').textContent, /Failed to fetch/);
+  assert.equal(f.calls.some(call => call.url.endsWith('/auth/v1/otp')), false);
 });
