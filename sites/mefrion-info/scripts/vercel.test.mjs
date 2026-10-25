@@ -8,7 +8,14 @@ test('public pages and operator assets preserve security headers', async () => {
     assert.equal(response.status, 200, path);
     assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
     assert.equal(response.headers.get('Cache-Control'), 'no-store');
-    if (path.startsWith('/console/')) assert.match(response.headers.get('Content-Security-Policy'), /frame-ancestors 'none'/);
+    if (path.startsWith('/console/')) {
+      const policy = response.headers.get('Content-Security-Policy');
+      assert.match(policy, /frame-ancestors 'none'/);
+      // The public configuration is fetched from the same origin before Auth.
+      // Without 'self', browsers throw Failed to fetch before any email request.
+      assert.match(policy, /connect-src 'self' https:\/\/pbnimpqrthvznbwewtcf\.supabase\.co;/);
+      assert.doesNotMatch(policy, /connect-src[^;]*\*/);
+    }
   }
 });
 test('does not expose files, backup storage, or accept writes', async () => {
