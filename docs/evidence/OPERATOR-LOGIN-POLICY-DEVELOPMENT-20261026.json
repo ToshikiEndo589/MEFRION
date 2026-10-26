@@ -1,0 +1,27 @@
+{
+  "configuration": [
+    {
+      "dedicated_identity_configured": true,
+      "public_contact_disallowed": true,
+      "invalid_operator_roles_disabled": true,
+      "old_app_account_count": 0,
+      "dedicated_app_account_count": 1
+    }
+  ],
+  "tests": {
+    "operator_login_policy": {
+      "assertions": 14,
+      "all_passed": true
+    },
+    "security_observability": {
+      "assertions": 43,
+      "all_passed": true
+    },
+    "account_security": {
+      "assertions": 22,
+      "all_passed": true
+    }
+  },
+  "private_login_email_omitted": true,
+  "auth_emails_or_passwords_modified": false
+}

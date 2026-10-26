@@ -17,6 +17,7 @@ begin
  perform set_config('request.jwt.claim.sub',a::text,true);perform set_config('request.jwt.claims',jsonb_build_object('sub',a,'role','authenticated','aal','aal1')::text,true);
  execute 'set local role authenticated';bad:=false;begin perform public.mefrion_security_dashboard();exception when insufficient_privilege then bad:=true;end;
  perform pg_temp.security_assert('ordinary user cannot access dashboard',bad);execute 'reset role';
+ insert into mefrion_private.operator_login_allowlist(email) values(a||'@security-fixture.invalid');
  insert into mefrion_private.operators(user_id,role,active,expires_at) values(a,'moderator',true,now()+interval '1 hour');
  execute 'set local role authenticated';bad:=false;begin perform public.mefrion_security_dashboard();exception when insufficient_privilege then bad:=true;end;
  perform pg_temp.security_assert('operator AAL1 cannot access dashboard',bad);execute 'reset role';

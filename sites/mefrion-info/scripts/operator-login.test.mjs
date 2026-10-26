@@ -6,7 +6,7 @@ import test from 'node:test';
 const source = await readFile(new URL('../worker/index.js', import.meta.url), 'utf8');
 const pages = JSON.parse(source.split('\n')[0].slice('const PAGES='.length, -1));
 
-function fixture({ failSettings = false, factorStatus = 'verified', verifyError = null } = {}) {
+function fixture({ failSettings = false, factorStatus = 'verified', verifyError = null, eligible = true } = {}) {
   const elements = new Map();
   const element = id => {
     if (!elements.has(id)) elements.set(id, { value: '', hidden: false, checked: false, textContent: '', handlers: {}, addEventListener(name, callback) { this.handlers[name] = callback; }, replaceChildren() {} });
@@ -24,6 +24,7 @@ function fixture({ failSettings = false, factorStatus = 'verified', verifyError 
       if (failSettings && url.endsWith('/auth/v1/settings')) throw new TypeError('Failed to fetch');
       if (url === '/console/config.json') return { ok: true, json: async () => ({ url: 'https://auth.invalid', anon_key: 'public-fixture' }) };
       let data = {};
+      if (url.endsWith('/mefrion_operator_login_eligible')) data = eligible;
       if (url.endsWith('/auth/v1/verify')) data = { access_token: 'fixture-session', expires_in: 1800 };
       if (url.endsWith('/auth/v1/user')) data = { factors: [{ factor_type: 'totp', status: factorStatus, id: 'factor-fixture' }] };
       if (url.endsWith('/challenge')) data = { id: 'challenge-fixture' };
@@ -152,4 +153,15 @@ test('restart button cannot unenroll an already verified factor', async () => {
   await f.trigger('restart-enroll', 'click');
   assert.equal(f.calls.some(call => call.options.method === 'DELETE'), false);
   assert.match(f.element('status').textContent, /登録状態が変わりました/);
+});
+
+
+test('non-operator email is stopped before MFA enrollment and credentials are cleared', async () => {
+ const f = fixture({ eligible: false });
+ await loginFixture(f);
+ assert.match(f.element('status').textContent, /運営専用のメールアドレス/);
+ assert.equal(f.calls.some(call => call.url.endsWith('/auth/v1/user')), false);
+ assert.equal(f.calls.some(call => call.url.endsWith('/auth/v1/factors')), false);
+ assert.equal(vm.runInContext('token', f.context), null);
+ assert.equal(f.element('mfa').hidden, true);
 });
