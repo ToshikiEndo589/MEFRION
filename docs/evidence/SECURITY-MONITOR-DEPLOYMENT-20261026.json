@@ -1,0 +1,25 @@
+{
+  "commit": "f09df33ae77524a41899e5502cae0a309f979cab",
+  "vercel_deployment": "77dK38sd1fq4p2XzAN1sEa2k99ha",
+  "vercel_state": "Ready",
+  "environment": "production",
+  "verified_in_vercel_dashboard": true,
+  "url": "https://mefrion.vercel.app/console/security",
+  "http": [
+    {
+      "path": "/console/security",
+      "status": 200,
+      "new_content_matches": true
+    },
+    {
+      "path": "/console/security.js",
+      "status": 200,
+      "new_content_matches": true
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "new_content_matches": true
+    }
+  ]
+}

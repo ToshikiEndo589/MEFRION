@@ -1,0 +1,96 @@
+{
+  "coverage": [
+    {
+      "source": "edge:asset-ingest",
+      "last_seen": "2026-10-26 07:09:03.029143+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:cloud-worker",
+      "last_seen": "2026-10-26 07:09:01.400008+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:database-backup",
+      "last_seen": "2026-10-26 07:09:04.143618+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:offsite-backup",
+      "last_seen": "2026-10-26 07:41:00.784778+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:private-image",
+      "last_seen": "2026-10-26 07:08:54.055175+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:private-video",
+      "last_seen": "2026-10-26 07:08:55.217832+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:public-image",
+      "last_seen": "2026-10-26 07:08:56.336947+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:public-video",
+      "last_seen": "2026-10-26 07:08:57.530468+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:security-collector",
+      "last_seen": "2026-10-26 07:37:41.066456+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:shared-page",
+      "last_seen": "2026-10-26 07:08:58.648713+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "edge:stock-worker",
+      "last_seen": "2026-10-26 07:41:02.21935+00",
+      "accepted": 1,
+      "lost": 0,
+      "details_omitted": 0
+    },
+    {
+      "source": "vercel",
+      "last_seen": "2026-10-26 07:20:11.694778+00",
+      "accepted": 10,
+      "lost": 0,
+      "details_omitted": 0
+    }
+  ],
+  "counts": [
+    {
+      "non_test_events": 0,
+      "test_events": 21,
+      "non_test_incidents": 0,
+      "test_incidents": 1
+    }
+  ]
+}
