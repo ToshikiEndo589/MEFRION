@@ -21,7 +21,7 @@ export function classify({ path = '/', query = '', status = 200, method = 'GET',
 }
 /** @param {string} path @param {string|null} edge */
 export function canonicalTarget(path, edge = null) {
-  const functions = ['private-image','private-video','public-image','public-video','shared-page','cloud-worker','stock-worker','asset-ingest','database-backup','offsite-backup'];
+  const functions = ['private-image','private-video','public-image','public-video','shared-page','cloud-worker','stock-worker','asset-ingest','database-backup','offsite-backup','security-collector'];
   if (functions.includes(edge)) return '/functions/' + edge;
   const safe = new Set(['/','/privacy','/terms','/console','/console/config.json','/console/cloud.js','/console/security.js','/console/security.css','/console/security','/healthz']);
   if (path.endsWith('.html')) path = path.slice(0, -5);

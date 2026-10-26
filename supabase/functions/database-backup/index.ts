@@ -1,7 +1,8 @@
+import { serveMonitored } from '../_shared/security_monitor.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
 const reply = (status: number, body: object) => new Response(JSON.stringify(body), { status, headers });
-Deno.serve(async request => {
+serveMonitored('database-backup', async request => {
   if (request.method !== "POST") return reply(405, { error: "method_not_allowed" });
   const token = request.headers.get("x-mefrion-worker");
   if (!token || token.length < 32 || token.length > 256) return reply(401, { error: "authentication_required" });
@@ -17,7 +18,7 @@ Deno.serve(async request => {
     if (stored.error) throw Error();
     const downloaded = await client.storage.from("system-backups").download(name);
     if (downloaded.error || !downloaded.data) throw Error();
-    const digest = async (data: Uint8Array) => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", data))).join(",");
+    const digest = async (data: Uint8Array) => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new Uint8Array(data).buffer))).join(",");
     if (await digest(bytes) !== await digest(new Uint8Array(await downloaded.data.arrayBuffer()))) throw Error();
     const listed = await client.storage.from("system-backups").list("", { limit: 1000 });
     if (listed.error) throw Error();

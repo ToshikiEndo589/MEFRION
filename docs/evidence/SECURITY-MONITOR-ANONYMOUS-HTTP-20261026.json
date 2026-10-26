@@ -1,0 +1,36 @@
+{
+  "checks": [
+    {
+      "path": "/rest/v1/rpc/mefrion_security_dashboard",
+      "status": 401,
+      "denied": true,
+      "request_id": "01a17724-bf0f-76ee-9a7c-47bfb5cd6a15"
+    },
+    {
+      "path": "/rest/v1/rpc/mefrion_security_ingest",
+      "status": 401,
+      "denied": true,
+      "request_id": "01a17724-c114-7be5-ba3e-3ff9798852ea"
+    },
+    {
+      "path": "/rest/v1/rpc/mefrion_security_incident_update",
+      "status": 401,
+      "denied": true,
+      "request_id": "01a17724-c181-7af5-8d07-82ae067b9dcf"
+    },
+    {
+      "path": "/functions/v1/security-collector",
+      "status": 401,
+      "denied": true,
+      "request_id": "01a17724-c1dc-77e7-aa18-8ada3e539cbd"
+    }
+  ],
+  "collector_denial_recorded": [
+    {
+      "id": "e22a4b97-e279-4d3d-97e2-1d22c2bf525f",
+      "kind": "auth_denied",
+      "status": 401
+    }
+  ],
+  "controlled_event_excluded": true
+}

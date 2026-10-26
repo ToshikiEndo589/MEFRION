@@ -1,8 +1,9 @@
+import { serveMonitored } from '../_shared/security_monitor.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 
 const headers={"Cache-Control":"private, no-store, max-age=0","X-Content-Type-Options":"nosniff","Accept-Ranges":"none"};
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-Deno.serve(async(request:Request)=>{
+serveMonitored('private-video', async(request:Request)=>{
   if(request.method!=="GET")return new Response(null,{status:405,headers});
   const photo=new URL(request.url).searchParams.get("photo");
   const token=request.headers.get("Authorization");

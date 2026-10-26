@@ -1,0 +1,174 @@
+[
+  {
+    "name": "anon cannot read/write security_console_audit",
+    "passed": true
+  },
+  {
+    "name": "anon cannot read/write security_events",
+    "passed": true
+  },
+  {
+    "name": "anon cannot read/write security_hourly",
+    "passed": true
+  },
+  {
+    "name": "anon cannot read/write security_import_cursor",
+    "passed": true
+  },
+  {
+    "name": "anon cannot read/write security_incidents",
+    "passed": true
+  },
+  {
+    "name": "anon cannot read/write security_settings",
+    "passed": true
+  },
+  {
+    "name": "anon cannot read/write security_sources",
+    "passed": true
+  },
+  {
+    "name": "authenticated cannot read/write security_console_audit",
+    "passed": true
+  },
+  {
+    "name": "authenticated cannot read/write security_events",
+    "passed": true
+  },
+  {
+    "name": "authenticated cannot read/write security_hourly",
+    "passed": true
+  },
+  {
+    "name": "authenticated cannot read/write security_import_cursor",
+    "passed": true
+  },
+  {
+    "name": "authenticated cannot read/write security_incidents",
+    "passed": true
+  },
+  {
+    "name": "authenticated cannot read/write security_settings",
+    "passed": true
+  },
+  {
+    "name": "authenticated cannot read/write security_sources",
+    "passed": true
+  },
+  {
+    "name": "service_role cannot read/write security_console_audit",
+    "passed": true
+  },
+  {
+    "name": "service_role cannot read/write security_events",
+    "passed": true
+  },
+  {
+    "name": "service_role cannot read/write security_hourly",
+    "passed": true
+  },
+  {
+    "name": "service_role cannot read/write security_import_cursor",
+    "passed": true
+  },
+  {
+    "name": "service_role cannot read/write security_incidents",
+    "passed": true
+  },
+  {
+    "name": "service_role cannot read/write security_settings",
+    "passed": true
+  },
+  {
+    "name": "service_role cannot read/write security_sources",
+    "passed": true
+  },
+  {
+    "name": "anon cannot run dashboard",
+    "passed": true
+  },
+  {
+    "name": "authenticated cannot ingest logs",
+    "passed": true
+  },
+  {
+    "name": "ordinary user cannot access dashboard",
+    "passed": true
+  },
+  {
+    "name": "operator AAL1 cannot access dashboard",
+    "passed": true
+  },
+  {
+    "name": "service ingestion succeeds",
+    "passed": true
+  },
+  {
+    "name": "event UUID is deduplicated",
+    "passed": true
+  },
+  {
+    "name": "source is pseudonymized",
+    "passed": true
+  },
+  {
+    "name": "unknown fields and invalid trace are discarded",
+    "passed": true
+  },
+  {
+    "name": "repeated signals correlate into incident",
+    "passed": true
+  },
+  {
+    "name": "MFA moderator reads paginated events",
+    "passed": true
+  },
+  {
+    "name": "dashboard contains no IP/password/email",
+    "passed": true
+  },
+  {
+    "name": "incident update increments version",
+    "passed": true
+  },
+  {
+    "name": "stale incident edit rejected",
+    "passed": true
+  },
+  {
+    "name": "null filter rejected",
+    "passed": true
+  },
+  {
+    "name": "incident actions leave audit trail",
+    "passed": true
+  },
+  {
+    "name": "revoked session denied immediately",
+    "passed": true
+  },
+  {
+    "name": "missing status rejected",
+    "passed": true
+  },
+  {
+    "name": "arbitrary sensitive paths rejected",
+    "passed": true
+  },
+  {
+    "name": "global ingest budget rejects overflow",
+    "passed": true
+  },
+  {
+    "name": "rejected ingest does not consume a prior loss report",
+    "passed": true
+  },
+  {
+    "name": "heartbeat still accepted during event flood",
+    "passed": true
+  },
+  {
+    "name": "maintenance succeeds",
+    "passed": true
+  }
+]

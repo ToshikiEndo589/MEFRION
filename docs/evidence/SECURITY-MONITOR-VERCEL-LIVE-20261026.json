@@ -1,0 +1,112 @@
+{
+  "project_bound_oidc_delivery_verified": true,
+  "controlled_probes_recorded": [
+    {
+      "id": "9be8d53a-feec-476f-a97d-ac36ba853072",
+      "occurred_at": "2026-10-26 07:20:09.599769+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::mdpx2-1792999208654-a8b5c82a8ac1",
+      "is_test": true
+    },
+    {
+      "id": "8b5df18c-3a43-410f-963e-160cf5549878",
+      "occurred_at": "2026-10-26 07:20:09.906183+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::dj8md-1792999208921-dd9e9abf9fce",
+      "is_test": true
+    },
+    {
+      "id": "e861f129-b4f8-46e2-8225-df6d20991a48",
+      "occurred_at": "2026-10-26 07:20:10.061468+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::xglhn-1792999209243-4431cb7b8da5",
+      "is_test": true
+    },
+    {
+      "id": "f8b53e19-c50f-4470-aabe-8310ab03ea66",
+      "occurred_at": "2026-10-26 07:20:10.302854+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::xglhn-1792999209463-bf04c8c02911",
+      "is_test": true
+    },
+    {
+      "id": "fb88f39e-6a16-402c-bd9f-f5f0cd25ac80",
+      "occurred_at": "2026-10-26 07:20:10.403875+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::vc89f-1792999209677-3c2cf91e2a8c",
+      "is_test": true
+    },
+    {
+      "id": "e9bd3fcf-fa10-4f2f-81db-b8dcac9aa3cb",
+      "occurred_at": "2026-10-26 07:20:10.539447+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::vc89f-1792999209889-c3058cacf177",
+      "is_test": true
+    },
+    {
+      "id": "a5c1a759-2e9e-49b1-93c4-4cd2a6efdb7c",
+      "occurred_at": "2026-10-26 07:20:10.708736+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::xkfks-1792999210089-4b0c0545064a",
+      "is_test": true
+    },
+    {
+      "id": "278026d2-cf65-4d33-8ea2-20943a5ac113",
+      "occurred_at": "2026-10-26 07:20:11.116034+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::vbgr8-1792999210298-92a281159608",
+      "is_test": true
+    },
+    {
+      "id": "a60c282a-e20d-4a14-afe6-12fcb1006407",
+      "occurred_at": "2026-10-26 07:20:11.338727+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::rbv9m-1792999210521-3b466b8a1528",
+      "is_test": true
+    },
+    {
+      "id": "60937252-9866-4854-8062-35a727e045c2",
+      "occurred_at": "2026-10-26 07:20:11.694778+00",
+      "kind": "secret_probe",
+      "status": 404,
+      "target": "/[secret-probe]",
+      "request_id": "hnd1::5twbf-1792999210887-c1a893090725",
+      "is_test": true
+    }
+  ],
+  "controlled_incidents": [
+    {
+      "kind": "repeated_signals",
+      "severity": "medium",
+      "state": "open",
+      "events": 10,
+      "is_test": true
+    }
+  ],
+  "later_response": {
+    "status": 403,
+    "provider": "Vercel",
+    "x-vercel-mitigated": "challenge"
+  },
+  "app_not_reached_after_provider_challenge": true,
+  "no_firewall_changes_or_bypass": true,
+  "test_events_excluded": true
+}

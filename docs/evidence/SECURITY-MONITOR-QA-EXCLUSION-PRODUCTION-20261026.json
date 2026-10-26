@@ -1,0 +1,33 @@
+{
+  "exact_event_ids": [
+    "b2b58865-52ea-4dfc-820c-4a1c826925bf",
+    "fc547ee4-2d05-4e57-8e35-100b3eef1269",
+    "cb26454e-b83a-4102-bb45-7d8704a25b77",
+    "860253d8-e6d1-46ad-92c4-83f982974223",
+    "5f146daa-956c-4526-8dd8-0919fd1b9a05",
+    "552f4d41-5efd-4a7c-b5a9-cdc6f43b5fda",
+    "678cac6b-7862-4b23-b154-b6531956dfc3",
+    "cbb0d4fe-e09e-4a07-bfe9-53ed3807fa58",
+    "f18c0931-d87e-49c9-8773-0932f84c8ffb",
+    "d1310559-724d-489a-a1a2-baf1453e7a2d",
+    "60937252-9866-4854-8062-35a727e045c2",
+    "a60c282a-e20d-4a14-afe6-12fcb1006407",
+    "278026d2-cf65-4d33-8ea2-20943a5ac113",
+    "a5c1a759-2e9e-49b1-93c4-4cd2a6efdb7c",
+    "e9bd3fcf-fa10-4f2f-81db-b8dcac9aa3cb",
+    "fb88f39e-6a16-402c-bd9f-f5f0cd25ac80",
+    "f8b53e19-c50f-4470-aabe-8310ab03ea66",
+    "e861f129-b4f8-46e2-8225-df6d20991a48",
+    "8b5df18c-3a43-410f-963e-160cf5549878",
+    "9be8d53a-feec-476f-a97d-ac36ba853072"
+  ],
+  "results": [
+    {
+      "qa_events": 20,
+      "real_events": 0,
+      "qa_incidents": 1
+    }
+  ],
+  "original_events_retained": true,
+  "regular_counts_exclude_qa": true
+}

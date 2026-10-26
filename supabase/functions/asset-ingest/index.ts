@@ -1,10 +1,11 @@
+import { serveMonitored } from '../_shared/security_monitor.ts';
 /** Internal stock import only; no user original can be read through this API.
  * SQL must first reserve the exact stock path. Existing active assets cannot be
  * overwritten. No service key is ever returned to import tools or the app. */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
 const reply = (status: number, body: object) => new Response(JSON.stringify(body), { status, headers });
-Deno.serve(async request => {
+serveMonitored('asset-ingest', async request => {
   if (!["PUT", "POST"].includes(request.method)) return reply(405, { error: "method_not_allowed" });
   const token = request.headers.get("x-mefrion-worker");
   if (!token || token.length < 32 || token.length > 256) return reply(401, { error: "authentication_required" });

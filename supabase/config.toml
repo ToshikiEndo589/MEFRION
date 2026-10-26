@@ -443,3 +443,6 @@ verify_jwt = false
 
 [functions.stock-worker]
 verify_jwt = false # Private scheduler token; stock catalogue and leases are server-owned.
+
+[functions.security-collector]
+verify_jwt = false # Verifies pinned Vercel OIDC signatures/project/environment itself.

@@ -1,0 +1,23 @@
+{
+  "exact_event_ids": [
+    "96995f8b-62d8-424c-b3a1-10f7bb0b738a",
+    "d4171c5b-4c80-4be9-bc78-d795ff5e7207",
+    "ee9b0ac7-7181-4aeb-8e2d-00c59e885e3f",
+    "e4409a45-ba95-4a09-a932-829a6070529a",
+    "b8942b3f-d1a1-4dc4-ab0a-313fd695d954",
+    "524f6f15-3486-4723-880a-eb9a7bdb9f7c",
+    "8e191eaf-c437-42b6-91a9-9894672611a1",
+    "2eda985d-3e4c-4aeb-835e-3ac1755648e5",
+    "f403f331-2da6-4157-b5d3-b4e75a670b2b",
+    "741f98ee-53a5-45e0-8965-cff436baa7da"
+  ],
+  "results": [
+    {
+      "qa_events": 10,
+      "real_events": 0,
+      "qa_incidents": 0
+    }
+  ],
+  "original_events_retained": true,
+  "regular_counts_exclude_qa": true
+}

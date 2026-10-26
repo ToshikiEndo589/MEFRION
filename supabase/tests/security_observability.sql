@@ -1,0 +1,63 @@
+-- All identities, secrets, logs and incident edits roll back; no customer content.
+begin;
+create temporary table security_results(name text,passed boolean);
+create function pg_temp.security_assert(label text,ok boolean) returns void language plpgsql security definer as $$begin if ok is distinct from true then raise exception 'security assertion failed: %',label;end if;insert into security_results values(label,true);end$$;
+grant execute on function pg_temp.security_assert(text,boolean) to anon,authenticated,service_role;
+do $$
+declare a uuid:=gen_random_uuid();sid uuid:=gen_random_uuid();f uuid:=gen_random_uuid();ident uuid:=gen_random_uuid();bad boolean;v jsonb;d jsonb;inc uuid;sk text;n integer;lost_before bigint;r text;t text;
+begin
+ for r in select unnest(array['anon','authenticated','service_role']) loop
+  for t in select tablename from pg_tables where schemaname='mefrion_private' and tablename like 'security_%' loop
+   perform pg_temp.security_assert(r||' cannot read/write '||t,not has_table_privilege(r,format('mefrion_private.%I',t),'SELECT,INSERT,UPDATE,DELETE'));
+  end loop;
+ end loop;
+ perform pg_temp.security_assert('anon cannot run dashboard',not has_function_privilege('anon','public.mefrion_security_dashboard(integer,text,text,text,timestamptz,uuid,integer)','execute'));
+ perform pg_temp.security_assert('authenticated cannot ingest logs',not has_function_privilege('authenticated','public.mefrion_security_ingest(text,jsonb,text,integer)','execute'));
+ insert into auth.users(id,aud,role,email,email_confirmed_at) values(a,'authenticated','authenticated',a||'@security-fixture.invalid',now());
+ perform set_config('request.jwt.claim.sub',a::text,true);perform set_config('request.jwt.claims',jsonb_build_object('sub',a,'role','authenticated','aal','aal1')::text,true);
+ execute 'set local role authenticated';bad:=false;begin perform public.mefrion_security_dashboard();exception when insufficient_privilege then bad:=true;end;
+ perform pg_temp.security_assert('ordinary user cannot access dashboard',bad);execute 'reset role';
+ insert into mefrion_private.operators(user_id,role,active,expires_at) values(a,'moderator',true,now()+interval '1 hour');
+ execute 'set local role authenticated';bad:=false;begin perform public.mefrion_security_dashboard();exception when insufficient_privilege then bad:=true;end;
+ perform pg_temp.security_assert('operator AAL1 cannot access dashboard',bad);execute 'reset role';
+ insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at,secret) values(f,a,'totp','verified',now(),now(),'synthetic-not-a-real-key');
+ insert into auth.sessions(id,user_id,factor_id,aal,created_at,updated_at) values(sid,a,f,'aal2',now(),now());
+ perform set_config('request.jwt.claims','{"role":"service_role"}',true);execute 'set local role service_role';
+ v:=jsonb_build_object('id',ident,'kind','secret_probe','severity','high','outcome','denied','status',404,'target','/[secret-probe]','email','should-not-be-stored@example.invalid','password','not-a-real-password','request_id','invalid user supplied trace');
+ perform pg_temp.security_assert('service ingestion succeeds',public.mefrion_security_ingest('vercel',v,'192.0.2.10',2));
+ perform public.mefrion_security_ingest('vercel',v,'192.0.2.10',0);execute 'reset role';
+ perform pg_temp.security_assert('event UUID is deduplicated',(select count(*)=1 from mefrion_private.security_events where id=ident));
+ select source_key into sk from mefrion_private.security_events where id=ident;
+ perform pg_temp.security_assert('source is pseudonymized',sk ~ '^src_[0-9a-f]{24}$');
+ perform pg_temp.security_assert('unknown fields and invalid trace are discarded',(select to_jsonb(e)::text not like '%should-not-be-stored%' and to_jsonb(e)::text not like '%not-a-real-password%' and request_id is null from mefrion_private.security_events e where id=ident));
+ for n in 1..10 loop perform mefrion_private.security_record('vercel',v||jsonb_build_object('id',gen_random_uuid()),'192.0.2.10');end loop;
+ perform pg_temp.security_assert('repeated signals correlate into incident',exists(select 1 from mefrion_private.security_incidents where source_key=sk and events>=10));
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',a,'role','authenticated','aal','aal2','session_id',sid)::text,true);execute 'set local role authenticated';
+ d:=public.mefrion_security_dashboard(p_limit=>5);
+ perform pg_temp.security_assert('MFA moderator reads paginated events',jsonb_array_length(d->'events')=6);
+ perform pg_temp.security_assert('dashboard contains no IP/password/email',d::text not like '%192.0.2.10%' and d::text not like '%should-not-be-stored%' and d::text not like '%not-a-real-password%');
+ inc:=(d->'incidents'->0->>'id')::uuid;
+ v:=public.mefrion_security_incident_update(inc,'acknowledged',0,'Checked fixture');
+ perform pg_temp.security_assert('incident update increments version',(v->>'version')::int=1);
+ bad:=false;begin perform public.mefrion_security_incident_update(inc,'resolved',0,'stale');exception when serialization_failure then bad:=true;end;
+ perform pg_temp.security_assert('stale incident edit rejected',bad);
+ bad:=false;begin perform public.mefrion_security_dashboard(p_hours=>null);exception when others then bad:=true;end;
+ perform pg_temp.security_assert('null filter rejected',bad);execute 'reset role';
+ perform pg_temp.security_assert('incident actions leave audit trail',exists(select 1 from mefrion_private.security_console_audit where actor=a and incident=inc));
+ delete from auth.sessions where id=sid;execute 'set local role authenticated';bad:=false;begin perform public.mefrion_security_dashboard();exception when insufficient_privilege then bad:=true;end;
+ perform pg_temp.security_assert('revoked session denied immediately',bad);execute 'reset role';
+ bad:=false;begin perform mefrion_private.security_record('vercel','{"id":"00000000-0000-0000-0000-000000000001","kind":"auth_denied","severity":"low","outcome":"denied","target":"/console"}');exception when others then bad:=true;end;
+ perform pg_temp.security_assert('missing status rejected',bad);
+ bad:=false;begin perform mefrion_private.security_record('vercel',jsonb_build_object('id',gen_random_uuid(),'kind','auth_denied','severity','low','outcome','denied','status',403,'target','/email@example.invalid'));exception when others then bad:=true;end;
+ perform pg_temp.security_assert('arbitrary sensitive paths rejected',bad);
+ select lost into lost_before from mefrion_private.security_sources where source='vercel';
+ update mefrion_private.security_settings set window_start=date_trunc('minute',clock_timestamp()),window_events=6000 where singleton;
+ perform pg_temp.security_assert('global ingest budget rejects overflow',not mefrion_private.security_record('vercel',v||jsonb_build_object('id',gen_random_uuid()),'192.0.2.10',7));
+ perform pg_temp.security_assert('rejected ingest does not consume a prior loss report',(select lost=lost_before from mefrion_private.security_sources where source='vercel'));
+ perform pg_temp.security_assert('heartbeat still accepted during event flood',mefrion_private.security_record('vercel',null,null,2));
+ update mefrion_private.security_settings set window_events=0 where singleton;
+ perform mefrion_private.security_maintenance();
+ perform pg_temp.security_assert('maintenance succeeds',true);
+end $$;
+select * from security_results;
+rollback;

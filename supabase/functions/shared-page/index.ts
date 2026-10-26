@@ -1,7 +1,8 @@
+import { serveMonitored } from '../_shared/security_monitor.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const escape=(value:unknown)=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));
-Deno.serve(async(request:Request)=>{
+serveMonitored('shared-page', async(request:Request)=>{
  const base=Deno.env.get("SUPABASE_URL")!;
  const headers={"Content-Type":"text/html; charset=utf-8","Cache-Control":"private, no-store, max-age=0","X-Content-Type-Options":"nosniff","Referrer-Policy":"no-referrer","Content-Security-Policy":`default-src 'none'; style-src 'unsafe-inline'; img-src ${base}; frame-ancestors 'none'; base-uri 'none'; form-action 'none'`};
  if(request.method!=="GET")return new Response(null,{status:405,headers});

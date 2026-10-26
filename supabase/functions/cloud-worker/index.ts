@@ -1,3 +1,4 @@
+import { serveMonitored } from '../_shared/security_monitor.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 import { imageDerivative, MediaError, videoDerivative } from "../_shared/media.ts";
 
@@ -103,4 +104,4 @@ export async function handler(request: Request): Promise<Response> {
   }
 }
 
-Deno.serve(handler);
+serveMonitored('cloud-worker', handler);

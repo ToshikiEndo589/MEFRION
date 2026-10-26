@@ -1,0 +1,132 @@
+{
+  "probes": [
+    {
+      "project": "development",
+      "function": "security-collector",
+      "status": 401,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "private-image",
+      "status": 401,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "private-video",
+      "status": 404,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "public-image",
+      "status": 404,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "public-video",
+      "status": 404,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "shared-page",
+      "status": 404,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "cloud-worker",
+      "status": 405,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "stock-worker",
+      "status": 405,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "asset-ingest",
+      "status": 405,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "database-backup",
+      "status": 405,
+      "expected_denial": true
+    },
+    {
+      "project": "development",
+      "function": "offsite-backup",
+      "status": 405,
+      "expected_denial": true
+    }
+  ],
+  "coverage": [
+    {
+      "source": "edge:asset-ingest",
+      "last_seen": "2026-10-26 07:09:16.854057+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:cloud-worker",
+      "last_seen": "2026-10-26 07:09:15.229304+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:database-backup",
+      "last_seen": "2026-10-26 07:09:17.960736+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:offsite-backup",
+      "last_seen": "2026-10-26 07:09:19.075719+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:private-image",
+      "last_seen": "2026-10-26 07:09:10.224413+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:private-video",
+      "last_seen": "2026-10-26 07:09:11.283468+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:public-image",
+      "last_seen": "2026-10-26 07:09:12.499009+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:public-video",
+      "last_seen": "2026-10-26 07:09:13.648889+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:shared-page",
+      "last_seen": "2026-10-26 07:09:14.732166+00",
+      "accepted": 1,
+      "lost": 0
+    },
+    {
+      "source": "edge:stock-worker",
+      "last_seen": "2026-10-26 07:09:15.722899+00",
+      "accepted": 1,
+      "lost": 0
+    }
+  ]
+}

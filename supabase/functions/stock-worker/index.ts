@@ -1,3 +1,4 @@
+import { serveMonitored } from '../_shared/security_monitor.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 import { jpegDimensions } from "../_shared/media.ts";
 
@@ -47,4 +48,4 @@ export async function handler(request: Request): Promise<Response> {
   }
   return reply(failed ? 503 : 200, { processed: tasks.length, published, cancelled, failed });
 }
-Deno.serve(handler);
+serveMonitored('stock-worker', handler);

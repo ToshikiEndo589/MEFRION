@@ -1,0 +1,21 @@
+{
+  "node": 23,
+  "deno": 10,
+  "sql_per_environment": 43,
+  "development_and_production_sql": true,
+  "public_site_oidc_delivery": true,
+  "controlled_probe_events": 10,
+  "controlled_incident": 1,
+  "controlled_probe_events_excluded": true,
+  "ui": {
+    "fixture_only": true,
+    "desktop": true,
+    "mobile_width_390": true,
+    "event_details": true,
+    "incident_status_and_note_save": true,
+    "draft_survives_refresh": true,
+    "csv_download": true
+  },
+  "owner_mfa_final_view": "pending_owner_available",
+  "paid_contracts_created": false
+}
