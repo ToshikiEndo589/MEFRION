@@ -2,6 +2,18 @@
   "name": "mefrion-public-site",
   "private": true,
   "type": "module",
-  "engines": { "node": "22.x" },
-  "scripts": { "test": "node --test scripts/*.test.mjs" }
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "test": "node --test scripts/*.test.mjs",
+    "build": "node scripts/security-assets.mjs"
+  },
+  "dependencies": {
+    "@vercel/functions": "3.10.3",
+    "@vercel/oidc": "4.0.3"
+  },
+  "overrides": {
+    "zod": "4.6.7"
+  }
 }
