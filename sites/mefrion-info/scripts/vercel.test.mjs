@@ -3,7 +3,7 @@ import test from 'node:test';
 import handler, { route } from '../api/site.mjs';
 
 test('public pages and operator assets preserve security headers', async () => {
-  for (const path of ['/', '/privacy', '/terms', '/console/', '/console/cloud.js', '/console/config.json']) {
+  for (const path of ['/', '/privacy', '/terms', '/console/', '/console/content', '/console/content.js', '/console/cloud.js', '/console/config.json']) {
     const response = await route(new Request('https://site.invalid' + path));
     assert.equal(response.status, 200, path);
     assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
@@ -17,6 +17,15 @@ test('public pages and operator assets preserve security headers', async () => {
       assert.doesNotMatch(policy, /connect-src[^;]*\*/);
     }
   }
+});
+test('public copy reflects the live service and private review requires operator UI', async () => {
+  const home = await (await route(new Request('https://site.invalid/'))).text();
+  const privacy = await (await route(new Request('https://site.invalid/privacy'))).text();
+  const operator = await (await route(new Request('https://site.invalid/console/content'))).text();
+  assert.doesNotMatch(home, /公開準備中|開発・検証/);
+  assert.match(privacy, /通常24時間以内/);
+  assert.match(operator, /id="content-section"/);
+  assert.match(operator, /src="\/console\/content.js"/);
 });
 test('does not expose files, backup storage, or accept writes', async () => {
   for (const path of ['/.env', '/.git/config', '/worker/index.js', '/internal-backup/health', '/cloud-shared/not-a-uuid']) {
