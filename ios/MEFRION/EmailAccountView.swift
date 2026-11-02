@@ -221,6 +221,16 @@ struct EmailAccountView:View {
                 .accessibilityIdentifier("account-verify")
             Text("届かない？ 迷惑メールを確認してみてね。")
                 .font(.caption).foregroundStyle(Theme.secondaryText)
+            if !recovery {
+                Text("登録済みの場合、確認メールは届きません。ログインへ進んでね。")
+                    .font(.caption).foregroundStyle(Theme.secondaryText)
+                Button("登録したことがある？ ログインへ") {mode="login"}
+                    .font(.footnote.weight(.semibold))
+                    .accessibilityIdentifier("account-verification-login")
+                Button("パスワードを忘れた？") {mode="recovery"}
+                    .font(.footnote)
+                    .accessibilityIdentifier("account-verification-recovery")
+            }
             Button("メールを再送する") {resend(recovery:recovery)}
                 .font(.footnote.weight(.semibold)).disabled(client.busy)
             Button("メールアドレスを変える") {awaitingEmail=false;code="";notice=nil}
@@ -310,7 +320,7 @@ struct EmailAccountView:View {
         Task {await client.perform {
             if recovery {try await client.sendRecovery(email:address)}
             else {try await client.resendSignup(email:address)}
-            notice="メールを再送しました。"
+            notice=recovery ? "アカウントがある場合は、復旧メールが届きます。" : "メール認証がまだの場合は、確認メールが届きます。登録済みの方はログインしてね。"
         }}
     }
 }

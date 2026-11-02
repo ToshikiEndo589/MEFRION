@@ -52,7 +52,8 @@ def setup():
  invitation=need(rpc(s,'invite',{'p_pet':s['pet']}),'invite')
  rpc(s,'accept_invite',{'p_token':invitation['token'],'p_confirm_scope':False},'family',codes=(400,),label='invite-explicit-scope-required')
  need(rpc(s,'accept_invite',{'p_token':invitation['token'],'p_confirm_scope':True},'family'),'join')
- rpc(s,'accept_invite',{'p_token':invitation['token'],'p_confirm_scope':True},'outsider',codes=(400,),label='invite-replay-denied')
+ rpc(s,'revoke_invite',{'p_invite':invitation['id']},label='owner-revokes-shared-invite')
+ rpc(s,'accept_invite',{'p_token':invitation['token'],'p_confirm_scope':True},'outsider',codes=(400,),label='revoked-invite-denied')
  for index,kind in enumerate(('image','image','video')):
   r=need(rpc(s,'begin_video' if kind=='video' else 'begin_photo',{'p_pet':s['pet'],'p_request_key':str(uuid4()),**({'p_duration':2} if kind=='video' else {})}),'media')
   r['kind']=kind;s['photos'].append(r);save(s)

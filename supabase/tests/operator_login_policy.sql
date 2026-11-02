@@ -1,0 +1,45 @@
+-- Dedicated synthetic identities only; the entire test rolls back.
+begin;
+create temporary table operator_policy_results(name text,passed boolean);
+create function pg_temp.policy_assert(label text,ok boolean) returns void language plpgsql security definer as $$begin if ok is distinct from true then raise exception 'operator policy assertion failed: %',label;end if;insert into operator_policy_results values(label,true);end$$;
+grant execute on function pg_temp.policy_assert(text,boolean) to authenticated,service_role;
+do $$
+declare a uuid:=gen_random_uuid();b uuid:=gen_random_uuid();c uuid:=gen_random_uuid();sid uuid:=gen_random_uuid();f uuid:=gen_random_uuid();bad boolean;result jsonb;
+ mail_a text:=gen_random_uuid()||'@operator-fixture.invalid';mail_b text:=gen_random_uuid()||'@public-fixture.invalid';
+begin
+ insert into auth.users(id,aud,role,email,email_confirmed_at) values(a,'authenticated','authenticated',mail_a,now()),(b,'authenticated','authenticated',mail_b,now()),(c,'authenticated','authenticated',gen_random_uuid()||'@operator-fixture.invalid',null);
+ insert into mefrion_private.operator_login_allowlist(email) values(mail_a),(mail_b);
+ insert into mefrion_private.operators(user_id,role,active,expires_at) values(b,'admin',true,now()+interval '1 hour');
+ delete from mefrion_private.operator_login_allowlist where email=mail_b;
+ insert into auth.mfa_factors(id,user_id,factor_type,status,created_at,updated_at,secret) values(f,b,'totp','verified',now(),now(),'synthetic-not-real');
+ insert into auth.sessions(id,user_id,factor_id,aal,created_at) values(sid,b,f,'aal2',now());
+ perform pg_temp.policy_assert('only configured confirmed email is eligible',mefrion_private.operator_login_allowed(a) and not mefrion_private.operator_login_allowed(b));
+ insert into mefrion_private.operator_login_allowlist(email) select email from auth.users where id=c;
+ perform pg_temp.policy_assert('unconfirmed email is denied',not mefrion_private.operator_login_allowed(c));
+ perform pg_temp.policy_assert('anonymous cannot check eligibility',not has_function_privilege('anon','public.mefrion_operator_login_eligible()','execute'));
+ perform pg_temp.policy_assert('authenticated cannot read the private allowlist',not has_table_privilege('authenticated','mefrion_private.operator_login_allowlist','SELECT,INSERT,UPDATE,DELETE'));
+ perform set_config('request.jwt.claim.sub',b::text,true);perform set_config('request.jwt.claims',jsonb_build_object('sub',b,'role','authenticated','aal','aal2','session_id',sid)::text,true);
+ execute 'set local role authenticated';
+ perform pg_temp.policy_assert('old identity gets false eligibility',not public.mefrion_operator_login_eligible());
+ bad:=false;begin perform public.mefrion_security_dashboard();exception when insufficient_privilege then bad:=true;end;
+ perform pg_temp.policy_assert('old MFA admin cannot read security console',bad);
+ bad:=false;begin perform public.mefrion_operator_queue();exception when insufficient_privilege then bad:=true;end;
+ perform pg_temp.policy_assert('old MFA admin cannot read moderation console',bad);
+ result:=public.mefrion_create_pet('Ordinary account still works','dog');perform pg_temp.policy_assert('ordinary app account retains pet creation',result->>'id' is not null);
+ execute 'reset role';
+ perform pg_temp.policy_assert('old admin cannot access editorial functions',not mefrion_private.seed_access('view'));
+ perform pg_temp.policy_assert('old admin is not assignable to reports',not mefrion_private.active_report_operator(b));
+ bad:=false;begin update mefrion_private.operators set active=true where user_id=b;exception when insufficient_privilege then bad:=true;end;
+ perform pg_temp.policy_assert('direct role reactivation is guarded',bad);
+ perform set_config('request.jwt.claims','{"role":"service_role"}',true);execute 'set local role service_role';
+ bad:=false;begin perform public.mefrion_set_operator(b,'admin',true,now()+interval '1 hour','Owner policy prevents using public contact identity');exception when insufficient_privilege then bad:=true;end;
+ perform pg_temp.policy_assert('service grant cannot reactivate old email',bad);
+ execute 'reset role';
+ perform set_config('request.jwt.claim.sub',a::text,true);perform set_config('request.jwt.claims',jsonb_build_object('sub',a,'role','authenticated','aal','aal1')::text,true);execute 'set local role authenticated';
+ perform pg_temp.policy_assert('new confirmed identity may start operator enrollment',public.mefrion_operator_login_eligible());
+ bad:=false;begin perform public.mefrion_security_dashboard();exception when insufficient_privilege then bad:=true;end;
+ perform pg_temp.policy_assert('new email alone cannot bypass MFA and role',bad);
+ execute 'reset role';
+end$$;
+select * from operator_policy_results;
+rollback;

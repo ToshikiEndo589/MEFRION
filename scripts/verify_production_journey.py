@@ -55,6 +55,7 @@ def setup():
  s['pet']=rpc(s,'create_pet',{'p_name':'QAサーバー確認','p_species':'dog','p_breed':'','p_introduction':'合成データの動作確認です'})['id'];save(s)
  rpc(s,'album',{'p_pet':s['pet']},role='outsider',statuses=(401,403))
  invitation=rpc(s,'invite',{'p_pet':s['pet']});rpc(s,'accept_invite',{'p_token':invitation['token'],'p_confirm_scope':True},role='family')
+ rpc(s,'revoke_invite',{'p_invite':invitation['id']})
  rpc(s,'accept_invite',{'p_token':invitation['token'],'p_confirm_scope':True},role='outsider',statuses=(400,))
  image=Image.new('RGB',(1200,800),(222,180,155));stream=io.BytesIO();image.save(stream,'JPEG');jpeg=stream.getvalue()
  for kind in ['image','video']:

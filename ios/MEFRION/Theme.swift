@@ -110,11 +110,69 @@ struct HorizontalTabSwipe:ViewModifier {
     var enabled:Bool=true
     var change:(Bool)->Void
     func body(content:Content)->some View {
-        content.simultaneousGesture(DragGesture(minimumDistance:30).onEnded {value in
-            guard enabled,abs(value.translation.width)>60,
-                  abs(value.translation.width)>abs(value.translation.height)*1.5 else {return}
-            withAnimation(.easeInOut(duration:0.2)) {change(value.translation.width<0)}
-        })
+        content.background(DirectionalTabSwipe(enabled:enabled,change:change))
+    }
+}
+
+/// Decide direction before recognizing, so vertical scrolling remains native.
+/// Cancelling the original touch prevents a link below the end of a swipe
+/// from opening when the picker replaces its content.
+private struct DirectionalTabSwipe:UIViewRepresentable {
+    let enabled:Bool
+    let change:(Bool)->Void
+    func makeUIView(context:Context)->Probe {Probe()}
+    func updateUIView(_ view:Probe,context:Context) {view.enabled=enabled;view.change=change}
+    final class Probe:UIView,UIGestureRecognizerDelegate {
+        var enabled=true
+        var change:((Bool)->Void)?
+        private weak var attachedWindow:UIWindow?
+        private lazy var pan:UIPanGestureRecognizer = {
+            let value=UIPanGestureRecognizer(target:self,action:#selector(moved(_:)))
+            value.delegate=self;value.cancelsTouchesInView=true
+            value.maximumNumberOfTouches=1
+            return value
+        }()
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            attachedWindow?.removeGestureRecognizer(pan)
+            attachedWindow=window;window?.addGestureRecognizer(pan)
+            isUserInteractionEnabled=false
+        }
+        override func gestureRecognizerShouldBegin(_ gesture:UIGestureRecognizer)->Bool {
+            guard enabled,let window,let pan=gesture as? UIPanGestureRecognizer,
+                  bounds.width>0,bounds.height>0,
+                  bounds.contains(pan.location(in:self)) else {return false}
+            var ancestor:UIView?=self
+            while let view=ancestor {if view.isHidden || view.alpha<0.01 {return false};ancestor=view.superview}
+            // A presented camera/share/auth sheet owns its own gestures.
+            if window.rootViewController?.presentedViewController != nil {return false}
+            // Leave the system's edge-back gesture to the navigation stack.
+            let originX=pan.location(in:self).x-pan.translation(in:self).x
+            guard originX>24 else {return false}
+            let velocity=pan.velocity(in:self)
+            guard abs(velocity.x)>abs(velocity.y)*1.5 else {return false}
+            // Media carousels own their horizontal gestures before root tabs.
+            var touched=window.hitTest(pan.location(in:window),with:nil)
+            while let view=touched {
+                if let scroll=view as? UIScrollView,scroll.isScrollEnabled,
+                   scroll.contentSize.width>scroll.bounds.width+1 {return false}
+                touched=view.superview
+            }
+            return true
+        }
+        func gestureRecognizer(_ gesture:UIGestureRecognizer,shouldRecognizeSimultaneouslyWith other:UIGestureRecognizer)->Bool {
+            // A vertical feed's UIScrollView may begin its pan before direction
+            // is decided. Let that recognizer coexist; horizontal media pagers
+            // remain exclusive and are rejected in shouldBegin above.
+            guard let scroll=other.view as? UIScrollView else {return false}
+            return scroll.contentSize.width<=scroll.bounds.width+1
+        }
+        @objc private func moved(_ pan:UIPanGestureRecognizer) {
+            guard pan.state == .ended else {return}
+            let distance=pan.translation(in:self)
+            guard abs(distance.x)>60,abs(distance.x)>abs(distance.y)*1.5 else {return}
+            change?(distance.x<0)
+        }
     }
 }
 

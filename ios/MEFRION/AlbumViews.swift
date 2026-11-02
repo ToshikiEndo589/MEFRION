@@ -220,8 +220,7 @@ struct SettingsView:View {
             Section {
                 NavigationLink {AccountRetirementView()} label: {Label("アカウントを削除する",systemImage:"trash").foregroundStyle(Theme.accent)}
             }
-        }.contentMargins(.bottom,88,for:.scrollContent)
-        .scrollContentBackground(.hidden).background(Theme.background).navigationTitle("設定").navigationBarTitleDisplayMode(.inline)
+        }.scrollContentBackground(.hidden).background(Theme.background).navigationTitle("設定").navigationBarTitleDisplayMode(.inline)
     }
     private func settingsRow(_ title:String,_ subtitle:String,_ icon:String)->some View {
         HStack(spacing:16) {Image(systemName:icon).font(.system(size:22)).frame(width:28);VStack(alignment:.leading,spacing:5) {Text(title).font(.subheadline);Text(subtitle).font(.caption2).foregroundStyle(.secondary)}}.padding(.vertical,8)

@@ -1,10 +1,36 @@
 import SwiftUI
 import PhotosUI
 import ImageIO
+import CryptoKit
+
+/// Validate the actual square avatar, not an original whose pet could be
+/// cropped out. Keep only bounded in-memory digests to avoid duplicate Vision
+/// work when selection is checked again at the save boundary.
+private actor ProfileIconValidation {
+    static let shared=ProfileIconValidation()
+    private var approved:[SHA256.Digest]=[]
+    func validate(_ value:String?) async throws {
+        guard let value else {return}
+        guard value.count<=22500,let bytes=Data(base64Encoded:value,options:.ignoreUnknownCharacters),bytes.count<=ProfileIconCodec.maximumBytes else {throw PetPostValidationError.unreadable}
+        let digest=SHA256.hash(data:bytes)
+        if approved.contains(digest) {return}
+        try await PetPostValidator.shared.validateProfileIcon(bytes)
+        try Task.checkCancellation()
+        approved.append(digest)
+        if approved.count>32 {approved.removeFirst(approved.count-32)}
+    }
+}
 
 /// A bounded, metadata-free thumbnail. Never place full photos in Auth/JWT data.
 enum ProfileIconCodec {
     static let maximumBytes=16384
+    static func validate(_ value:String?) async throws {try await ProfileIconValidation.shared.validate(value)}
+    static func validated(data:Data) async throws->String {
+        let value=await Task.detached(priority:.userInitiated) {encode(data:data)}.value
+        guard let value else {throw PetPostValidationError.unreadable}
+        try await validate(value)
+        return value
+    }
     static func encode(data:Data)->String? {
         guard let source=CGImageSourceCreateWithData(data as CFData,nil),
               let image=CGImageSourceCreateThumbnailAtIndex(source,0,[kCGImageSourceCreateThumbnailFromImageAlways:true,kCGImageSourceCreateThumbnailWithTransform:true,kCGImageSourceThumbnailMaxPixelSize:1024] as CFDictionary) else{return nil}
@@ -67,7 +93,7 @@ struct EditableProfileIcon:View {
                         }
                     VStack(alignment:.leading,spacing:6) {
                         Text("写真を変更").font(.subheadline.weight(.semibold)).foregroundStyle(Theme.actionText)
-                        Text("プロフィールやコメントにも表示されます。")
+                        Text("犬猫が写った写真を使ってね 🐾")
                             .font(.caption).foregroundStyle(Theme.secondaryText).multilineTextAlignment(.leading)
                     }
                     Spacer(minLength:0)
@@ -78,9 +104,15 @@ struct EditableProfileIcon:View {
             if encoded != nil {
                 Button("写真を外す") {requestID=UUID();encoded=nil;changed=true;selection=nil;importing=false}
                     .font(.caption).foregroundStyle(Theme.secondaryText).buttonStyle(.borderless)
+                    .disabled(importing)
                     .accessibilityIdentifier("profile-icon-remove")
             }
-            if let error {Text(error).font(.caption).foregroundStyle(.red)}
+            if let error {
+                Text(error).font(.subheadline.weight(.medium)).foregroundStyle(Theme.actionText)
+                    .frame(maxWidth:.infinity,alignment:.leading).padding(12)
+                    .background(Theme.accent.opacity(0.08),in:RoundedRectangle(cornerRadius:12))
+                    .accessibilityIdentifier("profile-icon-error")
+            }
         }.frame(maxWidth:.infinity).padding(.vertical,10)
         .onChange(of:selection) {_,item in
             guard let item else{return}
@@ -89,11 +121,10 @@ struct EditableProfileIcon:View {
                 defer {if requestID==request {importing=false}}
                 do {
                     guard let data=try await item.loadTransferable(type:Data.self) else {throw CocoaError(.fileReadCorruptFile)}
-                    let value=await Task.detached(priority:.userInitiated) {ProfileIconCodec.encode(data:data)}.value
-                    guard let value else {throw CocoaError(.fileReadCorruptFile)}
+                    let value=try await ProfileIconCodec.validated(data:data)
                     guard requestID==request else{return}
                     encoded=value;changed=true
-                } catch {if requestID==request {self.error="写真を選び直してね"}}
+                } catch {if requestID==request {self.error=error is PetPostValidationError ? error.localizedDescription : "写真を選び直してね 🐾"}}
             }
         }
     }
@@ -165,7 +196,7 @@ struct CloudProfileEditor:View {
                     Button("カバー写真を選ぶ") {photoPurpose="cover";showAlbumPicker=true}
                     if !cover.isEmpty {Button("カバー写真を外す") {cover=""}}
                     Text("カバー写真は家族アルバム内だけに表示します。").font(.caption).foregroundStyle(Theme.secondaryText)
-                }
+                }.disabled(importingIcon)
                 DisclosureGroup("そっくりへの掲載") {
                     Picker("掲載する写真",selection:$twinPhoto) {Text("写真を選ぶ").tag("");ForEach(albumPhotos.filter{$0.media_kind != "video"}) {Text($0.title.isEmpty ? ($0.captured ?? "写真") : $0.title).tag($0.id)}}
                     Toggle("公開プロフィールへの掲載を確認しました",isOn:$twinConfirmed)
@@ -178,19 +209,22 @@ struct CloudProfileEditor:View {
                     }}}.disabled(!twinConfirmed || twinPhoto.isEmpty || client.busy)
                     if let twinMessage {Text(twinMessage).font(.caption)}
                     Button("そっくりへの掲載をやめる",role:.destructive) {twinConfirmed=false;Task {await client.perform {try await client.withdrawTwins(pet:pet.id)}}}
-                }
+                }.accessibilityIdentifier("pet-profile-search-settings")
             }
             Section {
                 if let error=client.error {Text(error).font(.footnote).foregroundStyle(.red)}
-                if let photoError {Text(photoError).font(.caption).foregroundStyle(Theme.secondaryText)}
             }
         }.disabled(client.busy).scrollContentBackground(.hidden).background(Theme.background)
-            .navigationTitle("プロフィールを編集").navigationBarTitleDisplayMode(.inline).protectWhenInactive()
+            .navigationTitle("うちの子のプロフィール").navigationBarTitleDisplayMode(.inline).protectWhenInactive()
             .safeAreaInset(edge:.top,spacing:0) {
                 if saved {
                     Label("保存したよ ♡",systemImage:"checkmark.circle.fill").font(.subheadline.weight(.medium))
                         .foregroundStyle(Theme.actionText).frame(maxWidth:.infinity).padding(.vertical,9)
                         .background(Theme.accent.opacity(0.08)).accessibilityIdentifier("cloud-profile-saved")
+                } else if let photoError {
+                    Text(photoError).font(.subheadline.weight(.medium)).foregroundStyle(Theme.actionText)
+                        .frame(maxWidth:.infinity,alignment:.leading).padding(12)
+                        .background(Theme.accent.opacity(0.08)).accessibilityIdentifier("profile-icon-error")
                 }
             }
             .toolbar {ToolbarItem(placement:.topBarTrailing) {
@@ -206,7 +240,17 @@ struct CloudProfileEditor:View {
             .sheet(isPresented:$showAlbumPicker) {
                 NavigationStack {CloudProfileAlbumPhotoPicker(photos:photoPurpose=="icon" ? albumPhotos.filter(\.mine) : albumPhotos,client:client) {photo,image in
                     if photoPurpose=="cover" {cover=photo.id}
-                    else if let encoded=ProfileIconCodec.encode(image:image) {icon=encoded;iconChanged=true;familyIcon=""}
+                    else {
+                        importingIcon=true;photoError=nil
+                        Task {
+                            defer {importingIcon=false}
+                            do {
+                                guard let encoded=ProfileIconCodec.encode(image:image) else {throw PetPostValidationError.unreadable}
+                                try await ProfileIconCodec.validate(encoded)
+                                icon=encoded;iconChanged=true;familyIcon=""
+                            } catch {photoError=error.localizedDescription}
+                        }
+                    }
                     showAlbumPicker=false
                 }}
             }

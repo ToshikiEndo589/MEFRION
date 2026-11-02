@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BEEFAA202610250000000002 /* MEFRIONPetIcon.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = BEEFAA202610250000000001; };
 		A01120261011000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A01120261011000000000002 /* PrivacyInfo.xcprivacy */; };
 		01209EC0811DB97286029A16 /* CloudFamilyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8006E89B18B3FCA8AB2BA302 /* CloudFamilyClient.swift */; };
 		069825B4485022BEDEF17CBB /* AuthenticationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048A144015F950A5647B8212 /* AuthenticationSheet.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BEEFAA202610250000000001 /* MEFRIONPetIcon.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MEFRIONPetIcon.mlmodel; sourceTree = "<group>"; };
 		A01120261011000000000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		023E22DE01E07C95469DAE0C /* CloudTwinsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudTwinsView.swift; sourceTree = "<group>"; };
 		048A144015F950A5647B8212 /* AuthenticationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationSheet.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				5053C9B5B67FC3B735630928 /* ReferenceTwinsEngine.swift */,
 				BEEFAA000000000000000004 /* ModelNotices.txt */,
 				BEEFAA000000000000000003 /* MEFRIONResemblance.mlpackage */,
+				BEEFAA202610250000000001 /* MEFRIONPetIcon.mlmodel */,
 				BEEFAA000000000000000002 /* PetResemblance.swift */,
 				BEEFAA000000000000000001 /* PetSubjectCrop.swift */,
 				19142B097797D85B016E6D0A /* PetVisualFeature.swift */,
@@ -332,6 +335,7 @@
 				179084E4D4A671A9E8381401 /* ReferenceTwinsView.swift in Sources */,
 				47BA0942368144D6369EA32D /* ReferenceTwinsEngine.swift in Sources */,
 				BEEFAA000000000000000103 /* MEFRIONResemblance.mlpackage in Sources */,
+				BEEFAA202610250000000002 /* MEFRIONPetIcon.mlmodel in Sources */,
 				BEEFAA000000000000000102 /* PetResemblance.swift in Sources */,
 				BEEFAA000000000000000101 /* PetSubjectCrop.swift in Sources */,
 				A4402A1959814FB8C41717CF /* PetVisualFeature.swift in Sources */,

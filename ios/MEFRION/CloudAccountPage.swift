@@ -31,6 +31,7 @@ struct CloudAccountPage:View {
                             VStack(alignment:.leading,spacing:4) {
                                 Text(client.accountProfile.name.isEmpty ? "マイプロフィール" : client.accountProfile.name)
                                     .font(.headline).foregroundStyle(Theme.text)
+                                Text("あなたのプロフィール").font(.caption).foregroundStyle(Theme.secondaryText)
                                 Text("プロフィールを編集").font(.caption.weight(.semibold)).foregroundStyle(Theme.actionText)
                             }
                             Spacer(minLength:0)
@@ -60,7 +61,7 @@ struct CloudAccountPage:View {
                     .background(.white,in:RoundedRectangle(cornerRadius:20))
                 }
                 if !client.pets.isEmpty {
-                    Text("うちの子").font(.headline)
+                    Text("うちの子のアカウント").font(.headline)
                     ForEach(client.pets) {pet in NavigationLink {
                         if pet.role=="owner" {CloudProfileEditor(pet:pet,client:client)}
                         else {CloudAlbumLibraryView()}
@@ -162,9 +163,6 @@ struct CloudAccountPage:View {
             }
             if let error=client.error {Text(error).foregroundStyle(.red)}
         }.padding(16)}
-        // TabView's floating bar is hosted outside this navigation stack. Keep
-        // trailing rows above it after the scroll view finishes bouncing.
-        .contentMargins(.bottom,88,for:.scrollContent)
         .background(Theme.background).navigationTitle("マイページ").navigationBarTitleDisplayMode(.inline)
         .task {await client.restore();if client.authenticated {await client.performRefresh {async let pets:Void=client.loadPets();async let profile:Void=client.loadAccountProfile();_ = try await (pets,profile)}}}
         .protectWhenInactive()
@@ -185,7 +183,7 @@ private struct CloudAccountProfileEditor:View {
     var body:some View {
         Form {
             Section {EditableProfileIcon(encoded:$icon,changed:$iconChanged,importing:$importingIcon)}
-            Section("ニックネーム") {
+            Section("あなたのニックネーム") {
                 TextField("コメントで使う名前",text:$name).accessibilityIdentifier("account-profile-name")
                 Text("うちの子の名前・写真は、マイページの「うちの子」から変更できます。")
                     .font(.caption).foregroundStyle(Theme.secondaryText)
@@ -195,7 +193,7 @@ private struct CloudAccountProfileEditor:View {
                 if let error=client.error {Text(error).font(.footnote).foregroundStyle(.red)}
             }
         }.disabled(client.busy).scrollContentBackground(.hidden).background(Theme.background)
-            .navigationTitle("マイプロフィール").navigationBarTitleDisplayMode(.inline).protectWhenInactive()
+            .navigationTitle("あなたのプロフィール").navigationBarTitleDisplayMode(.inline).protectWhenInactive()
             .safeAreaInset(edge:.top,spacing:0) {
                 if saved {
                     Label("保存したよ ♡",systemImage:"checkmark.circle.fill").font(.subheadline.weight(.medium))
@@ -494,6 +492,7 @@ struct CloudMyPostsView:View {
         switch state {
         case "published":return "公開中"
         case "pending","processing":return "公開準備中"
+        case "review":return "公開前の確認中"
         case "stopped":return "公開終了"
         default:return "状態を確認中"
         }
@@ -627,6 +626,7 @@ struct CloudAlbumLibraryView:View {
                             albumFeatureLink("しぐさ図鑑","かわいいを集めよう","pawprint.fill",
                                              Color(red:0.91,green:0.89,blue:1))
                         }.buttonStyle(.plain).padding(.horizontal,12)
+                            .accessibilityIdentifier("album-gesture-atlas")
                     }}
                     HStack(spacing:6) {
                         Image(systemName:"lock.fill").font(.caption)

@@ -3,6 +3,8 @@ import Vision
 import CoreGraphics
 import AVFoundation
 import UIKit
+import CoreML
+import CoreVideo
 
 enum PetPostValidationError:LocalizedError {
     case imageNotRecognized,videoNotRecognized,unreadable
@@ -18,10 +20,26 @@ enum PetPostValidationError:LocalizedError {
 actor PetPostValidator {
     static let shared=PetPostValidator()
     private var verifiedVideos:Set<URL>=[]
+    private var iconClassifier:PetIconClassifier?
 
     func validatePhoto(_ jpeg:Data) throws {
         guard let image=UIImage(data:jpeg)?.cgImage else {throw PetPostValidationError.unreadable}
         guard containsPet(image,includeTiles:true) else {throw PetPostValidationError.imageNotRecognized}
+    }
+
+    /// Inspect the actual stored square, never an original with a pet outside it.
+    /// A separate classifier recovers face-only portraits missed by localization.
+    func validateProfileIcon(_ jpeg:Data) throws {
+        guard let image=UIImage(data:jpeg)?.cgImage else {throw PetPostValidationError.unreadable}
+        try Task.checkCancellation()
+        if containsPet(image,includeTiles:true) {return}
+        if iconClassifier==nil {iconClassifier=try PetIconClassifier()}
+        guard let iconClassifier else {throw PetPostValidationError.unreadable}
+        for padding in [0.0,0.2,0.45] {
+            try Task.checkCancellation()
+            if try iconClassifier.containsPet(image,padding:padding) {return}
+        }
+        throw PetPostValidationError.imageNotRecognized
     }
 
     func validateVideo(_ url:URL,duration:Double) throws {
@@ -83,6 +101,57 @@ actor PetPostValidator {
                 ["dog","cat"].contains(label.identifier.lowercased()) && label.confidence>=0.25
             }
         }
+    }
+}
+
+/// A pinned local classifier supplements whole-animal localization for avatars.
+/// ImageNet domestic-cat and dog labels are grouped; unrelated animals and
+/// objects are never accepted just because their names contain "cat" or "dog".
+final class PetIconClassifier {
+    private let model:MLModel
+    private let dogs:Set<String>
+    private let cats:Set<String>
+    init() throws {
+        guard let url=Bundle.main.url(forResource:"MEFRIONPetIcon",withExtension:"mlmodelc") else {throw PetPostValidationError.unreadable}
+        let config=MLModelConfiguration();config.computeUnits = .all
+        #if targetEnvironment(simulator)
+        config.computeUnits = .cpuOnly
+        #endif
+        model=try MLModel(contentsOf:url,configuration:config)
+        guard let labels=model.modelDescription.classLabels as? [String],labels.count==1001,
+              let firstDog=labels.firstIndex(of:"Chihuahua"),let lastDog=labels.firstIndex(of:"Mexican hairless"),lastDog-firstDog==117,
+              let firstCat=labels.firstIndex(of:"tabby, tabby cat"),let lastCat=labels.firstIndex(of:"Egyptian cat"),lastCat-firstCat==4,
+              labels.contains("dingo, warrigal, warragal, Canis dingo") else {throw PetPostValidationError.unreadable}
+        // Dingo is a dog category, often the model's best match for Shiba faces.
+        dogs=Set(labels[firstDog...lastDog]).union(["dingo, warrigal, warragal, Canis dingo"])
+        cats=Set(labels[firstCat...lastCat])
+    }
+    func containsPet(_ image:CGImage,padding:Double) throws->Bool {
+        var buffer:CVPixelBuffer?
+        guard CVPixelBufferCreate(kCFAllocatorDefault,224,224,kCVPixelFormatType_32BGRA,
+            [kCVPixelBufferCGImageCompatibilityKey:true,kCVPixelBufferCGBitmapContextCompatibilityKey:true] as CFDictionary,&buffer)==kCVReturnSuccess,
+              let buffer,CVPixelBufferLockBaseAddress(buffer,[])==kCVReturnSuccess else {throw PetPostValidationError.unreadable}
+        guard let context=CGContext(data:CVPixelBufferGetBaseAddress(buffer),width:224,height:224,bitsPerComponent:8,
+            bytesPerRow:CVPixelBufferGetBytesPerRow(buffer),space:CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo:CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue) else {
+            CVPixelBufferUnlockBaseAddress(buffer,[]);throw PetPostValidationError.unreadable
+        }
+        context.setFillColor(gray:0.5,alpha:1);context.fill(CGRect(x:0,y:0,width:224,height:224))
+        let side=224/(1+2*padding),inset=(224-side)/2
+        context.interpolationQuality = .high;context.draw(image,in:CGRect(x:inset,y:inset,width:side,height:side));context.flush()
+        CVPixelBufferUnlockBaseAddress(buffer,[])
+        let input=try MLDictionaryFeatureProvider(dictionary:["image":MLFeatureValue(pixelBuffer:buffer)])
+        let result=try model.prediction(from:input)
+        guard let values=result.featureValue(for:"classLabelProbs")?.dictionaryValue as? [String:Double] else {throw PetPostValidationError.unreadable}
+        return Self.hasPetEvidence(values,dogs:dogs,cats:cats)
+    }
+    static func hasPetEvidence(_ scores:[String:Double],dogs:Set<String>,cats:Set<String>)->Bool {
+        guard !scores.isEmpty,scores.values.allSatisfy({$0.isFinite && $0>=0 && $0<=1}),
+              abs(scores.values.reduce(0,+)-1)<0.05,let top=scores.max(by:{$0.value<$1.value})?.key else {return false}
+        let dog=scores.filter{dogs.contains($0.key)}.values.reduce(0,+)
+        let cat=scores.filter{cats.contains($0.key)}.values.reduce(0,+)
+        guard max(dog,cat)>=0.65,abs(dog-cat)>=0.35 else{return false}
+        return dog>cat ? dogs.contains(top) : cats.contains(top)
     }
 }
 

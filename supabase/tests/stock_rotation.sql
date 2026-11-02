@@ -12,13 +12,18 @@ do $$
 declare qa_publisher uuid:=gen_random_uuid();batch jsonb;t mefrion_private.stock_tasks;other mefrion_private.stock_tasks;
  asset text;second text;baseline integer;r uuid;published uuid;before_count integer;
 begin
+ -- Isolate this transaction from an already populated, daily-running catalogue.
+ -- ROLLBACK is mandatory: the live pool must never be disabled persistently.
+ update mefrion_private.stock_catalog set enabled=false where enabled;
+ update mefrion_private.stock_tasks set state='cancelled' where state in('pending','processing','failed');
+ update mefrion_private.stock_runs set day=day-36500,state='done';
  insert into auth.users(id,aud,role,email,raw_app_meta_data,raw_user_meta_data) values(qa_publisher,'authenticated','authenticated','stock-rollback-'||qa_publisher||'@example.invalid','{}','{"test_only":true}');
  insert into mefrion_private.managed_publishers(id) values(qa_publisher);
  select count(*) into baseline from mefrion_private.public_posts p where p.content_origin='managed_seed' and p.kind='post' and mefrion_private.post_allowed(p.id,null);
- update mefrion_private.stock_policy set enabled=true,publisher=qa_publisher,target=baseline+2,daily=1;
- select id into asset from public.mefrion_reference_assets where active and withdrawn_at is null and exists(select 1 from storage.objects where bucket_id='reference-thumbnails' and name=file) order by id limit 1;
- select id into second from public.mefrion_reference_assets where active and withdrawn_at is null and id<>asset and exists(select 1 from storage.objects where bucket_id='reference-thumbnails' and name=file) order by id limit 1;
- insert into mefrion_private.stock_catalog(asset_id,name,rights_until,evidence) values(asset,'QA むぎ',now()+interval '30 days','rollback fixture');
+ update mefrion_private.stock_policy set enabled=true,publisher=qa_publisher,target=baseline+2,daily=1,initialized=false,last_day=null;
+ select id into asset from public.mefrion_reference_assets a where active and withdrawn_at is null and exists(select 1 from storage.objects where bucket_id='reference-thumbnails' and name=file) and not exists(select 1 from mefrion_private.stock_tasks existing_task where existing_task.asset_id=a.id) order by id limit 1;
+ select id into second from public.mefrion_reference_assets a where active and withdrawn_at is null and id<>asset and exists(select 1 from storage.objects where bucket_id='reference-thumbnails' and name=file) and not exists(select 1 from mefrion_private.stock_tasks existing_task where existing_task.asset_id=a.id) order by id limit 1;
+ insert into mefrion_private.stock_catalog(asset_id,name,rights_until,evidence) values(asset,'QA むぎ',now()+interval '30 days','rollback fixture') on conflict(asset_id) do update set enabled=true,pet_id=null,name=excluded.name,rights_until=excluded.rights_until;
  batch:=public.mefrion_stock_batch();
  perform pg_temp.stock_assert('one reserved catalogue asset',jsonb_array_length(batch)=1);
  perform pg_temp.stock_assert('no duplicate reservation',jsonb_array_length(public.mefrion_stock_batch())=0);
@@ -49,7 +54,7 @@ begin
  update mefrion_private.public_posts set content_origin='managed_seed' where id=t.post_id;
  -- Exercise an atomic daily swap and retirement of its old original.
  update mefrion_private.stock_runs set state='done',completed_at=now() where id=t.run_id;
- insert into mefrion_private.stock_catalog(asset_id,name,rights_until,evidence) values(second,'QA もち',now()+interval '30 days','rollback fixture');
+ insert into mefrion_private.stock_catalog(asset_id,name,rights_until,evidence) values(second,'QA もち',now()+interval '30 days','rollback fixture') on conflict(asset_id) do update set enabled=true,pet_id=null,name=excluded.name,rights_until=excluded.rights_until;
  insert into mefrion_private.stock_runs(day,kind,goal,created_at) values((now() at time zone 'Asia/Tokyo')::date,'daily',1,now()+interval '1 second') returning id into r;
  -- The live pool must not participate in this disposable swap.
  update mefrion_private.public_posts set published_at=now()+interval '1 day' where content_origin='managed_seed' and id<>t.post_id;

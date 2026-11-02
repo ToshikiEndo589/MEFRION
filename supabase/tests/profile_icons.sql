@@ -3,6 +3,7 @@ begin;
 create temporary table icon_test_result(name text,passed boolean);
 create function pg_temp.icon_assert(label text,ok boolean) returns void language plpgsql security definer as $$
 begin if ok is distinct from true then raise exception 'profile icon assertion failed: %',label;end if;insert into icon_test_result values(label,true);end $$;
+grant execute on function pg_temp.icon_assert(text,boolean) to anon,authenticated;
 do $$
 declare a uuid:=gen_random_uuid();b uuid:=gen_random_uuid();pet uuid;private_pet uuid;photo uuid:=gen_random_uuid();post uuid:=gen_random_uuid();comment_id uuid;
  jpeg text:=encode(decode('ffd8ffe000104a46494600010100000100010000ffd9','hex'),'base64');v jsonb;invite jsonb;denied boolean;

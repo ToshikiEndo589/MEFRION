@@ -7,11 +7,11 @@ from p1_test_support import ROOT,DevelopmentClient
 c=DevelopmentClient();photos=[];pet=None;winner=None
 try:
  c.login();pet=c.check('private-race-pet',c.rpc('create_pet',{'p_name':'P01 owned concurrency only','p_species':'dog'}))['id']
- invite=c.check('single-use-invite',c.rpc('invite',{'p_pet':pet}));barrier=threading.Barrier(2)
+ invite=c.check('ten-person-invite',c.rpc('invite',{'p_pet':pet}));barrier=threading.Barrier(2)
  def accept(role):barrier.wait();return role,c.rpc('accept_invite',{'p_token':invite['token'],'p_confirm_scope':True},role)
  with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(accept,['family','outsider']))
- successful=[role for role,(status,data) in results if status==200];assert len(successful)==1 and sorted(status for role,(status,data) in results)==[200,400];winner=successful[0]
- c.check('single-invite-one-committed-member',(200,True));members=c.check('only-owner-and-one-family',c.rpc('members',{'p_pet':pet}),predicate=lambda v:len(v)==2)
+ successful=[role for role,(status,data) in results if status==200];assert len(successful)==2 and all(status==200 for role,(status,data) in results);winner='family'
+ c.check('shared-invite-two-committed-members',(200,True));members=c.check('owner-and-two-family',c.rpc('members',{'p_pet':pet}),predicate=lambda v:len(v)==3)
  p=c.check('owner-photo',c.rpc('begin_photo',{'p_pet':pet,'p_request_key':str(uuid4()),'p_title':'Owned concurrency illustration'}));photos.append(p['id']);data=io.BytesIO();Image.new('RGB',(256,256),(170,140,120)).save(data,'JPEG');c.check('upload',c.call('/storage/v1/object/family-originals/'+p['path'],raw=data.getvalue(),role='owner'),(200,201));c.check('finish',c.rpc('finish_photo',{'p_photo':p['id']}));c.check('winner-private-read-before-exit',c.rpc('photo',{'p_photo':p['id']},winner))
  actor=next(v['id'] for v in c.people if v['role']==winner);barrier=threading.Barrier(2)
  def add():barrier.wait();return c.rpc('begin_photo',{'p_pet':pet,'p_request_key':str(uuid4()),'p_title':'Owned concurrent pending only'},winner)
@@ -23,7 +23,7 @@ try:
   photos.append(added[1]['id']);c.check('pending-photo-cannot-finish-after-exit',c.rpc('finish_photo',{'p_photo':added[1]['id']},winner),(403,))
  c.check('post-commit-old-member-album-denied',c.rpc('album',{'p_pet':pet},winner),(403,));c.check('post-commit-old-member-photo-denied',c.rpc('photo',{'p_photo':p['id']},winner),(403,));c.check('post-commit-old-member-image-denied',c.call('/functions/v1/private-image?photo='+p['id'],role=winner),(404,))
  c.check('anonymous-private-image-denied',c.call('/functions/v1/private-image?photo='+p['id']),(401,));c.check('expired-member-cannot-consent-owner-photo',c.rpc('consent',{'p_photo':p['id'],'p_purpose':'sns','p_allowed':True},winner),(403,))
- outcome={'passed':True,'scope':'actual two concurrent single-use joins and membership removal/write race','checks':c.checks}
+ outcome={'passed':True,'scope':'actual two concurrent shared-link joins and membership removal/write race','checks':c.checks}
 except Exception as e:outcome={'passed':False,'failure':str(e),'checks':c.checks}
 finally:
  for id in photos:c.check('cleanup-owned-photo',c.rpc('delete_photo',{'p_photo':id}))

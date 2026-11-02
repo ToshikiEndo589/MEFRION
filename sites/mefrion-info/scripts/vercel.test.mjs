@@ -1,0 +1,58 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import handler, { route } from '../api/site.mjs';
+
+test('public pages and operator assets preserve security headers', async () => {
+  for (const path of ['/', '/privacy', '/terms', '/console/', '/console/content', '/console/content.js', '/console/cloud.js', '/console/config.json']) {
+    const response = await route(new Request('https://site.invalid' + path));
+    assert.equal(response.status, 200, path);
+    assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+    if (path.startsWith('/console/')) {
+      const policy = response.headers.get('Content-Security-Policy');
+      assert.match(policy, /frame-ancestors 'none'/);
+      // The public configuration is fetched from the same origin before Auth.
+      // Without 'self', browsers throw Failed to fetch before any email request.
+      assert.match(policy, /connect-src 'self' https:\/\/pbnimpqrthvznbwewtcf\.supabase\.co;/);
+      assert.match(policy, /media-src 'self' blob:;/);
+      assert.doesNotMatch(policy, /connect-src[^;]*\*/);
+    }
+  }
+});
+test('public copy reflects the live service and private review requires operator UI', async () => {
+  const home = await (await route(new Request('https://site.invalid/'))).text();
+  const privacy = await (await route(new Request('https://site.invalid/privacy'))).text();
+  const operator = await (await route(new Request('https://site.invalid/console/content'))).text();
+  assert.doesNotMatch(home, /公開準備中|開発・検証/);
+  assert.match(privacy, /通常24時間以内/);
+  assert.match(operator, /id="content-section"/);
+  assert.match(operator, /src="\/console\/content.js"/);
+});
+test('does not expose files, backup storage, or accept writes', async () => {
+  for (const path of ['/.env', '/.git/config', '/worker/index.js', '/internal-backup/health', '/cloud-shared/not-a-uuid']) {
+    assert.equal((await route(new Request('https://site.invalid' + path))).status, 404, path);
+  }
+  assert.equal((await route(new Request('https://site.invalid/privacy', { method: 'POST' }))).status, 405);
+});
+test('shared page router only contacts allowlisted Supabase origin', async () => {
+  const previous = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (url) => { calls.push(url); return new Response('shared', { status: 200 }); };
+  try {
+    const response = await route(new Request('https://site.invalid/cloud-shared/11111111-2222-3333-4444-555555555555'));
+    assert.equal(response.status, 200);
+    assert.equal(await response.text(), 'shared');
+    assert.equal(new URL(calls[0]).origin, 'https://pbnimpqrthvznbwewtcf.supabase.co');
+  } finally { globalThis.fetch = previous; }
+});
+test('Vercel rewrite adapter serves routes and HEAD correctly', async () => {
+  for (const method of ['GET', 'HEAD']) {
+    const res = { headers: {}, setHeader(k, v) { this.headers[k] = v; }, end(body) { this.body = body; } };
+    await handler({ url: '/api/site?__mefrion_path=privacy', method }, res);
+    assert.equal(res.statusCode, 200);
+    assert.equal(method === 'HEAD' ? res.body : res.body.includes('MEFRION'), method === 'HEAD' ? undefined : true);
+  }
+  const res = { setHeader() {}, end() {} };
+  await handler({ url: '/api/site?__mefrion_path=privacy&__mefrion_path=terms', method: 'GET' }, res);
+  assert.equal(res.statusCode, 400);
+});

@@ -47,7 +47,7 @@ HStack {Label("そっくり",systemImage:"pawprint.fill").font(.headline).access
                     .overlay(alignment:.bottomLeading) {
                         Text("うちの子に、似ている子を見つけよう。")
                             .font(.headline).foregroundStyle(.white).padding(16).frame(maxWidth:.infinity,alignment:.leading)
-                            .background(LinearGradient(colors:[.clear,.black.opacity(0.5)],startPoint:.top,endPoint:.bottom))
+                            .background(.black.opacity(0.78))
                     }.clipShape(RoundedRectangle(cornerRadius:16)).accessibilityLabel("そっくり検索のイメージ・開発用イラスト")
                 Text("端末内で、所有テストイラストとの色・輪郭を比較します。犬猫の種別は本人が選択します。実写真の犬猫認識と似ている品質は未検証です。血縁や同一個体の判定ではありません。")
                 Text("入力写真は端末内メモリのみで使い、破棄ボタンやアプリ終了で破棄します。サーバー・外部AIへ送信せず、候補DBにも追加しません。")

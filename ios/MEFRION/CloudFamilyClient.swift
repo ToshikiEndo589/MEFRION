@@ -10,8 +10,14 @@ struct CloudPhoto:Decodable,Identifiable { let id:String;let path:String;let cap
 struct CloudInvitation:Codable { let id:String;let token:String;let expires_at:String }
 struct CloudPendingInvitation:Decodable {let id:String;let expires_at:String}
 enum FamilyInvitationError:LocalizedError {
-    case limit
-    var errorDescription:String? {"使っていない招待リンクが5件残っています。古いリンクを取り消すと、新しく作れます。"}
+    case limit,full,invalid
+    var errorDescription:String? {
+        switch self {
+        case .limit:return "有効な招待リンクが5件残っています。古いリンクを取り消すと、新しく作れます。"
+        case .full:return "この招待は10人が参加済みです。新しいリンクを送ってもらってね。"
+        case .invalid:return "この招待は使えません。新しいリンクを送ってもらってね。"
+        }
+    }
 }
 struct CloudMember:Decodable,Identifiable {let id:String;let role:String;let me:Bool;var display_name:String?=nil}
 struct ProvidedPhoto:Decodable,Identifiable {let id:String;let captured:String?;let title:String;let sns:Bool;let twins:Bool;let external_share:Bool}
@@ -182,8 +188,8 @@ final class CloudFamilyClient:ObservableObject {
     }
     var configured:Bool { !key.isEmpty }
     private enum Failure:LocalizedError {
-        case unavailable,providerUnavailable,notAuthenticated,denied,invalid,network,dailyLimit,referenceLimit,emailNotAuthorized,emailRateLimited,emailAlreadyRegistered
-        var errorDescription:String? { switch self { case .referenceLimit:return "参考写真の検索はゲスト10回・会員50回/日（日本時間）までです。明日またお試しください。";case .unavailable:return "サービスに接続できません。時間をおいて再試行してください。";case .providerUnavailable:return "このログイン方法は現在利用できません。メールでログインしてください。";case .notAuthenticated:return "ログインが必要です。メールとパスワードを確認してください。";case .denied:return "操作できません。権限・招待・写真の状態を確認してください。";case .invalid:return "入力内容を確認してください。";case .network:return "接続できません。再試行してください。";case .dailyLimit:return "本日の検索回数を使い切りました。ゲスト初回1回・会員5回/日（日本時間）です。";case .emailNotAuthorized:return "このメールアドレスには現在確認メールを送れません。メール配信の設定が必要です。";case .emailRateLimited:return "メール送信の回数制限に達しました。時間をおいて再試行してください。";case .emailAlreadyRegistered:return "このメールアドレスは登録済みです。ログインまたはパスワードの復旧をお試しください。" } }
+        case unavailable,providerUnavailable,notAuthenticated,denied,invalid,network,dailyLimit,referenceLimit,emailNotAuthorized,emailRateLimited,emailAlreadyRegistered,contentTextBlocked
+        var errorDescription:String? { switch self { case .referenceLimit:return "参考写真の検索はゲスト10回・会員50回/日（日本時間）までです。明日またお試しください。";case .unavailable:return "サービスに接続できません。時間をおいて再試行してください。";case .providerUnavailable:return "このログイン方法は現在利用できません。メールでログインしてください。";case .notAuthenticated:return "ログインが必要です。メールとパスワードを確認してください。";case .denied:return "操作できません。権限・招待・写真の状態を確認してください。";case .invalid:return "入力内容を確認してください。";case .network:return "接続できません。再試行してください。";case .dailyLimit:return "本日の検索回数を使い切りました。ゲスト初回1回・会員5回/日（日本時間）です。";case .emailNotAuthorized:return "このメールアドレスには現在確認メールを送れません。メール配信の設定が必要です。";case .emailRateLimited:return "メール送信の回数制限に達しました。時間をおいて再試行してください。";case .emailAlreadyRegistered:return "このメールアドレスは登録済みです。ログインまたはパスワードの復旧をお試しください。";case .contentTextBlocked:return "この文章は投稿できないよ。やさしい言葉に直してね。" } }
     }
     private func request(_ path:String,body:[String:Any]?=nil,token:String?=nil,raw:Data?=nil,contentType:String="image/jpeg") async throws -> Data {
         #if DEBUG
@@ -202,8 +208,14 @@ final class CloudFamilyClient:ObservableObject {
         if raw != nil && Self.isExistingUpload(status:response.statusCode,data:data) {return data}
         if response.statusCode==401 {throw Failure.notAuthenticated}
         if !(200..<300).contains(response.statusCode),
-           let payload=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any],payload["message"] as? String=="invitation_limit" {
-            throw FamilyInvitationError.limit
+           let payload=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any] {
+            switch payload["message"] as? String {
+            case "invitation_limit":throw FamilyInvitationError.limit
+            case "invitation_full":throw FamilyInvitationError.full
+            case "invalid_invitation":throw FamilyInvitationError.invalid
+            case "content_text_blocked":throw Failure.contentTextBlocked
+            default:break
+            }
         }
         if let error=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any],error["message"] as? String == "daily_search_limit" {throw Failure.dailyLimit}
         if let error=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any],error["message"] as? String == "reference_search_limit" {throw Failure.referenceLimit}
@@ -366,6 +378,12 @@ final class CloudFamilyClient:ObservableObject {
         guard receipt.accepted else {throw Failure.denied}
         await signOut()
     }
+    func retirementStatus(key:String) async throws -> String {
+        guard UUID(uuidString:key) != nil else {throw Failure.invalid}
+        let data=try await request("/rest/v1/rpc/mefrion_retirement_status",body:["p_request_key":key])
+        struct Receipt:Decodable {let state:String}
+        return try JSONDecoder().decode(Receipt.self,from:data).state
+    }
     func verifyEmail(email:String,code:String,recovery:Bool) async throws {
         guard code.count>=6,code.count<=12,code.allSatisfy(\.isNumber) else {throw Failure.invalid}
         let data=try await request("/auth/v1/verify",body:["email":email,"token":code,"type":recovery ? "recovery" : "signup"])
@@ -498,6 +516,9 @@ final class CloudFamilyClient:ObservableObject {
         let _:Bool=try await rpc("update_pet",["p_pet":pet.id,"p_name":name,"p_breed":breed,"p_introduction":introduction,"p_details":details,"p_public_fields":publicFields]);clearPublicViews();try await loadPets()
     }
     func updatePetProfile(_ pet:CloudPet,name:String,breed:String,introduction:String,details:[String:String],publicFields:[String],icon:String?,iconChanged:Bool) async throws {
+        let validationGeneration=authenticationGeneration
+        if iconChanged {try await ProfileIconCodec.validate(icon)}
+        guard validationGeneration==authenticationGeneration else {throw CancellationError()}
         #if DEBUG
         if isolated,ProcessInfo.processInfo.arguments.contains("--ui-profile-fixture"),let index=pets.firstIndex(where:{$0.id==pet.id}) {
             pets[index]=CloudPet(id:pet.id,name:name,species:pet.species,breed:breed,introduction:introduction,role:pet.role,details:details,public_fields:publicFields,icon:iconChanged ? icon : pets[index].icon)
@@ -523,6 +544,9 @@ final class CloudFamilyClient:ObservableObject {
         accountProfile=value
     }
     func saveAccountProfile(name:String,icon:String?,iconChanged:Bool) async throws {
+        let validationGeneration=authenticationGeneration
+        if iconChanged {try await ProfileIconCodec.validate(icon)}
+        guard validationGeneration==authenticationGeneration else {throw CancellationError()}
         #if DEBUG
         if isolated,ProcessInfo.processInfo.arguments.contains("--ui-profile-fixture") {
             if !name.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty {accountProfile.name=name.trimmingCharacters(in:.whitespacesAndNewlines)}
@@ -674,6 +698,12 @@ final class CloudFamilyClient:ObservableObject {
     }
     func privatePhotoForDeviceSave(_ id:String) async throws->UIImage {
         #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--ui-profile-fixture"),["fixture-album-photo","fixture-album-old"].contains(id) {
+            if id=="fixture-album-photo",let image=UIImage(named:"appstore-dog-one") {return image}
+            return UIGraphicsImageRenderer(size:CGSize(width:320,height:320)).image {context in
+                UIColor.white.setFill();context.fill(CGRect(x:0,y:0,width:320,height:320))
+            }
+        }
         if isolated,ProcessInfo.processInfo.arguments.contains("--appstore-screenshots") {
             let asset=id=="appstore-album-two" ? "appstore-dog-two" : "appstore-dog-one"
             if let image=UIImage(named:asset) {return image}
@@ -705,15 +735,25 @@ final class CloudFamilyClient:ObservableObject {
                 let file=try await task.value
                 guard generation==publicVideoGeneration else {try? FileManager.default.removeItem(at:file);throw CancellationError()}
                 publicVideoLoads[id]=nil
-                guard !Task.isCancelled else {try? FileManager.default.removeItem(at:file);throw CancellationError()}
                 publicVideoFiles[id]=file;publicVideoOrder.removeAll(where:{$0==id});publicVideoOrder.append(id)
                 trimPublicVideoCache()
+                guard !Task.isCancelled else {throw CancellationError()}
                 return file
             } catch {if generation==publicVideoGeneration {publicVideoLoads[id]=nil};throw error}
         }
         return try await downloadVideo(id,privateMedia:true)
     }
     private func downloadVideo(_ id:String,privateMedia:Bool) async throws->URL {
+        #if DEBUG
+        if isolated,!privateMedia,ProcessInfo.processInfo.arguments.contains("--ui-video-fixture"),
+           let encoded=ProcessInfo.processInfo.environment["MEFRION_TEST_VIDEO_BASE64"],encoded.count<20000,
+           let data=Data(base64Encoded:encoded) {
+            try await Task.sleep(for:.seconds(2))
+            let output=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString+".mp4")
+            try data.write(to:output,options:[.atomic,.completeFileProtection])
+            return output
+        }
+        #endif
         let path=privateMedia ? "/functions/v1/private-video?photo="+id : "/functions/v1/public-image?media="+id+"&format=video"
         let data:Data
         if privateMedia || authenticated {data=try await authenticatedRequest(path)}
@@ -878,6 +918,13 @@ final class CloudFamilyClient:ObservableObject {
             publicImages=Dictionary(uniqueKeysWithValues:samples.enumerated().compactMap {index,item in
                 UIImage(named:item.3).map {("appstore-media-\(index)",$0)}
             })
+            hasMorePublicPosts=false
+            return
+        }
+        if isolated,ProcessInfo.processInfo.arguments.contains("--ui-video-fixture") {
+            let video="A9873210-1234-4567-8910-123456789012"
+            publicPosts=[CloudPublicPost(id:"fixture-video-post",pet_id:"fixture-pet-video",name:"テスト犬",species:"dog",breed:"",body:"動画の自動再生",kind:"post",media:[video,"fixture-video-second-photo"],likes:0,comments:0,liked:false,saved:false,following:false,video_media:[video])]
+            if let image=UIImage(named:"pet-0") {publicImages=[video:image,"fixture-video-second-photo":image]}
             hasMorePublicPosts=false
             return
         }
@@ -1290,7 +1337,7 @@ final class CloudFamilyClient:ObservableObject {
         case "https://pmrvzpuznwzuejbuhaqm.supabase.co": route="cloud-development-shared"
         default: return nil
         }
-        return URL(string:"https://mefrion-support.toshiki1108.chatgpt.site/"+route+"/"+id)
+        return URL(string:"https://mefrion.vercel.app/"+route+"/"+id)
     }
     func withdrawTwins(pet:String) async throws {let _:Bool=try await rpc("twins_withdraw",["p_pet":pet])}
 

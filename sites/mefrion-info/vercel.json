@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "outputDirectory": "public",
+  "trailingSlash": false,
+  "functions": { "api/site.mjs": { "maxDuration": 30 } },
+  "rewrites": [
+    { "source": "/", "destination": "/api/site?__mefrion_path=index.html" },
+    { "source": "/:path*", "destination": "/api/site?__mefrion_path=:path*" }
+  ]
+}

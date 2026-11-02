@@ -94,7 +94,7 @@ struct ReferenceTwinsView:View {
                                 .offset(x:-82,y:-56)
                             Image(systemName:"sparkle").font(.system(size:20)).foregroundStyle(.white)
                                 .offset(x:91,y:55)
-                        }.frame(width:contentWidth,height:270).accessibilityLabel("そっくり検索")
+                        }.frame(width:contentWidth,height:270).accessibilityHidden(true)
                     }
                     actionPanel.frame(width:contentWidth)
                     if working {PawLoadingView(title:"そっくりな子を探してるよ",compact:true)
@@ -118,7 +118,7 @@ struct ReferenceTwinsView:View {
         }.background(Theme.background).foregroundStyle(Theme.text).toolbar(.hidden,for:.navigationBar)
         .task {
             #if DEBUG
-            if ProcessInfo.processInfo.arguments.contains("--appstore-screenshots"),image==nil {
+            if (ProcessInfo.processInfo.arguments.contains("--appstore-screenshots") || ProcessInfo.processInfo.arguments.contains("--ui-share-probe")),image==nil {
                 image=UIImage(named:"appstore-dog-one")
                 expires=Date().addingTimeInterval(600)
             }
@@ -194,7 +194,7 @@ struct ReferenceTwinsView:View {
                     Label("写真を撮る",systemImage:"camera.fill")
                         .font(.system(size:15,weight:.semibold)).frame(maxWidth:.infinity,minHeight:56)
                         .foregroundStyle(.white)
-                        .background(Theme.accent.gradient,in:RoundedRectangle(cornerRadius:18))
+                        .background(Theme.actionText,in:RoundedRectangle(cornerRadius:18))
                 }.buttonStyle(.plain).accessibilityIdentifier("reference-twins-camera")
             }.disabled(working)
             Button(action:search) {
@@ -202,7 +202,7 @@ struct ReferenceTwinsView:View {
                     .frame(maxWidth:.infinity,minHeight:54)
                     .foregroundStyle(image==nil || working ? Theme.secondaryText : .white)
                     .background(image==nil || working ? Theme.accent.opacity(0.16) : Theme.actionText,in:Capsule())
-            }.buttonStyle(.plain).disabled(image==nil || working)
+            }.buttonStyle(ReferenceSearchButtonStyle()).disabled(image==nil || working)
                 .accessibilityIdentifier("reference-twins-search")
         }
     }
@@ -434,7 +434,7 @@ private struct ReferenceShareView:View {
             Button {shareToX(image:renderedPost)} label: {
                 Label("Xでポストを作る",systemImage:"arrow.up.right")
                     .font(.headline).frame(maxWidth:.infinity,minHeight:54)
-                    .foregroundStyle(.white).background(Theme.accent.gradient,in:Capsule())
+                    .foregroundStyle(.white).background(Theme.actionText,in:Capsule())
             }.buttonStyle(.plain).accessibilityIdentifier("reference-twins-x-share")
             Text("カードをコピーしてXを開くよ。画像を貼り付けて投稿してね。")
                 .font(.caption).foregroundStyle(Theme.secondaryText)
@@ -443,7 +443,7 @@ private struct ReferenceShareView:View {
             Button {shareToInstagramStories(image:rendered)} label: {
                 Label("Instagramストーリーを作る",systemImage:"sparkles.tv.fill")
                     .font(.headline).frame(maxWidth:.infinity,minHeight:54)
-                    .foregroundStyle(.white).background(Theme.accent.gradient,in:Capsule())
+                    .foregroundStyle(.white).background(Theme.actionText,in:Capsule())
             }.buttonStyle(.plain).accessibilityIdentifier("reference-twins-instagram-story")
         } else if selectedFormat==0 || renderedPost==nil {
             PawLoadingView(title:"カードを作っているよ",compact:true)
@@ -580,5 +580,13 @@ private struct ReferenceShareView:View {
         UIApplication.shared.open(UIApplication.shared.canOpenURL(appURL) ? appURL : webURL) {opened in
             if !opened {shareError="Xを開けませんでした。アプリの設定を確認してね。"}
         }
+    }
+}
+
+/// Preserve the explicit readable disabled color; PlainButtonStyle adds a
+/// second opacity reduction on top of the search button's disabled palette.
+private struct ReferenceSearchButtonStyle:ButtonStyle {
+    func makeBody(configuration:Configuration)->some View {
+        configuration.label.opacity(configuration.isPressed ? 0.8 : 1)
     }
 }

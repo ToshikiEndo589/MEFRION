@@ -5,6 +5,104 @@ import Vision
 @testable import MEFRION
 
 @MainActor final class ReferenceTwinsTests:XCTestCase {
+    func testProfileIconCloseUpsRecoverAfterActualThumbnailEncoding() async throws {
+        var previousAccepted=0,recovered=0,total=0
+        for (name,centerX,centerY) in [("appstore-dog-one",0.58,0.32),("appstore-dog-two",0.49,0.34),("appstore-cat-one",0.48,0.45)] {
+            let image=try XCTUnwrap(UIImage(named:name)?.cgImage)
+            // Zoom around the face rather than the centre of a full-body photo.
+            let canvas=CGRect(x:0,y:0,width:image.width,height:image.height)
+            for fraction in [1.0,0.75,0.5,0.35,0.25] {
+                let side=CGFloat(min(image.width,image.height))*fraction
+                let zoom=try XCTUnwrap(image.cropping(to:CGRect(x:CGFloat(image.width)*centerX-side/2,y:CGFloat(image.height)*centerY-side/2,width:side,height:side).intersection(canvas)))
+                let icon=try XCTUnwrap(ProfileIconCodec.encode(image:UIImage(cgImage:zoom)))
+                let bytes=try XCTUnwrap(Data(base64Encoded:icon))
+                var oldAccepted=false
+                do {try await PetPostValidator.shared.validatePhoto(bytes);oldAccepted=true;previousAccepted+=1}
+                catch PetPostValidationError.imageNotRecognized {}
+                do {
+                    try await ProfileIconCodec.validate(icon)
+                    if !oldAccepted {recovered+=1}
+                    total+=1
+                } catch {
+                    let attachment=XCTAttachment(image:try XCTUnwrap(UIImage(data:bytes)));attachment.name="Rejected-\(name)-\(fraction)";attachment.lifetime = .keepAlways;add(attachment)
+                    XCTFail("Avatar \(name) face zoom \(fraction): \(error)")
+                }
+                // The codec can store 128px avatars for more detailed photos.
+                let format=UIGraphicsImageRendererFormat();format.scale=1;format.opaque=true
+                let small=UIGraphicsImageRenderer(size:CGSize(width:128,height:128),format:format).image {_ in
+                    ProfileIconCodec.image(icon)?.draw(in:CGRect(x:0,y:0,width:128,height:128))
+                }
+                let smallJPEG=try XCTUnwrap(small.jpegData(compressionQuality:0.6))
+                do {
+                    try await ProfileIconCodec.validate(smallJPEG.base64EncodedString())
+                    total+=1
+                } catch {XCTFail("128px avatar \(name) face zoom \(fraction): \(error)")}
+            }
+        }
+        print("ICON_CLOSEUP_REGRESSION old=\(previousAccepted)/15 recovered=\(recovered) accepted=\(total)/30")
+        XCTAssertGreaterThan(recovered,0,"Must reproduce and recover a thumbnail rejected by the old icon detector")
+        XCTAssertEqual(total,30)
+    }
+    func testProfileIconFallbackRejectsNonPetImages() async throws {
+        for symbol in ["person.crop.square.fill","teddybear.fill","car.fill","leaf.fill","cup.and.saucer.fill","house.fill"] {
+            let format=UIGraphicsImageRendererFormat();format.scale=1;format.opaque=true
+            let image=UIGraphicsImageRenderer(size:CGSize(width:256,height:256),format:format).image {context in
+                UIColor.white.setFill();context.fill(CGRect(x:0,y:0,width:256,height:256))
+                UIImage(systemName:symbol)?.withTintColor(.black,renderingMode:.alwaysOriginal).draw(in:CGRect(x:20,y:20,width:216,height:216))
+            }
+            let value=try XCTUnwrap(ProfileIconCodec.encode(image:image))
+            do {
+                try await ProfileIconCodec.validate(value)
+                XCTFail("Non-pet icon accepted: \(symbol)")
+            } catch PetPostValidationError.imageNotRecognized {}
+        }
+    }
+    func testIconClassifierRequiresDominantExactPetCategories() {
+        let dogs:Set<String>=["Chihuahua","Pembroke","dingo, warrigal, warragal, Canis dingo"]
+        let cats:Set<String>=["tabby, tabby cat","Egyptian cat"]
+        func accepts(_ scores:[String:Double])->Bool {PetIconClassifier.hasPetEvidence(scores,dogs:dogs,cats:cats)}
+        XCTAssertTrue(accepts(["Chihuahua":0.4,"Pembroke":0.4,"chair":0.2]))
+        XCTAssertTrue(accepts(["tabby, tabby cat":0.8,"chair":0.2]))
+        XCTAssertTrue(accepts(["dingo, warrigal, warragal, Canis dingo":0.9,"chair":0.1]))
+        XCTAssertFalse(accepts(["hotdog":0.9,"Chihuahua":0.1]))
+        XCTAssertFalse(accepts(["timber wolf":0.9,"Chihuahua":0.1]))
+        XCTAssertFalse(accepts(["red fox":0.9,"Chihuahua":0.1]))
+        XCTAssertFalse(accepts(["lynx":0.9,"Egyptian cat":0.1]))
+        XCTAssertFalse(accepts(["Chihuahua":0.4,"Egyptian cat":0.3,"chair":0.3]))
+        XCTAssertFalse(accepts(["Chihuahua":Double.nan]))
+        XCTAssertFalse(accepts(["Chihuahua":0.9,"chair":0.9]))
+    }
+    func testProfileIconsRequireDogOrCatAfterSquareCrop() async throws {
+        for name in ["appstore-dog-one","appstore-cat-one"] {
+            let image=try XCTUnwrap(UIImage(named:name))
+            let value=try XCTUnwrap(ProfileIconCodec.encode(image:image))
+            try await ProfileIconCodec.validate(value)
+        }
+        let blank=UIGraphicsImageRenderer(size:CGSize(width:320,height:320)).image {context in
+            UIColor.white.setFill();context.fill(CGRect(x:0,y:0,width:320,height:320))
+        }
+        let value=try XCTUnwrap(ProfileIconCodec.encode(image:blank))
+        let client=CloudFamilyClient()
+        do {
+            try await client.saveAccountProfile(name:"QA",icon:value,iconChanged:true)
+            XCTFail("Account avatar must be rejected before any API request")
+        } catch PetPostValidationError.imageNotRecognized {}
+        let pet=CloudPet(id:UUID().uuidString,name:"QA",species:"dog",breed:"",introduction:"",role:"owner")
+        do {
+            try await client.updatePetProfile(pet,name:"QA",breed:"",introduction:"",details:[:],publicFields:[],icon:value,iconChanged:true)
+            XCTFail("Pet avatar must be rejected before any API request")
+        } catch PetPostValidationError.imageNotRecognized {}
+        try await ProfileIconCodec.validate(nil)
+        let dog=try XCTUnwrap(UIImage(named:"appstore-dog-one"))
+        let edge=UIGraphicsImageRenderer(size:CGSize(width:960,height:320)).image {context in
+            UIColor.white.setFill();context.fill(CGRect(x:0,y:0,width:960,height:320))
+            dog.draw(in:CGRect(x:0,y:0,width:160,height:320))
+        }
+        do {
+            _=try await ProfileIconCodec.validated(data:try XCTUnwrap(edge.jpegData(compressionQuality:0.9)))
+            XCTFail("A pet outside the avatar crop cannot authorize the empty square")
+        } catch PetPostValidationError.imageNotRecognized {}
+    }
     func testCloseUpRecognitionRecoversRejectedDogAndCatPhotosThroughQueryEncoding() async throws {
         var baselineAccepted=0,improvedAccepted=0
         let encoder=ReferenceQueryEncoder()

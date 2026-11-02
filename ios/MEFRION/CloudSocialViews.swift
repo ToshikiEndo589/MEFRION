@@ -81,7 +81,7 @@ private struct InlineAutoplayVideo:View {
                 ProgressView().tint(.white).padding(12).background(.black.opacity(0.45),in:Circle())
             }
             if player != nil {
-                Button {paused.toggle();paused ? player?.pause() : player?.play()} label: {
+                Button {paused.toggle()} label: {
                     ZStack {
                         Color.clear
                         if paused {
@@ -101,8 +101,13 @@ private struct InlineAutoplayVideo:View {
             }
         }
         .task(id:id) {await load()}
-        .onChange(of:scenePhase) {_,phase in if phase == .active && active && !paused {player?.play()} else {player?.pause()}}
-        .onChange(of:active) {_,visible in if visible && scenePhase == .active && !paused {player?.play()} else {player?.pause()}}
+        // The loading task may have captured active=false before viewport
+        // measurement. Reconcile from the latest rendered view when it installs
+        // a player, even if visibility changed while the file was downloading.
+        .onChange(of:player) {_,_ in syncPlayback()}
+        .onChange(of:scenePhase) {_,_ in syncPlayback()}
+        .onChange(of:active) {_,_ in syncPlayback()}
+        .onChange(of:paused) {_,_ in syncPlayback()}
         .onReceive(NotificationCenter.default.publisher(for:.AVPlayerItemDidPlayToEndTime)) {note in
             if let item=note.object as? AVPlayerItem,item === player?.currentItem {
                 player?.seek(to:.zero);if scenePhase == .active && active && !paused {player?.play()}
@@ -110,15 +115,20 @@ private struct InlineAutoplayVideo:View {
         }
         .onDisappear {player?.pause();player=nil;file=nil}
     }
+    private func syncPlayback() {
+        if scenePhase == .active && active && !paused {player?.play()}
+        else {player?.pause()}
+    }
     private func load() async {
         failed=false
         do {
             let url=try await client.videoFile(id,privateMedia:false)
-            guard !Task.isCancelled else {try? FileManager.default.removeItem(at:url);return}
+            // Public files belong to the shared cache, including prefetchers
+            // and other visible players; a cancelled view must not delete them.
+            guard !Task.isCancelled else {return}
             file=url
             let next=AVPlayer(url:url);next.isMuted=muted;next.actionAtItemEnd = .none
             player=next
-            if scenePhase == .active && active && !paused {next.play()}
         } catch {if !Task.isCancelled {failed=true}}
     }
 }
@@ -128,11 +138,18 @@ private struct InlinePlayerSurface:UIViewRepresentable {
     final class PlayerView:UIView {
         override static var layerClass:AnyClass {AVPlayerLayer.self}
         var playerLayer:AVPlayerLayer {layer as! AVPlayerLayer}
+        override var accessibilityValue:String? {
+            get {playerLayer.player?.timeControlStatus == .playing ? "再生中" : "停止中"}
+            set {super.accessibilityValue=newValue}
+        }
     }
     func makeUIView(context:Context)->PlayerView {
         let view=PlayerView();view.backgroundColor = .black
         view.playerLayer.videoGravity = .resizeAspect
         view.playerLayer.player=player
+        view.isAccessibilityElement=true
+        view.accessibilityLabel="投稿の動画"
+        view.accessibilityIdentifier="inline-video-surface"
         return view
     }
     func updateUIView(_ view:PlayerView,context:Context) {view.playerLayer.player=player}
@@ -163,7 +180,7 @@ struct CloudVideoScreen:View {
         errorMessage=nil
         do {
             let url=try await client.videoFile(id,privateMedia:privateMedia)
-            guard !Task.isCancelled else {try? FileManager.default.removeItem(at:url);return}
+            guard !Task.isCancelled else {if privateMedia {try? FileManager.default.removeItem(at:url)};return}
             file=url;player=AVPlayer(url:url);player?.play()
         } catch {errorMessage="動画を再生できませんでした。通信状態を確認してください。"}
     }
@@ -246,13 +263,13 @@ struct CloudPublicationComposer:View {
             }.padding(14).background(.white,in:RoundedRectangle(cornerRadius:18))
             if let publication {
                 VStack(alignment:.leading,spacing:8) {
-                    Text(withdrawn || publication.state=="stopped" ? "公開を停止しました" : publication.state=="published" ? "公開済み" : "公開用画像を処理待ちです").accessibilityIdentifier("cloud-publication-status")
+                    Text(withdrawn || publication.state=="stopped" ? "公開を停止しました" : publication.state=="published" ? "公開済み" : publication.state=="review" ? "公開前の確認中" : "公開準備中").accessibilityIdentifier("cloud-publication-status")
                     Text("写真の準備と公開範囲の確認が終わると、おすすめに表示されます。").font(.caption)
                     if !withdrawn {Button("この投稿の公開を取り消す",role:.destructive) {Task {await client.perform {try await client.stopPublication(id:publication.id);withdrawn=true}}}.accessibilityIdentifier("cloud-stop-publication")}
                 }.padding(14).background(.white,in:RoundedRectangle(cornerRadius:18))
             }
             if client.busy {PawLoadingView(title:"投稿を準備中",compact:true)}
-            if let error=client.error {Text(error).foregroundStyle(.red)}
+            if let error=client.error {Text(error).foregroundStyle(Theme.actionText)}
         }.padding(16)}.background(Theme.background).disabled(client.busy).scrollDismissesKeyboard(.interactively).navigationTitle("新規投稿").toolbar {
             ToolbarItem(placement:.cancellationAction) {Button("閉じる") {dismiss()}}
             ToolbarItemGroup(placement:.keyboard) {Spacer();Button("入力を完了") {editingBody=false}.accessibilityIdentifier("cloud-publication-done")}
@@ -338,7 +355,7 @@ struct CloudDiscoveryView:View {
                     } else {Text("元の投稿は公開終了などで表示できません。操作を中止します。");Button("操作を破棄") {self.continuation=nil}}
                 }.padding().background(Theme.accent.opacity(0.07)).clipShape(RoundedRectangle(cornerRadius:14))
             }
-            if let error=client.error {Text(error).foregroundStyle(.red)}
+            if let error=client.error {Text(error).foregroundStyle(Theme.actionText)}
             if detail==nil && client.publicPosts.isEmpty && !client.busy && !initialFeedLoading {
                 VStack(spacing:8) {
                     ContentUnavailableView(
@@ -519,18 +536,22 @@ struct CloudDiscoveryView:View {
                             Circle().fill(Theme.accent.opacity(0.12)).frame(width:36,height:36)
                                 .overlay {Image(systemName:"pawprint.fill").font(.caption).foregroundStyle(Theme.actionText)}
                         }
-                    }
-                }.buttonStyle(.plain).accessibilityIdentifier("cloud-open-pet-"+post.pet_id)
+                    }.accessibilityLabel(displayName(post)+"のアイコン")
+                }.frame(width:44,height:44).contentShape(Rectangle()).buttonStyle(.plain)
+                    .accessibilityLabel(displayName(post)+"のプロフィールを開く")
+                    .accessibilityIdentifier("cloud-open-pet-"+post.pet_id)
                 NavigationLink {if isDetail {CloudPublicPetView(petID:post.pet_id,client:client)} else {CloudDiscoveryView(client:client,detail:post.id)}} label: {
                     VStack(alignment:.leading,spacing:1) {
-                        Text(displayName(post)).font(.subheadline.bold()).lineLimit(1)
+                        Text(displayName(post)).font(.subheadline.bold()).lineLimit(1).truncationMode(.tail).fixedSize(horizontal:false,vertical:true).padding(.vertical,2).accessibilityIdentifier("cloud-post-name-"+post.id)
                         if !breedLabel(post).isEmpty {
                             Text(breedLabel(post))
-                                .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                                .font(.caption.weight(.medium)).foregroundStyle(Theme.text).lineLimit(1).padding(.vertical,1)
                                 .accessibilityIdentifier("cloud-post-breed-"+post.id)
                         }
                     }
-                }.buttonStyle(.plain).accessibilityIdentifier("cloud-open-post-"+post.id)
+                }.frame(minHeight:44).contentShape(Rectangle()).buttonStyle(.plain)
+                    .accessibilityLabel(displayName(post))
+                    .accessibilityValue(breedLabel(post)).accessibilityIdentifier("cloud-open-post-"+post.id)
                 Spacer(minLength:4)
                 Button(post.following ? "フォロー中" : "フォロー") {
                     if client.authenticated {
@@ -719,7 +740,8 @@ struct CloudDiscoveryView:View {
                     Circle().fill(index==page.wrappedValue ? Theme.accent : Color(.systemGray4))
                         .frame(width:index==page.wrappedValue ? 7 : 5,height:index==page.wrappedValue ? 7 : 5)
                 }
-            }.frame(height:20).accessibilityLabel("\(post.media.count)枚中\(page.wrappedValue+1)枚目")
+            }.frame(height:20).accessibilityElement(children:.ignore)
+                .accessibilityLabel("\(post.media.count)枚中\(page.wrappedValue+1)枚目").accessibilityAddTraits(.isStaticText)
         }.accessibilityIdentifier("cloud-media-carousel-"+post.id)
     }
     @ViewBuilder private func homeMedia(_ media:String,isVideo:Bool=false,isCurrent:Bool=true)->some View {
@@ -733,7 +755,7 @@ struct CloudDiscoveryView:View {
                 } else if let image=detailImages[media] ?? client.publicImages[media] {
                     Image(uiImage:image).resizable().scaledToFill()
                         .frame(width:geometry.size.width,height:geometry.size.height).clipped()
-                        .accessibilityIdentifier("cloud-public-image")
+                        .accessibilityLabel("投稿の写真").accessibilityIdentifier("cloud-public-image")
                 } else if client.failedPublicImages.contains(media) {
                     VStack(spacing:8) {
                         Text("写真を表示できませんでした").font(.caption)
@@ -795,7 +817,7 @@ struct CloudBlockedPetsView:View {
             ForEach(client.blockedPets) {pet in HStack {Text(pet.name);Spacer();Button("解除する") {Task {await client.perform {try await client.block(pet:pet.id,enabled:false)}}}.disabled(client.busy)}}
             if client.blockedPets.isEmpty && !client.busy {Text("ブロックした相手はいません")}
             if client.busy {ProgressView()}
-            if let error=client.error {Text(error).foregroundStyle(.red)}
+            if let error=client.error {Text(error).foregroundStyle(Theme.actionText)}
         }.navigationTitle("ブロックした相手")
         .task {await client.perform {try await client.loadBlockedPets()}}
     }
@@ -824,7 +846,7 @@ struct CloudReportView:View {
                 }.disabled(client.busy)
             }
             if client.busy {ProgressView()}
-            if let error=client.error {Text(error).foregroundStyle(.red)}
+            if let error=client.error {Text(error).foregroundStyle(Theme.actionText)}
         }.navigationTitle("投稿を通報").toolbar {ToolbarItem(placement:.cancellationAction) {Button("閉じる") {dismiss()}}}
         .onChange(of:note) {_,_ in key=UUID()}.onChange(of:reason) {_,_ in key=UUID()}
     }
@@ -843,7 +865,7 @@ struct CloudModerationNoticesView:View {
             }}
             if client.moderationNotices.isEmpty && !client.busy {Text("運営からの通知はありません")}
             if client.busy {ProgressView()}
-            if let error=client.error {Text(error).foregroundStyle(.red)}
+            if let error=client.error {Text(error).foregroundStyle(Theme.actionText)}
         }.navigationTitle("運営からの通知").task {await client.perform {try await client.loadModerationNotices()}}
         .onDisappear {client.moderationNotices=[]}
         .sheet(item:$selected) {notice in NavigationStack {CloudAppealView(notice:notice,client:client)}}
@@ -867,7 +889,7 @@ struct CloudAppealView:View {
                 }.disabled(client.busy)
             }
             if client.busy {ProgressView()}
-            if let error=client.error {Text(error).foregroundStyle(.red)}
+            if let error=client.error {Text(error).foregroundStyle(Theme.actionText)}
         }.navigationTitle("異議申し立て").toolbar {ToolbarItem(placement:.cancellationAction) {Button("閉じる") {dismiss()}}}
     }
 }
@@ -931,7 +953,7 @@ struct CloudCommentsView:View {
                     }.padding(.leading,comment.parent==nil ? 0 : 28)
                 }
                 if client.busy {PawLoadingView(title:"送信中",compact:true)}
-                if let error=client.error {Text(error).font(.caption).foregroundStyle(.red)}
+                if let error=client.error {Text(error).font(.caption).foregroundStyle(Theme.actionText)}
             }.padding(16)
         }.background(Theme.background)
             .safeAreaInset(edge:.bottom,spacing:0) {
@@ -1022,7 +1044,7 @@ struct CloudCommentReportView:View {
                 TextField("補足（任意・1000文字まで）",text:$note,axis:.vertical)
                 Button("通報を送信") {let selected=reason;let body=note;let requestKey=key;Task {await client.perform {try await client.reportComment(comment.id,reason:selected,note:body,key:requestKey);sent=true}}}.disabled(client.busy || note.count>1000).accessibilityIdentifier("cloud-submit-comment-report")
             }
-            if let error=client.error {Text(error).foregroundStyle(.red)}
+            if let error=client.error {Text(error).foregroundStyle(Theme.actionText)}
         }.navigationTitle("コメントを通報").toolbar {ToolbarItem(placement:.cancellationAction) {Button("閉じる") {dismiss()}}}
         .onChange(of:note) {_,_ in key=UUID()}.onChange(of:reason) {_,_ in key=UUID()}
         .protectWhenInactive()

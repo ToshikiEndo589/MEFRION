@@ -37,7 +37,7 @@ try:
  check('unknown-public-field-denied',rpc('update_pet',{**profile,'p_public_fields':['owner_id']}),(400,))
  check('cross-pet-profile-photo-denied',rpc('update_pet',{**profile,'p_details':{'icon_photo':str(uuid4())}}),(400,))
  check('public-profile-explicit',rpc('set_public_profile',{'p_pet':pet,'p_enabled':True,'p_explicit':True}))
- check('public-fields-exclude-family-metadata',rpc('public_pet',{'p_pet':pet},None),predicate=lambda v:set(v)=={'id','name','species'})
+ check('public-fields-exclude-family-metadata',rpc('public_pet',{'p_pet':pet},None),predicate=lambda v:set(v)=={'id','name','species','icon'} and v['icon'] is None)
  check('public-field-selected',rpc('update_pet',{**profile,'p_public_fields':['sex']}))
  check('public-field-projection',rpc('public_pet',{'p_pet':pet},None),predicate=lambda v:v.get('sex')=='female' and 'birthday' not in v and 'temperament' not in v)
  check('profile-withdraw',rpc('set_public_profile',{'p_pet':pet,'p_enabled':False}))

@@ -1,0 +1,24 @@
+<section id="content-section" hidden aria-label="公開前の投稿確認">
+ <style>
+  #content-section{max-width:900px;margin:24px auto;padding:0 16px;color:#352426}
+  #content-section h2{font-size:1.5rem;margin:8px 0}
+  #content-section .content-intro{color:#6b5557;line-height:1.65}
+  #content-section .content-card{background:#fff;border:1px solid #f0d9dc;border-radius:20px;padding:20px;margin:18px 0;box-shadow:0 7px 24px #58272d12}
+  #content-section .content-card h3{margin:0 0 5px}
+  #content-section .content-card p{white-space:pre-wrap;overflow-wrap:anywhere}
+  #content-section .content-media{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:14px 0}
+  #content-section .content-media-item{background:#fff7f8;border:1px solid #f2dfe1;border-radius:14px;overflow:hidden;padding:8px}
+  #content-section .content-media img,#content-section .content-media video{display:block;width:100%;max-height:340px;object-fit:contain;background:#1c1718;border-radius:9px}
+  #content-section textarea{display:block;width:100%;box-sizing:border-box;min-height:70px;margin:14px 0;padding:12px;border:1px solid #dac8ca;border-radius:12px;font:inherit}
+  #content-section .content-actions{display:flex;flex-wrap:wrap;gap:10px}
+  #content-section button{border-radius:999px;padding:10px 16px;cursor:pointer}
+  #content-section .content-approve{background:#b92845;color:#fff;border:0}
+  #content-section .content-reject{background:#fff;color:#9a2438;border:1px solid #d4a0a8}
+  #content-section .content-muted{color:#806c70;font-size:.9rem}
+ </style>
+ <h2>公開前の投稿確認 🐾</h2>
+ <p class="content-intro">利用者の写真・動画は、確認が終わるまでおすすめに表示されません。すべてのメディアを見てから公開してください。迷ったら非公開にしてください。</p>
+ <button id="content-refresh" type="button">一覧を更新</button>
+ <p id="content-message" role="status" aria-live="polite"></p>
+ <div id="content-list"></div>
+</section>

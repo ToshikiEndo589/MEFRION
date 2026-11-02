@@ -10,9 +10,9 @@ App Store Connectのアプリ・iOSバージョン1.0は登録済み。署名付
 - バージョン: 1.0.0、ビルド1（Release Bundle ID `com.mefrion.app`）
 - キーワード案: ペット,犬,猫,アルバム,家族,写真,思い出,そっくり
 - 著作権表示: © 2026 MEFRION（App Store Connectに保存済み）
-- サポートURL候補: https://mefrion-support.toshiki1108.chatgpt.site/
-- プライバシーポリシーURL候補: https://mefrion-support.toshiki1108.chatgpt.site/privacy.html
-- 利用規約URL候補: https://mefrion-support.toshiki1108.chatgpt.site/terms.html
+- サポートURL候補: https://mefrion.vercel.app/
+- プライバシーポリシーURL候補: https://mefrion.vercel.app/privacy.html
+- 利用規約URL候補: https://mefrion.vercel.app/terms.html
 - 上記サイトは現時点で「公開準備中の草案」と表示する。一般公開用としては未確定。
 
 ## 説明案

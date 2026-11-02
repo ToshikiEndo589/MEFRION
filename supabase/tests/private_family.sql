@@ -42,8 +42,8 @@ begin
  perform public.mefrion_accept_invite(invite->>'token',true);
  if not public.mefrion_family_access(pet) or jsonb_array_length(public.mefrion_album(pet))<>1 then raise exception 'family album denied';end if;checks:=checks+1;
  if jsonb_array_length(public.mefrion_members(pet))<>2 then raise exception 'family membership list incorrect';end if;checks:=checks+1;
- denied:=false;begin perform public.mefrion_accept_invite(invite->>'token',true);exception when others then if sqlerrm='invalid_invitation' then denied:=true;else raise;end if;end;
- if not denied then raise exception 'invite reused';end if;checks:=checks+1;
+ perform public.mefrion_accept_invite(invite->>'token',true);
+ if jsonb_array_length(public.mefrion_members(pet))<>2 then raise exception 'retry duplicated member';end if;checks:=checks+1;
  denied:=false;begin perform public.mefrion_consent(photo,'sns',true);exception when insufficient_privilege then denied:=true;end;
  if not denied then raise exception 'another provider consent';end if;checks:=checks+1;
  perform public.mefrion_remove_member(pet,b);

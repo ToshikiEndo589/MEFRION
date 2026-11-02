@@ -1,3 +1,4 @@
+import { serveMonitored } from '../_shared/security_monitor.ts';
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 const json=(status:number,value:unknown)=>new Response(JSON.stringify(value),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});
 const sha=async(bytes:Uint8Array)=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new Uint8Array(bytes).buffer))].map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -6,7 +7,7 @@ export async function seal(bytes:Uint8Array,key:CryptoKey):Promise<Uint8Array<Ar
  const cipher=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:prefix},key,new Uint8Array(bytes).buffer));
  const result=new Uint8Array(20+cipher.length);result.set(prefix);result.set(iv,8);result.set(cipher,20);return result;
 }
-Deno.serve(async request=>{
+serveMonitored('offsite-backup', async request=>{
  if(request.method!=='POST')return json(405,{error:'method_not_allowed'});
  const token=request.headers.get('x-mefrion-worker');if(!token||token.length<32)return json(401,{error:'authentication_required'});
  const client=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,{auth:{persistSession:false}});

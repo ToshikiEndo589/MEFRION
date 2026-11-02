@@ -206,3 +206,14 @@ MEFRION: fixed 224px positional embeddings, ImageNet normalization, CLS normaliz
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+
+MobileNetV2 FP16 — TensorFlow Authors / Apple Core ML conversion
+Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+Licensed under the Apache License, Version 2.0 (full text above).
+Source: https://github.com/tensorflow/models/tree/master/research/slim/nets/mobilenet
+Model: https://ml-assets.apple.com/coreml/models/Image/ImageClassification/MobileNetV2/MobileNetV2FP16.mlmodel
+MEFRIONPetIcon.mlmodel is an unmodified copy, renamed for bundling.
+Used only as an on-device fallback for dog/cat avatar recognition.
+No inferred breed name is shown to users.
+SHA-256: c76832208ff4c936365f0f2609f7b77f7f1a6caf62b0b429056d5ad7e48635ad

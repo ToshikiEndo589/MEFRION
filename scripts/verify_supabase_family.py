@@ -67,10 +67,12 @@ try:
  a,b,c=(sessions[r] for r in ['owner','family','outsider'])
  pet=check('private-pet-create',rpc('create_pet',{'p_name':'E2E合成試験','p_species':'dog'},a))['id']
  check('outsider-cannot-read-album',rpc('album',{'p_pet':pet},c),(401,403))
- invite=check('owner-single-use-invite',rpc('invite',{'p_pet':pet},a))
+ invite=check('owner-ten-person-invite',rpc('invite',{'p_pet':pet},a))
  check('explicit-invite-scope-required',rpc('accept_invite',{'p_token':invite['token'],'p_confirm_scope':False},b),(400,))
  check('family-accept-invite',rpc('accept_invite',{'p_token':invite['token'],'p_confirm_scope':True},b))
- check('invite-token-cannot-be-reused',rpc('accept_invite',{'p_token':invite['token'],'p_confirm_scope':True},c),(400,))
+ check('existing-member-retry-is-idempotent',rpc('accept_invite',{'p_token':invite['token'],'p_confirm_scope':True},b))
+ check('owner-revokes-shared-invite',rpc('revoke_invite',{'p_invite':invite['id']},a))
+ check('revoked-invite-cannot-add-outsider',rpc('accept_invite',{'p_token':invite['token'],'p_confirm_scope':True},c),(400,))
  key=str(uuid4());body={'p_pet':pet,'p_request_key':key,'p_captured':'2020','p_title':'synthetic JPEG'}
  photo=check('family-reserve-photo',rpc('begin_photo',body,b))
  check('photo-reservation-retry-idempotent',rpc('begin_photo',body,b),predicate=lambda d,h:d['id']==photo['id'])

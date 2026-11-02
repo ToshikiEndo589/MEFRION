@@ -33,7 +33,7 @@ def main():
     desired = {key: current[key] for key in FIELDS if key in current}
     desired.update({'smtp_sender_name': 'MEFRION', 'mailer_autoconfirm': False, 'disable_signup': False,
                     'external_email_enabled': True, 'password_min_length': max(12, current.get('password_min_length', 12)),
-                    'site_url': 'https://mefrion-support.toshiki1108.chatgpt.site',
+                    'site_url': 'https://mefrion.vercel.app',
                     'uri_allow_list': 'mefrion://auth-callback',
                     'mailer_subjects_confirmation': 'MEFRIONの確認コード',
                     'mailer_subjects_recovery': 'MEFRIONのパスワード再設定コード',
