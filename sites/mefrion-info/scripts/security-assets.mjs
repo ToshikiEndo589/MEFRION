@@ -1,4 +1,4 @@
-import {readFile,writeFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
 const root=new URL('../',import.meta.url),path=new URL('worker/index.js',root);
 const source=await readFile(path,'utf8'),at=source.indexOf('\n');
 const pages=JSON.parse(source.slice('const PAGES='.length,at).trim().replace(/;$/,''));
@@ -36,4 +36,5 @@ pages['/console/'].body=html;
 pages['/console/security']={...pages['/console/'],body:html.replace('<body>','<body data-console-panel="security">').replace('<title>MEFRION クラウド運営管理</title>','<title>セキュリティ監視｜MEFRION</title>')};
 pages['/console/content']={...pages['/console/'],body:html.replace('<body>','<body data-console-panel="content">').replace('<title>MEFRION クラウド運営管理</title>','<title>公開前の投稿｜MEFRION</title>')};
 await writeFile(path,'const PAGES='+JSON.stringify(pages)+';'+source.slice(at));
+await mkdir(new URL('dist/',root),{recursive:true});
 for(const name of ['index.html','privacy.html','terms.html'])await writeFile(new URL('dist/'+name,root),pages['/'+name].body);
