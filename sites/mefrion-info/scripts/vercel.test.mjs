@@ -14,6 +14,7 @@ test('public pages and operator assets preserve security headers', async () => {
       // The public configuration is fetched from the same origin before Auth.
       // Without 'self', browsers throw Failed to fetch before any email request.
       assert.match(policy, /connect-src 'self' https:\/\/pbnimpqrthvznbwewtcf\.supabase\.co;/);
+      assert.match(policy, /media-src 'self' blob:;/);
       assert.doesNotMatch(policy, /connect-src[^;]*\*/);
     }
   }
