@@ -11,7 +11,7 @@ export default {async fetch(request,env={}){
  if(pathname==="/console")pathname="/console/";
  if(pathname==="/privacy")pathname="/privacy.html";
  if(pathname==="/terms")pathname="/terms.html";
- if(PAGES[pathname])return new Response(request.method==="HEAD"?null:PAGES[pathname].body,{headers:{...common,"Content-Type":PAGES[pathname].type,...(pathname.startsWith("/console")?{"X-Robots-Tag":"noindex, nofollow","Content-Security-Policy":`default-src 'self'; connect-src 'self' ${BASE}; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'`}:{})}});
+ if(PAGES[pathname])return new Response(request.method==="HEAD"?null:PAGES[pathname].body,{headers:{...common,"Content-Type":PAGES[pathname].type,...(pathname.startsWith("/console")?{"X-Robots-Tag":"noindex, nofollow","Content-Security-Policy":`default-src 'self'; connect-src 'self' ${BASE}; img-src 'self' blob: data:; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'`}:{})}});
  if(pathname==="/healthz")return new Response(JSON.stringify({ok:true,service:"MEFRION public pages"}),{headers:{...common,"Content-Type":"application/json"}});
  const match=pathname.match(/^\/(cloud-shared|cloud-development-shared)\/([0-9a-f-]+)$/i);
  if(match&&uuid.test(match[2])){
