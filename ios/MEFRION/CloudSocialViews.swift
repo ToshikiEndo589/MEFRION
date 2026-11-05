@@ -282,6 +282,110 @@ struct CloudPublicationComposer:View {
     }
 }
 
+struct CloudSearchView:View {
+    @ObservedObject var client:CloudFamilyClient
+    @State private var query=""
+    @State private var accounts:[CloudSearchPet]=[]
+    @State private var loading=false
+    private let columns=Array(repeating:GridItem(.flexible(),spacing:5),count:3)
+    private var term:String {query.trimmingCharacters(in:.whitespacesAndNewlines)}
+
+    var body:some View {
+        VStack(spacing:0) {
+            HStack(spacing:11) {
+                Image(systemName:"magnifyingglass").foregroundStyle(Theme.secondaryText)
+                TextField("名前・犬種・投稿を検索",text:$query)
+                    .textInputAutocapitalization(.never).autocorrectionDisabled()
+                    .submitLabel(.search).accessibilityIdentifier("cloud-search-query")
+                if !query.isEmpty {
+                    Button {query=""} label: {Image(systemName:"xmark.circle.fill")}
+                        .foregroundStyle(Theme.secondaryText).accessibilityLabel("検索を消す")
+                }
+            }
+            .padding(.horizontal,16).frame(height:48)
+            .background(Theme.accent.opacity(0.07),in:Capsule())
+            .padding(.horizontal,18).padding(.top,10).padding(.bottom,14)
+            ScrollView {
+                LazyVStack(alignment:.leading,spacing:14) {
+                    if loading {
+                        PublicFeedSkeleton().padding(.top,8)
+                    } else {
+                        if !accounts.isEmpty {
+                            Text("アカウント").font(.headline).padding(.horizontal,18)
+                            ForEach(accounts) {pet in
+                                NavigationLink {CloudPublicPetView(petID:pet.id,client:client)} label: {
+                                    HStack(spacing:12) {
+                                        searchIcon(for:pet)
+                                        VStack(alignment:.leading,spacing:3) {
+                                            Text(pet.name).font(.subheadline.bold()).foregroundStyle(Theme.text)
+                                            if !pet.breed.isEmpty {Text(pet.breed).font(.caption).foregroundStyle(Theme.secondaryText)}
+                                        }
+                                        Spacer()
+                                        Image(systemName:"chevron.right").font(.caption.bold()).foregroundStyle(Theme.secondaryText)
+                                    }.padding(.horizontal,18).frame(minHeight:57)
+                                }.buttonStyle(.plain).accessibilityIdentifier("search-account-"+pet.id)
+                            }
+                            Divider().padding(.horizontal,18)
+                        }
+                        Text(term.isEmpty ? "投稿" : "関連する投稿")
+                            .font(.headline).padding(.horizontal,18)
+                        if client.publicPosts.isEmpty {
+                            ContentUnavailableView("まだ見つかりません",systemImage:"pawprint",description:Text("別の言葉で探してみてね"))
+                                .frame(maxWidth:.infinity)
+                        } else {
+                            LazyVGrid(columns:columns,spacing:5) {
+                                ForEach(client.publicPosts) {post in
+                                    NavigationLink {CloudDiscoveryView(client:client,detail:post.id)} label: {
+                                        GeometryReader {geometry in
+                                            PhotoHero(image:post.media.first.flatMap{client.publicImages[$0]},height:geometry.size.width)
+                                                .frame(width:geometry.size.width,height:geometry.size.width)
+                                                .clipped().clipShape(RoundedRectangle(cornerRadius:9))
+                                        }.aspectRatio(1,contentMode:.fit)
+                                    }.buttonStyle(.plain)
+                                        .accessibilityIdentifier("cloud-open-post-"+post.id)
+                                        .onAppear {if let media=post.media.first {client.setPublicImageVisible(media,true);client.prefetchPublicImages(after:post.id)}}
+                                        .onDisappear {if let media=post.media.first {client.setPublicImageVisible(media,false)}}
+                                }
+                            }.padding(.horizontal,12)
+                        }
+                    }
+                }.padding(.bottom,100)
+            }.scrollDismissesKeyboard(.interactively)
+        }
+        .background(Theme.background)
+        .navigationTitle("検索").navigationBarTitleDisplayMode(.inline)
+        .task(id:query) {
+            let requested=term
+            loading=true
+            if !requested.isEmpty {try? await Task.sleep(for:.milliseconds(350))}
+            guard !Task.isCancelled,requested.count<=100 else {return}
+            if requested.isEmpty && client.currentPublicQuery.isEmpty && !client.publicPosts.isEmpty {
+                accounts=[];loading=false;return
+            }
+            do {
+                async let found=client.searchPets(requested)
+                try await client.loadPublicFeed(mode:"all",query:requested,species:"all")
+                let matches=try await found
+                guard !Task.isCancelled,requested==term else {return}
+                accounts=matches
+            } catch is CancellationError {} catch {client.error=error.localizedDescription}
+            if requested==term {loading=false}
+        }
+        .task {await client.restore()}
+    }
+
+    @ViewBuilder private func searchIcon(for pet:CloudSearchPet)->some View {
+        let match=client.publicPosts.first(where:{$0.pet_id==pet.id})
+        if let icon=match?.icon {ProfileIconImage(encoded:icon,size:47)}
+        else if let media=match?.media.first,let image=client.publicImages[media] {
+            Image(uiImage:image).resizable().scaledToFill().frame(width:47,height:47).clipShape(Circle())
+        } else {
+            Image(systemName:"pawprint.fill").foregroundStyle(Theme.actionText)
+                .frame(width:47,height:47).background(Theme.accent.opacity(0.12),in:Circle())
+        }
+    }
+}
+
 struct CloudDiscoveryView:View {
     @ObservedObject var client:CloudFamilyClient
     var integrated:Bool
@@ -327,7 +431,7 @@ struct CloudDiscoveryView:View {
         ScrollViewReader {scrollProxy in ScrollView {LazyVStack(alignment:.leading,spacing:integrated || mode=="liked" ? 4 : 18) {
             Color.clear.frame(height:0).id("cloud-home-top")
             if integrated {
-                CompactHomeHeader {NavigationLink {CloudDiscoveryView(client:client)} label: {Image(systemName:"magnifyingglass").frame(width:44,height:44)}.accessibilityLabel("検索").accessibilityIdentifier("home-search");NavigationLink {NotificationHubView()} label: {Image(systemName:"bell").frame(width:44,height:44)}.accessibilityLabel("通知")}.padding(.horizontal,16)
+                CompactHomeHeader {NavigationLink {CloudSearchView(client:client)} label: {Image(systemName:"magnifyingglass").frame(width:44,height:44)}.accessibilityLabel("検索").accessibilityIdentifier("home-search");NavigationLink {NotificationHubView()} label: {Image(systemName:"bell").frame(width:44,height:44)}.accessibilityLabel("通知")}.padding(.horizontal,16)
                 HStack {
                     Button {mode="all"} label: {Label("おすすめ",systemImage:"pawprint.fill").frame(maxWidth:.infinity,minHeight:44).contentShape(Rectangle())}.foregroundStyle(mode=="all" ? Theme.actionText : Theme.text).accessibilityIdentifier("home-recommended").accessibilityValue(mode=="all" ? "選択中" : "未選択")
                     Button {mode="following"} label: {Label("フォロー中",systemImage:"person.2").frame(maxWidth:.infinity,minHeight:44).contentShape(Rectangle())}.foregroundStyle(mode=="following" ? Theme.actionText : Theme.text).accessibilityIdentifier("home-following").accessibilityValue(mode=="following" ? "選択中" : "未選択")
@@ -481,6 +585,11 @@ struct CloudDiscoveryView:View {
             guard phase == .active,loadedFeedIdentity != nil,!initialFeedLoading,!client.publicFeedIsRevalidating else {return}
             Task {if detail != nil {await loadDetail()} else {await client.performRefresh {try await client.loadPublicFeed(mode:mode,query:query,species:species)}}}
         }
+        .onAppear {
+            if integrated && !client.currentPublicQuery.isEmpty {
+                Task {await client.performRefresh {try await client.loadPublicFeed(mode:mode,query:"",species:"all")}}
+            }
+        }
     }
     private func loadDetail() async {
         guard let id=detail else {return}
@@ -601,10 +710,7 @@ struct CloudDiscoveryView:View {
                 }.buttonStyle(.plain).disabled(client.busy)
                     .accessibilityIdentifier(client.authenticated ? "cloud-like-post" : "cloud-guest-like")
                     .accessibilityLabel("いいね \(post.likes)件").accessibilityValue(post.liked ? "いいね済み" : "いいねなし")
-                Button {
-                    if client.authenticated {commentPost=post}
-                    else {beginAuthentication(post:post,action:"comment")}
-                } label: {
+                Button {commentPost=post} label: {
                     HStack(spacing:5) {
                         ZStack {
                             Circle().fill(Theme.accent.opacity(0.12)).frame(width:34,height:34)
@@ -652,10 +758,8 @@ struct CloudDiscoveryView:View {
                     .padding(.horizontal,14).padding(.top,4)
             }
             if post.comments>0 {
-                Button("コメントをすべて見る") {
-                    if client.authenticated {commentPost=post}
-                    else {beginAuthentication(post:post,action:"comment")}
-                }.font(.caption).foregroundStyle(.secondary).padding(.horizontal,14).padding(.top,5)
+                Button("コメントをすべて見る") {commentPost=post}
+                    .font(.caption).foregroundStyle(.secondary).padding(.horizontal,14).padding(.top,5)
             }
             if let time=post.published_at {Text(PostTime.label(time)).font(.caption2).foregroundStyle(Theme.secondaryText).padding(.horizontal,14).padding(.top,6)}
             if isDetail,let source=stockSource(post) {
@@ -909,6 +1013,7 @@ struct CloudCommentsView:View {
     @State private var reportTarget:CloudComment?
     @State private var deleteTarget:CloudComment?
     @State private var showingName=false
+    @State private var authenticating=false
     @FocusState private var focused:Bool
     private func reload() async throws {
         records=try await client.comments(post:post.id)
@@ -941,10 +1046,10 @@ struct CloudCommentsView:View {
                             Text(comment.deleted ? "コメントは削除されました" : comment.body).font(.subheadline)
                             if !comment.deleted {
                                 HStack(spacing:17) {
-                                    if comment.parent==nil {Button("返信") {parent=comment;focused=true}.accessibilityIdentifier("cloud-reply-comment")}
+                                    if comment.parent==nil {Button("返信") {if client.authenticated {parent=comment;focused=true} else {authenticating=true}}.accessibilityIdentifier("cloud-reply-comment")}
                                     Menu {
                                         if comment.mine {Button("削除",role:.destructive) {deleteTarget=comment}.accessibilityIdentifier("cloud-delete-comment")}
-                                        Button("通報",systemImage:"flag") {reportTarget=comment}.accessibilityIdentifier("cloud-report-comment")
+                                        Button("通報",systemImage:"flag") {if client.authenticated {reportTarget=comment} else {authenticating=true}}.accessibilityIdentifier("cloud-report-comment")
                                     } label: {Image(systemName:"ellipsis").frame(width:28,height:28)}
                                     .accessibilityLabel("コメントの操作")
                                 }.font(.caption).foregroundStyle(Theme.secondaryText).buttonStyle(.plain)
@@ -962,7 +1067,7 @@ struct CloudCommentsView:View {
                         HStack {Text(parent.display_name+"に返信").font(.caption);Spacer();Button("やめる") {self.parent=nil}.font(.caption)}
                             .foregroundStyle(Theme.actionText).padding(.horizontal,10)
                     }
-                    HStack(alignment:.bottom,spacing:8) {
+                    if client.authenticated {HStack(alignment:.bottom,spacing:8) {
                         if !speakers.isEmpty {
                             Menu {
                                 Button("自分の名前") {alias=""}
@@ -981,6 +1086,11 @@ struct CloudCommentsView:View {
                     }.padding(.horizontal,11).padding(.vertical,8)
                         .background(.white,in:RoundedRectangle(cornerRadius:23))
                         .overlay {RoundedRectangle(cornerRadius:23).stroke(Theme.accent.opacity(0.15))}
+                    } else {
+                        Button("ログインしてコメントする") {authenticating=true}
+                            .frame(maxWidth:.infinity).buttonStyle(CoralButtonStyle())
+                            .accessibilityIdentifier("cloud-guest-comment-login")
+                    }
                 }.padding(.horizontal,14).padding(.top,7).padding(.bottom,8).background(.regularMaterial)
             }
             .navigationTitle("コメント").navigationBarTitleDisplayMode(.inline)
@@ -988,9 +1098,10 @@ struct CloudCommentsView:View {
                 ToolbarItem(placement:.topBarTrailing) {Button("閉じる") {dismiss()}}
                 ToolbarItemGroup(placement:.keyboard) {Spacer();Button("完了") {focused=false}.accessibilityIdentifier("cloud-comment-done")}
             }
-            .task {await client.perform {speakers=try await client.publicSpeakers();let identity=try await client.socialIdentity();name=identity?.name ?? "";savedName=name;alias=identity?.last_pet ?? "";try await reload()}}
+            .task {await client.perform {if client.authenticated {speakers=try await client.publicSpeakers();let identity=try await client.socialIdentity();name=identity?.name ?? "";savedName=name;alias=identity?.last_pet ?? ""};try await reload()}}
             .onChange(of:text) {_,_ in key=UUID()}.onChange(of:alias) {_,_ in key=UUID()}.onChange(of:parent?.id) {_,_ in key=UUID()}
-            .onChange(of:client.authenticated) {_,active in if !active {records=[];text="";dismiss()}}
+            .onChange(of:client.authenticated) {_,_ in Task {await client.perform {try await reload()}}}
+            .sheet(isPresented:$authenticating) {AuthenticationSheet(client:client)}
             .sheet(isPresented:$showingName) {
                 NavigationStack {
                     VStack(alignment:.leading,spacing:15) {

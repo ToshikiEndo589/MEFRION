@@ -22,6 +22,7 @@ enum FamilyInvitationError:LocalizedError {
 struct CloudMember:Decodable,Identifiable {let id:String;let role:String;let me:Bool;var display_name:String?=nil}
 struct ProvidedPhoto:Decodable,Identifiable {let id:String;let captured:String?;let title:String;let sns:Bool;let twins:Bool;let external_share:Bool}
 struct CloudPublicPost:Decodable,Identifiable {let id:String;let pet_id:String;let name:String;let species:String;let breed:String;let body:String;let kind:String;let media:[String];var likes:Int;var comments:Int;var liked:Bool;var saved:Bool;var following:Bool;var tags:[CloudPublicTag]?=nil;var published_at:String?=nil;var video_media:[String]?=nil;var icon:String?=nil}
+struct CloudSearchPet:Decodable,Identifiable {let id:String;let name:String;let breed:String}
 struct CloudPublicTag:Decodable,Identifiable {let id:String;let name:String}
 struct CloudModerationNotice:Decodable,Identifiable {let id:String;let decision:String;let note:String;let created_at:String}
 struct CloudBlockedPet:Decodable,Identifiable {let id:String;let name:String}
@@ -94,6 +95,7 @@ final class CloudFamilyClient:ObservableObject {
     @Published var members:[CloudMember]=[]
     @Published var providedPhotos:[ProvidedPhoto]=[]
     @Published var publicPosts:[CloudPublicPost]=[]
+    var currentPublicQuery:String {feedQuery}
     @Published var moderationNotices:[CloudModerationNotice]=[]
     @Published var blockedPets:[CloudBlockedPet]=[]
     @Published var publicImages:[String:UIImage]=[:]
@@ -351,7 +353,7 @@ final class CloudFamilyClient:ObservableObject {
         #if DEBUG
         if isolated,ProcessInfo.processInfo.arguments.contains("--ui-signup-fixture") {return false}
         #endif
-        let data=try await request("/auth/v1/signup",body:["email":email,"password":password,"data":["adult_confirmation":true,"data_handling_confirmation":true]])
+        let data=try await request("/auth/v1/signup",body:["email":email,"password":password,"data":["data_handling_confirmation":true]])
         // A previous registration attempt may have left a local Pet draft. This
         // registration flow never creates a Pet without the user's later choice.
         clearPendingFirstPet()
@@ -1229,9 +1231,38 @@ final class CloudFamilyClient:ObservableObject {
         guard let index=publicPosts.firstIndex(where:{$0.id==post}) else{return}
         publicPosts[index].comments=max(0,count)
     }
-    func comments(post:String) async throws->[CloudComment] {try await rpc("comments",["p_post":post])}
-    func publicSpeakers() async throws->[CloudBlockedPet] {try await rpc("public_speakers")}
-    func socialIdentity() async throws->CloudSocialIdentity? {try await rpc("social_identity")}
+    func comments(post:String) async throws->[CloudComment] {
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--appstore-screenshots") {
+            return [
+                CloudComment(id:"store-comment-1",body:"この表情、かわいすぎる ♡",parent:nil,display_name:"つむぎ",mine:false,deleted:false,created_at:"2026-10-21T13:00:00Z"),
+                CloudComment(id:"store-comment-2",body:"窓辺が似合うね 🐾",parent:nil,display_name:"すず",mine:false,deleted:false,created_at:"2026-10-21T14:00:00Z")
+            ]
+        }
+        #endif
+        let body:[String:Any]=["p_post":post]
+        let data=authenticated ? try await authenticatedRequest("/rest/v1/rpc/mefrion_comments",body:body) : try await request("/rest/v1/rpc/mefrion_comments",body:body)
+        return try JSONDecoder().decode([CloudComment].self,from:data)
+    }
+    func searchPets(_ query:String) async throws->[CloudSearchPet] {
+        let term=query.trimmingCharacters(in:.whitespacesAndNewlines)
+        guard !term.isEmpty,term.count<=100 else {return []}
+        let body:[String:Any]=["p_query":term,"p_limit":8]
+        let data=authenticated ? try await authenticatedRequest("/rest/v1/rpc/mefrion_search_pets",body:body) : try await request("/rest/v1/rpc/mefrion_search_pets",body:body)
+        return try JSONDecoder().decode([CloudSearchPet].self,from:data)
+    }
+    func publicSpeakers() async throws->[CloudBlockedPet] {
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--appstore-screenshots") {return [CloudBlockedPet(id:"appstore-pet",name:"こむぎ")]}
+        #endif
+        return try await rpc("public_speakers")
+    }
+    func socialIdentity() async throws->CloudSocialIdentity? {
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--appstore-screenshots") {return CloudSocialIdentity(name:"こむぎ",last_pet:"appstore-pet")}
+        #endif
+        return try await rpc("social_identity")
+    }
     func setSocialName(_ name:String) async throws {let _:Bool=try await rpc("set_social_name",["p_name":name]);accountProfile.name=name.trimmingCharacters(in:.whitespacesAndNewlines)}
     func comment(post:String,body:String,parent:String?,aliasPet:String?,key:UUID) async throws {let _:String=try await rpc("comment",["p_post":post,"p_body":body,"p_parent":parent as Any? ?? NSNull(),"p_alias_pet":aliasPet as Any? ?? NSNull(),"p_request_key":key.uuidString])}
     func deleteComment(_ id:String) async throws {let _:Bool=try await rpc("delete_comment",["p_comment":id])}
@@ -1318,6 +1349,11 @@ final class CloudFamilyClient:ObservableObject {
     func publicPet(_ pet:String) async throws->CloudPublicPet {let data=authenticated ? try await authenticatedRequest("/rest/v1/rpc/mefrion_public_pet",body:["p_pet":pet]) : try await request("/rest/v1/rpc/mefrion_public_pet",body:["p_pet":pet]);return try JSONDecoder().decode(CloudPublicPet.self,from:data)}
     func petRecentPosts(_ pet:String) async throws->[CloudPetRecentPost] {let data=authenticated ? try await authenticatedRequest("/rest/v1/rpc/mefrion_pet_recent_posts",body:["p_pet":pet]) : try await request("/rest/v1/rpc/mefrion_pet_recent_posts",body:["p_pet":pet]);return try JSONDecoder().decode([CloudPetRecentPost].self,from:data)}
     func publicPost(_ id:String,petName:String) async throws->(post:CloudPublicPost?,visible:Bool) {
+        #if DEBUG
+        if isolated,ProcessInfo.processInfo.arguments.contains("--appstore-screenshots") {
+            return (publicPosts.first(where:{$0.id==id}),true)
+        }
+        #endif
         // The profile already checked visibility. Fetch detail without replacing the home feed.
         let body:[String:Any]=["p_limit":50,"p_mode":"all","p_query":petName,"p_species":"all","p_known_ids":[id]]
         let data=authenticated ? try await authenticatedRequest("/rest/v1/rpc/mefrion_feed_page",body:body) : try await request("/rest/v1/rpc/mefrion_feed_page",body:body)

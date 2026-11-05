@@ -9,18 +9,17 @@ enum SignupRequirements {
     }
 
     static let minimumPasswordLength=12
-    static func validationMessage(email:String,password:String,confirmation:String,adult:Bool,confirmed:Bool)->String? {
+    static func validationMessage(email:String,password:String,confirmation:String,confirmed:Bool)->String? {
         if !validEmail(email) {return "メールアドレスを確認してね"}
         if password.isEmpty {return "パスワードを入力してね"}
         if password.count<minimumPasswordLength {return "パスワードは12文字以上にしてね"}
         if confirmation.isEmpty {return "確認用のパスワードも入力してね"}
         if password != confirmation {return "2つのパスワードを同じにしてね"}
-        if !adult {return "18歳以上の確認をオンにしてね"}
         if !confirmed {return "データの取り扱いを確認してね"}
         return nil
     }
-    static func valid(email:String,password:String,confirmation:String,adult:Bool,confirmed:Bool)->Bool {
-        validationMessage(email:email,password:password,confirmation:confirmation,adult:adult,confirmed:confirmed)==nil
+    static func valid(email:String,password:String,confirmation:String,confirmed:Bool)->Bool {
+        validationMessage(email:email,password:password,confirmation:confirmation,confirmed:confirmed)==nil
     }
 }
 
@@ -33,7 +32,6 @@ struct EmailAccountView:View {
     @State private var email=""
     @State private var password=""
     @State private var passwordConfirmation=""
-    @State private var adult=false
     @State private var confirmed=false
     @State private var code=""
     @State private var awaitingEmail=false
@@ -48,7 +46,7 @@ struct EmailAccountView:View {
 
     private var address:String {email.trimmingCharacters(in:.whitespacesAndNewlines)}
     private var validationMessage:String? {
-        if mode=="signup" {return SignupRequirements.validationMessage(email:address,password:password,confirmation:passwordConfirmation,adult:adult,confirmed:confirmed)}
+        if mode=="signup" {return SignupRequirements.validationMessage(email:address,password:password,confirmation:passwordConfirmation,confirmed:confirmed)}
         if !SignupRequirements.validEmail(address) {return "メールアドレスを確認してね"}
         if mode=="login" && password.isEmpty {return "パスワードを入力してね"}
         return nil
@@ -56,7 +54,7 @@ struct EmailAccountView:View {
     private var canSubmit:Bool {
         guard !client.busy,SignupRequirements.validEmail(address) else{return false}
         switch mode {
-        case "signup":return SignupRequirements.valid(email:address,password:password,confirmation:passwordConfirmation,adult:adult,confirmed:confirmed)
+        case "signup":return SignupRequirements.valid(email:address,password:password,confirmation:passwordConfirmation,confirmed:confirmed)
         case "login":return !password.isEmpty
         default:return true
         }
@@ -150,7 +148,6 @@ struct EmailAccountView:View {
                 if !attemptedSubmission && !passwordConfirmation.isEmpty && password != passwordConfirmation {
                     Text("パスワードが一致しません").font(.caption).foregroundStyle(.red)
                 }
-                Toggle("18歳以上です",isOn:$adult).tint(Theme.accent).font(.subheadline).accessibilityIdentifier("account-adult")
                 Toggle("データの取り扱いを確認しました",isOn:$confirmed).tint(Theme.accent).font(.subheadline).accessibilityIdentifier("account-privacy")
                 NavigationLink("データの取り扱いを見る") {PrivacyInformationView()}
                     .font(.caption.weight(.semibold)).foregroundStyle(Theme.actionText)
@@ -290,7 +287,7 @@ struct EmailAccountView:View {
     private func submit() {
         attemptedSubmission=true
         guard canSubmit else{return}
-        let supplied=password,action=mode,address=address,accepted=adult && confirmed
+        let supplied=password,action=mode,address=address,accepted=confirmed
         notice=nil
         Task {await client.perform {
             if action=="login" {

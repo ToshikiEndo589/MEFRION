@@ -2,6 +2,62 @@ import XCTest
 
 @MainActor
 final class PrototypeUITests: XCTestCase {
+    func testAppStoreSocialCapture() throws {
+        let app=XCUIApplication()
+        app.launchArguments=["--ui-test-isolated","--appstore-screenshots"]
+        app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1"
+        app.launch()
+        let first=app.buttons["cloud-open-post-appstore-post-0"]
+        XCTAssertTrue(first.waitForExistence(timeout:15))
+        first.tap()
+        capture(app,"Store-03-post-detail")
+        let comments=app.buttons["cloud-comments-post"].firstMatch
+        if comments.exists && comments.isHittable {comments.tap();capture(app,"Store-03b-comments")}
+    }
+    func testAppStoreTenScreenCapture() throws {
+        let app=XCUIApplication()
+        app.launchArguments=["--ui-test-isolated","--appstore-screenshots"]
+        app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1"
+        app.launch()
+        let home=app.buttons["root-tab-ホーム"]
+        XCTAssertTrue(home.waitForExistence(timeout:15))
+        capture(app,"Store-01-home")
+        app.swipeUp()
+        capture(app,"Store-02-home-next")
+        let firstPost=app.buttons.matching(NSPredicate(format:"identifier BEGINSWITH %@","cloud-open-post-appstore-post-")).firstMatch
+        if firstPost.exists && firstPost.isHittable {
+            firstPost.tap()
+            capture(app,"Store-03-post-detail")
+            if app.buttons["閉じる"].exists {app.buttons["閉じる"].tap()}
+            else if app.navigationBars.buttons.firstMatch.exists {app.navigationBars.buttons.firstMatch.tap()}
+        }
+        app.buttons["root-tab-アルバム"].tap()
+        capture(app,"Store-04-album")
+        let albumPhoto=app.buttons.matching(NSPredicate(format:"identifier BEGINSWITH %@","cloud-album-gallery-photo-")).firstMatch
+        if albumPhoto.exists && albumPhoto.isHittable {
+            albumPhoto.tap()
+            capture(app,"Store-04b-album-detail")
+            if app.buttons["閉じる"].exists {app.buttons["閉じる"].tap()}
+        }
+        let atlas=app.buttons["album-gesture-atlas"]
+        if atlas.waitForExistence(timeout:5) {
+            atlas.tap()
+            capture(app,"Store-05-gesture-atlas")
+            if app.navigationBars.buttons.firstMatch.exists {app.navigationBars.buttons.firstMatch.tap()}
+        }
+        app.buttons["root-tab-投稿"].tap()
+        capture(app,"Store-06-post")
+        app.buttons["root-tab-そっくり"].tap()
+        capture(app,"Store-07-twins")
+        app.buttons["root-tab-マイページ"].tap()
+        capture(app,"Store-08-mypage")
+        let pet=app.buttons.matching(NSPredicate(format:"identifier BEGINSWITH %@","cloud-pet-")).firstMatch
+        if pet.exists && pet.isHittable {pet.tap();capture(app,"Store-09-pet-profile")}
+        else {
+            let profile=app.buttons["open-account-profile"]
+            if profile.exists && profile.isHittable {profile.tap();capture(app,"Store-09-profile")}
+        }
+    }
     func testProfileIdentityLabelsAndBottomSettingsClearTabs() throws {
         let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-album-fixture","--ui-profile-fixture"]
         app.launchEnvironment["MEFRION_TEST_USE_CLOUD"]="1";app.launch()
@@ -301,13 +357,13 @@ final class PrototypeUITests: XCTestCase {
         XCTAssertEqual(app.staticTexts["signup-fixture-counts"].label,"入力\(password.count)・確認\(password.count)")
         XCTContext.runActivity(named:"After confirmation input: "+app.staticTexts["signup-fixture-counts"].label+" "+field.label+" "+confirmation.label) {_ in}
         if app.buttons["完了"].exists {app.buttons["完了"].firstMatch.tap()}
-        let adult=app.switches["account-adult"],privacy=app.switches["account-privacy"]
-        for toggle in [adult,privacy] {
+        let privacy=app.switches["account-privacy"]
+        for toggle in [privacy] {
             reveal(toggle,in:app)
             if toggle.value as? String != "1" {
                 toggle.coordinate(withNormalizedOffset:CGVector(dx:0.92,dy:0.5)).tap()
             }
-            XCTAssertEqual(toggle.value as? String,"1","Registration fixture must accept both conditions before submitting")
+            XCTAssertEqual(toggle.value as? String,"1","Registration fixture must accept data handling before submitting")
         }
         return app
     }
@@ -775,7 +831,6 @@ final class PrototypeUITests: XCTestCase {
     }
     func testPreReleaseLegalDocumentsAccessible() throws {
         let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-test-onboarding"];app.launch()
-        app.buttons["welcome-start"].tap()
         let information=app.buttons["利用規約・プライバシーについて"]
         if !information.isHittable {app.swipeUp()}
         XCTAssertTrue(information.waitForExistence(timeout:10));information.tap()
@@ -988,7 +1043,8 @@ final class PrototypeUITests: XCTestCase {
     func testOnboardingDefaultRecommendationAndSearchNotifications() throws {
         let app=XCUIApplication();app.launchArguments=["--ui-test-isolated","--ui-test-onboarding"]
         app.launchEnvironment["MEFRION_TEST_API_BASE"]="http://127.0.0.1:8766";app.launch()
-        XCTAssertTrue(app.buttons["welcome-start"].waitForExistence(timeout:10));app.buttons["welcome-start"].tap()
+        XCTAssertTrue(app.buttons["welcome-start"].waitForExistence(timeout:10))
+        capture(app,"UI-01-welcome")
         let guest=app.buttons["welcome-guest"];reveal(guest,in:app);guest.tap()
         let recommended=app.buttons["home-recommended"],following=app.buttons["home-following"]
         XCTAssertTrue(recommended.waitForExistence(timeout:10));XCTAssertEqual(recommended.value as? String,"選択中")

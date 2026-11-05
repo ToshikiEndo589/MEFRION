@@ -91,19 +91,18 @@ final class PrototypeTests: XCTestCase {
     }
     func testSignupReportsTheUnmetConditionInsteadOfSilentlyDisabling() {
         XCTAssertTrue(SignupRequirements.validEmail("pet.owner@docomo.ne.jp"))
-        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345",confirmation:"Paw12345",adult:true,confirmed:true),"パスワードは12文字以上にしてね")
-        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345more",confirmation:"",adult:true,confirmed:true),"確認用のパスワードも入力してね")
-        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345more",confirmation:"Paw12345other",adult:true,confirmed:true),"2つのパスワードを同じにしてね")
-        XCTAssertNil(SignupRequirements.validationMessage(email:"pet.owner@docomo.ne.jp",password:"Paw12345more",confirmation:"Paw12345more",adult:true,confirmed:true))
+        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345",confirmation:"Paw12345",confirmed:true),"パスワードは12文字以上にしてね")
+        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345more",confirmation:"",confirmed:true),"確認用のパスワードも入力してね")
+        XCTAssertEqual(SignupRequirements.validationMessage(email:"pet@example.com",password:"Paw12345more",confirmation:"Paw12345other",confirmed:true),"2つのパスワードを同じにしてね")
+        XCTAssertNil(SignupRequirements.validationMessage(email:"pet.owner@docomo.ne.jp",password:"Paw12345more",confirmation:"Paw12345more",confirmed:true))
     }
     func testSignupRequiresMatchingPasswordAndExplicitChecks() {
-        let valid=SignupRequirements.valid(email:"person@example.com",password:"long-password-123",confirmation:"long-password-123",adult:true,confirmed:true)
+        let valid=SignupRequirements.valid(email:"person@example.com",password:"long-password-123",confirmation:"long-password-123",confirmed:true)
         XCTAssertTrue(valid)
-        XCTAssertFalse(SignupRequirements.valid(email:"person@example.com",password:"long-password-123",confirmation:"different-pass-123",adult:true,confirmed:true))
-        XCTAssertFalse(SignupRequirements.valid(email:"person@example.com",password:"short",confirmation:"short",adult:true,confirmed:true))
-        XCTAssertFalse(SignupRequirements.valid(email:"person@example.com",password:"long-password-123",confirmation:"long-password-123",adult:false,confirmed:true))
-        XCTAssertFalse(SignupRequirements.valid(email:"person@example.com",password:"long-password-123",confirmation:"long-password-123",adult:true,confirmed:false))
-        XCTAssertFalse(SignupRequirements.valid(email:"personexample.com",password:"long-password-123",confirmation:"long-password-123",adult:true,confirmed:true))
+        XCTAssertFalse(SignupRequirements.valid(email:"person@example.com",password:"long-password-123",confirmation:"different-pass-123",confirmed:true))
+        XCTAssertFalse(SignupRequirements.valid(email:"person@example.com",password:"short",confirmation:"short",confirmed:true))
+        XCTAssertFalse(SignupRequirements.valid(email:"person@example.com",password:"long-password-123",confirmation:"long-password-123",confirmed:false))
+        XCTAssertFalse(SignupRequirements.valid(email:"personexample.com",password:"long-password-123",confirmation:"long-password-123",confirmed:true))
     }
     func testStreamedTwinsRankingMatchesBatchAndExcludesSource() async throws {
         let engine=DemoTwinsEngine();let query=try XCTUnwrap(UIImage(named:"pet-0")?.cgImage)

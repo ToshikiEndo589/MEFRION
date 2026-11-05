@@ -4,12 +4,14 @@ const source=await readFile(path,'utf8'),at=source.indexOf('\n');
 const pages=JSON.parse(source.slice('const PAGES='.length,at).trim().replace(/;$/,''));
 const replaceCopy=(path,oldText,newText)=>{
  const current=pages[path].body;
+ if(newText && current.includes(newText))return;
  if(current.includes(oldText))pages[path].body=current.replace(oldText,newText);
- else if(!current.includes(newText))throw Error('Public copy changed unexpectedly: '+path);
+ else if(newText)throw Error('Public copy changed unexpectedly: '+path);
 };
 replaceCopy('/index.html','MEFRIONは公開準備中です。このページは現在の開発・検証状況を説明するもので、App Storeでの一般提供開始をお知らせするものではありません。','MEFRIONの使い方と、写真やアカウント情報の取り扱いをご案内します。');
 replaceCopy('/privacy.html','App Storeでの一般公開は準備中です。','');
 replaceCopy('/terms.html','App Storeでの一般公開は準備中です。','');
+replaceCopy('/terms.html','現行の提供方針は18歳以上、無料です。犬や猫を飼っていなくても登録できます。未成年者向け提供や有料機能を始める場合は、条件を別途案内します。','無料で利用でき、犬や猫を飼っていなくても登録できます。有料機能を始める場合は、条件を別途案内します。');
 replaceCopy('/privacy.html','残るファイルと認証情報は削除処理で順次消去します。','残るファイルと認証情報は通常24時間以内に削除します。完了後、この端末でアプリを開いた時にお知らせします。24時間を超えた場合はお問い合わせください。');
 replaceCopy('/privacy.html','公開投稿はほかの利用者から閲覧されます。','公開投稿の写真・動画と投稿文は公開前に運営が確認し、承認後にほかの利用者から閲覧されます。コメントも投稿前に不適切な内容を確認します。');
 replaceCopy('/terms.html','問題のある投稿やアカウントはアプリから通報できます。','公開投稿の写真・動画と投稿文は公開前に運営が確認します。問題のある投稿やアカウントはアプリから通報できます。');

@@ -153,7 +153,7 @@ struct CloudAccountPage:View {
                     .background(.white,in:RoundedRectangle(cornerRadius:18))
                 }.accessibilityIdentifier("open-account-retirement")
             } else {
-                Text("見るだけなら登録なしでもOK。フォローや家族アルバムはログインから。")
+                Text("見るだけなら登録なしでもOK。いいねやコメントはログインから。")
                     .font(.subheadline).foregroundStyle(Theme.secondaryText)
                 NavigationLink {CloudFamilyView()} label: {
                     Text("登録・ログイン").font(.headline).foregroundStyle(.white)

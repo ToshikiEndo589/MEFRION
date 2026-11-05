@@ -22,35 +22,100 @@ struct PhotoHero:View {
 struct WelcomeFlowView:View {
     @ObservedObject private var cloud=CloudFamilyClient.shared
     let onStart:()->Void
-    @State private var step=0
-    init(initialStep:Int=0,onStart:@escaping ()->Void) {self.onStart=onStart;_step=State(initialValue:initialStep)}
+    init(initialStep:Int=0,onStart:@escaping ()->Void) {self.onStart=onStart}
     var body:some View {
         NavigationStack {
-            ScrollView {VStack(spacing:24) {
-                if step==0 {
-                    PhotoHero(asset:"pet-0",height:340).overlay(alignment:.topLeading) {
-                        Text("きみの毎日を、\n大切な思い出に。").font(.title2.bold()).padding(20)
+            GeometryReader {screen in
+                ScrollView {
+                    VStack(spacing:0) {
+                        HStack {
+                            BrandWordmark()
+                            Spacer()
+                            NavigationLink("ログイン") {EmailAccountView(client:cloud)}
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.actionText)
+                                .accessibilityIdentifier("welcome-email")
+                        }.padding(.top,10)
+
+                        Image("welcome-pets")
+                            .resizable().scaledToFill()
+                            .frame(width:max(0,screen.size.width-48),height:min(max(screen.size.height*0.39,250),330))
+                            .clipped()
+                            .clipShape(RoundedRectangle(cornerRadius:28,style:.continuous))
+                            .overlay(alignment:.bottomLeading) {
+                                Text("犬と猫の、好きが集まる場所 ♡")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(Theme.text)
+                                    .padding(.horizontal,14).padding(.vertical,10)
+                                    .background(.regularMaterial,in:Capsule())
+                                    .padding(16)
+                            }
+                            .accessibilityLabel("犬と猫が並んでいる写真")
+                            .padding(.top,24)
+
+                        Text("犬猫の毎日が、\nもっと好きになる。")
+                            .font(.system(size:30,weight:.bold,design:.rounded))
+                            .tracking(-0.8)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal:false,vertical:true)
+                            .padding(.top,22)
+                        Text("見つけて、つながって、思い出に。")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.secondaryText)
+                            .padding(.top,8)
+
+                        HStack(spacing:8) {
+                            welcomeFeature("投稿",symbol:"photo.on.rectangle.angled")
+                            welcomeFeature("そっくり",symbol:"pawprint")
+                            welcomeFeature("アルバム",symbol:"heart.text.square")
+                        }.padding(.top,20)
+
+                        Spacer(minLength:25)
+                        NavigationLink {EmailAccountView(client:cloud,initialMode:"signup")} label: {
+                            Text("登録して始める")
+                                .font(.headline.weight(.bold))
+                                .foregroundStyle(.white)
+                                .frame(maxWidth:.infinity,minHeight:54)
+                                .background(Theme.accent.gradient,in:Capsule())
+                        }.accessibilityIdentifier("welcome-start")
+
+                        Button("ゲストユーザとして始める",action:onStart)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.actionText)
+                            .frame(maxWidth:.infinity,minHeight:44)
+                            .accessibilityIdentifier("welcome-guest")
+                            .padding(.top,7)
+                        Text("犬猫を飼っていなくても大歓迎 🐾")
+                            .font(.caption)
+                            .foregroundStyle(Theme.secondaryText)
+                            .padding(.top,3)
+                        NavigationLink("利用規約・プライバシーについて") {PrivacyInformationView()}
+                            .font(.caption2)
+                            .foregroundStyle(Theme.secondaryText)
+                            .padding(.top,18)
                     }
-                    BrandWordmark().scaleEffect(1.25).padding(.vertical,12)
-                    Text("かわいい犬猫を見つけたり、\nうちの子の毎日を残したり。").multilineTextAlignment(.center).font(.subheadline)
-                    Button("はじめる") {step=1}.buttonStyle(CoralButtonStyle()).accessibilityIdentifier("welcome-start")
-                    HStack {Circle().fill(Theme.accent);Circle().fill(Theme.accent.opacity(0.15));Circle().fill(Theme.accent.opacity(0.15))}.frame(width:45,height:7)
-                } else {
-                    BrandWordmark().padding(.top,20)
-                    HStack(spacing:8) {PhotoHero(asset:"pet-2",height:180);PhotoHero(asset:"pet-1",height:180)}
-                    Text("ようこそ、MEFRIONへ").font(.title2.bold())
-                    Text("見るだけでも大歓迎。\n犬猫の登録はあとからできます。").multilineTextAlignment(.center).font(.subheadline).foregroundStyle(.secondary)
-                    VStack(spacing:12) {
-                        NavigationLink {EmailAccountView(client:cloud,initialMode:"signup")} label: {Label("メールで新規登録",systemImage:"envelope").frame(maxWidth:.infinity).frame(minHeight:44)}.buttonStyle(CoralButtonStyle()).accessibilityIdentifier("welcome-email-signup")
-                        NavigationLink {EmailAccountView(client:cloud)} label: {Text("メールでログイン").frame(maxWidth:.infinity).frame(minHeight:44).background(.white).clipShape(Capsule())}.accessibilityIdentifier("welcome-email")
-                        Button("ゲストで始める",action:onStart).buttonStyle(CoralButtonStyle()).accessibilityIdentifier("welcome-guest")
-                        Text("ゲストの記録は端末内に非公開で保存します。家族共有にはログインが必要です。").font(.caption).foregroundStyle(.secondary)
-                        NavigationLink("利用規約・プライバシーについて") {PrivacyInformationView()}.font(.caption)
-                    }
+                    .frame(minHeight:screen.size.height,alignment:.top)
+                    .padding(.horizontal,24)
+                    .padding(.bottom,18)
                 }
-            }.padding(24)}.background(Theme.background).foregroundStyle(Theme.text).navigationBarTitleDisplayMode(.inline)
-                .toolbar {if step==1 {ToolbarItem(placement:.topBarLeading) {Button("戻る") {step=0}}}}
+                .scrollIndicators(.hidden)
+            }
+            .background(Theme.background)
+            .foregroundStyle(Theme.text)
+            .toolbar(.hidden,for:.navigationBar)
         }.onChange(of:cloud.busy) {_,busy in if !busy && cloud.authenticated {onStart()}}
+    }
+
+    private func welcomeFeature(_ title:String,symbol:String)->some View {
+        Label(title,systemImage:symbol)
+            .font(.caption2.weight(.semibold))
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .foregroundStyle(Theme.actionText)
+            .padding(.horizontal,10)
+            .frame(minHeight:34)
+            .frame(maxWidth:.infinity)
+            .background(Theme.accent.opacity(0.08),in:Capsule())
     }
 }
 
