@@ -4,7 +4,7 @@ const opsNode=(tag,value)=>{const el=document.createElement(tag);if(value!==unde
 const opsCount=value=>new Intl.NumberFormat('ja-JP').format(Number(value)||0);
 const opsDate=value=>value?new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value)):'—';
 let opsCases=[],opsStamp=0,opsTimer=null,opsPreviousAttention=null;
-function clearOverview(event){opsStamp++;if(opsTimer)clearTimeout(opsTimer);opsTimer=null;document.title='MEFRION クラウド運営管理';ops('overview-section').hidden=true;ops('ops-search-results').replaceChildren();ops('ops-case-dialog')?.close();ops('ops-history-dialog')?.close();if(event?.currentTarget){for(const id of ['overview-nav','reports-nav','content-nav','security-nav','seed-refresh'])ops(id)?.classList.toggle('active',id===event.currentTarget.id);}}
+function clearOverview(event){opsStamp++;if(opsTimer)clearTimeout(opsTimer);opsTimer=null;document.body.classList.remove('ops-console');document.title='MEFRION クラウド運営管理';ops('overview-section').hidden=true;ops('ops-search-results').replaceChildren();ops('ops-case-dialog')?.close();ops('ops-history-dialog')?.close();if(event?.currentTarget){for(const id of ['overview-nav','reports-nav','content-nav','security-nav','seed-refresh'])ops(id)?.classList.toggle('active',id===event.currentTarget.id);}}
 function scheduleOverview(){if(opsTimer)clearTimeout(opsTimer);opsTimer=setTimeout(()=>{if(panel==='overview'&&mfaComplete&&token&&!document.hidden&&!busy&&!ops('ops-case-dialog').open&&!ops('ops-history-dialog').open&&!document.querySelector('#overview-section input:focus,#overview-section textarea:focus,#overview-section select:focus'))perform(refreshOverview);else scheduleOverview();},60000);}
 function opsNav(){for(const id of ['overview-nav','reports-nav','content-nav','security-nav','seed-refresh'])ops(id)?.classList.toggle('active',id==='overview-nav');}
 function opsMetric(label,value,hint){const card=opsNode('article');card.className='ops-metric';card.append(opsNode('span',label),opsNode('strong',opsCount(value)),opsNode('small',hint));return card;}
@@ -13,7 +13,7 @@ function opsAlert(title,detail,nav,urgent=false){const card=opsNode('div');card.
 async function refreshOverview(){
  if(!mfaComplete||!token)throw Error('運営アカウントで二段階認証を完了してください。');
  if(typeof clearSecurity==='function')clearSecurity();if(typeof clearContent==='function')clearContent();
- panel='overview';ops('overview-section').hidden=false;ops('queue').hidden=true;ops('seed-section').hidden=true;
+ panel='overview';document.body.classList.add('ops-console');ops('overview-section').hidden=false;ops('queue').hidden=true;ops('seed-section').hidden=true;
  ops('main-heading').hidden=true;ops('refresh').hidden=true;ops('seed-refresh').hidden=false;
  ops('server-health-refresh')?.closest('details')?.removeAttribute('hidden');opsNav();
  const stamp=++opsStamp;ops('ops-message').textContent='更新中…';

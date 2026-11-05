@@ -29,3 +29,6 @@
 #ops-case-dialog h2,#ops-history-dialog h2{margin:0 0 18px}#ops-case-dialog label{display:block;margin:12px 0;color:#5c454b;font-weight:700}#ops-case-dialog input,#ops-case-dialog textarea,#ops-case-dialog select{display:block;width:100%;margin-top:6px}.ops-dialog-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ops-dialog-actions{display:flex;justify-content:flex-end;gap:8px}.ops-dialog-actions button:first-child{border:0;background:#f5ecee;color:#6b4d55;border-radius:999px;padding:11px 19px}
 .ops-empty{color:#927e82;padding:16px 0}.ops-footnote{font-size:.78rem;color:#967f84;padding:12px}
 @media(max-width:760px){.ops-hero{padding:22px}.ops-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ops-grid,.ops-alerts{grid-template-columns:1fr}.ops-case{display:block}.ops-case-controls{max-width:none;justify-content:flex-start;margin-top:10px}.ops-dialog-grid{grid-template-columns:1fr}}
+body.ops-console main>.notice,body.ops-console #email-login-toggle,body.ops-console #cancel-login,body.ops-console main>details{display:none}
+body.ops-console #status{border:0;padding:0;min-height:0;color:#8d727b;font-size:.8rem}
+body.ops-console #status:empty{display:none}
