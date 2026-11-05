@@ -1,0 +1,15 @@
+<section id="overview-section" hidden aria-label="運営ホーム">
+ <header class="ops-hero"><div><span class="ops-eyebrow">MEFRION OPERATIONS</span><h1>今日の運営 🐾</h1><p>対応が必要なことを、ここから確認できます。</p></div><button id="ops-refresh" type="button">↻ 更新</button></header>
+ <div id="ops-message" role="status" aria-live="polite"></div>
+ <div class="ops-metrics" id="ops-metrics"></div>
+ <section class="ops-card"><div class="ops-card-head"><div><span class="ops-eyebrow">TO DO</span><h2>先に見てほしいこと</h2></div></div><div id="ops-alerts" class="ops-alerts"></div></section>
+ <div class="ops-grid">
+  <section class="ops-card"><span class="ops-eyebrow">TODAY</span><h2>アプリの動き</h2><div id="ops-activity"></div></section>
+  <section class="ops-card"><span class="ops-eyebrow">ACTIVITY</span><h2>最近の対応</h2><div id="ops-actions"></div></section>
+ </div>
+ <section class="ops-card"><div class="ops-card-head"><div><span class="ops-eyebrow">SEARCH</span><h2>投稿を探す</h2><p>Pet名・投稿文・投稿IDで検索できます。</p></div></div><form id="ops-search-form" class="ops-search"><input id="ops-search" type="search" maxlength="80" minlength="2" placeholder="Pet名、投稿文、投稿ID" required><button type="submit">検索</button></form><div id="ops-search-results"></div></section>
+ <section class="ops-card"><div class="ops-card-head"><div><span class="ops-eyebrow">SUPPORT</span><h2>問い合わせ</h2><p>メールで受けた相談の担当・期限・対応状況を記録します。</p></div><button id="ops-case-new" type="button">＋ 相談を記録</button></div><div id="ops-cases"></div></section>
+ <dialog id="ops-case-dialog"><form id="ops-case-form" method="dialog"><h2>問い合わせを記録</h2><label>件名<input name="subject" maxlength="160" required></label><label>返信先メール<input name="email" type="email" maxlength="254"></label><label>相談内容<textarea name="detail" maxlength="4000" rows="5"></textarea></label><div class="ops-dialog-grid"><label>優先度<select name="priority"><option value="normal">通常</option><option value="urgent">至急</option></select></label><label>対応期限<input name="due" type="datetime-local"></label></div><div class="ops-dialog-actions"><button type="button" id="ops-case-cancel">閉じる</button><button type="submit">記録する</button></div></form></dialog>
+ <dialog id="ops-history-dialog"><div class="ops-card-head"><h2>投稿の対応履歴</h2><button id="ops-history-close" type="button">閉じる</button></div><div id="ops-history"></div></dialog>
+ <footer class="ops-footnote"><span id="ops-email-status">メール通知の状態を確認中</span> · 数値は取得時点の本番データです。問い合わせメールの自動取り込みは現在連携していません。</footer>
+</section>
