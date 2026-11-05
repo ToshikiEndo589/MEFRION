@@ -1,4 +1,3 @@
-import {serveMonitored} from '../_shared/security_monitor.ts';
 const base=Deno.env.get('SUPABASE_URL')||'';
 const serviceKey=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||'';
 const sendKey=Deno.env.get('BREVO_API_KEY')||'';
@@ -7,7 +6,7 @@ const rpc=async(name:string,body:Record<string,unknown>)=>{
  const response=await fetch(base+'/rest/v1/rpc/mefrion_'+name,{method:'POST',headers:{apikey:serviceKey,Authorization:'Bearer '+serviceKey,'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(8000)});
  if(!response.ok)throw Error('rpc_failed');return response.json();
 };
-serveMonitored('operator-alerts',async request=>{
+Deno.serve(async request=>{
  if(request.method!=='POST')return reply(405);
  const token=request.headers.get('x-mefrion-worker')||'';
  if(token.length<32||token.length>512)return reply(401);
