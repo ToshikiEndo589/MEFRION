@@ -15,6 +15,8 @@ replaceCopy('/terms.html','現行の提供方針は18歳以上、無料です。
 replaceCopy('/privacy.html','残るファイルと認証情報は削除処理で順次消去します。','残るファイルと認証情報は通常24時間以内に削除します。完了後、この端末でアプリを開いた時にお知らせします。24時間を超えた場合はお問い合わせください。');
 replaceCopy('/privacy.html','公開投稿はほかの利用者から閲覧されます。','公開投稿の写真・動画と投稿文は公開前に運営が確認し、承認後にほかの利用者から閲覧されます。コメントも投稿前に不適切な内容を確認します。');
 replaceCopy('/terms.html','問題のある投稿やアカウントはアプリから通報できます。','公開投稿の写真・動画と投稿文は公開前に運営が確認します。問題のある投稿やアカウントはアプリから通報できます。');
+const reviewCopy='公開投稿の写真・動画と投稿文は公開前に運営が確認します。';
+pages['/terms.html'].body=pages['/terms.html'].body.replaceAll(reviewCopy+reviewCopy,reviewCopy);
 for(const path of ['/privacy.html','/terms.html'])replaceCopy(path,'2026年11月1日更新','2026年11月2日更新');
 for(const name of ['security.js','security.css','content.js','overview.js','overview.css'])pages['/console/'+name]={type:name.endsWith('.js')?'application/javascript; charset=utf-8':'text/css; charset=utf-8',body:await readFile(new URL('console/'+name,root),'utf8')};
 if(!pages['/console/cloud.js'].body.includes("if(typeof clearOverview==='function')clearOverview();"))

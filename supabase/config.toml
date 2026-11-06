@@ -449,3 +449,6 @@ verify_jwt = false # Private scheduler token; stock catalogue and leases are ser
 
 [functions.security-collector]
 verify_jwt = false # Verifies pinned Vercel OIDC signatures/project/environment itself.
+
+[functions.operator-alerts]
+verify_jwt = false # Private scheduler token is verified server-side before claiming or sending.
