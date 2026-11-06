@@ -32,3 +32,7 @@
 body.ops-console main>.notice,body.ops-console #email-login-toggle,body.ops-console #cancel-login,body.ops-console main>details{display:none}
 body.ops-console #status{border:0;padding:0;min-height:0;color:#8d727b;font-size:.8rem}
 body.ops-console #status:empty{display:none}
+
+.product-table{width:100%;border-collapse:collapse;font-size:.85rem}.product-table th,.product-table td{text-align:left;padding:9px;border-bottom:1px solid #f2e6e8}.product-scroll{overflow:auto;max-height:320px}.product-chart{display:flex;align-items:end;gap:3px;height:150px;overflow:auto;padding-top:25px}.product-chart div{min-width:9px;flex:1;background:#e88da2;border-radius:4px 4px 0 0}.product-store{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0}.product-store input{display:block;padding:9px;border:1px solid #ead6dd;border-radius:10px;max-width:160px}
+
+.product-table th{position:sticky;top:0;background:#fff7f8;z-index:1;white-space:nowrap}.product-table td{font-variant-numeric:tabular-nums}.ops-card[aria-label=利用分析] h3{margin-top:30px;padding-top:16px;border-top:1px solid #f3e5e9;color:#653942}.ops-card[aria-label=利用分析] select{border:1px solid #ead6dd;border-radius:12px;padding:10px;background:#fff7f8;color:#653942;font:inherit}.product-scroll+button,.ops-card[aria-label=利用分析] button{border:1px solid #ead6dd;border-radius:999px;padding:7px 14px;background:#fff7f8;color:#99475d}.ops-card[aria-label=利用分析] .ops-footnote{line-height:1.8}

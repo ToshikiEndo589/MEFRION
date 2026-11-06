@@ -2,6 +2,19 @@
  <header class="ops-hero"><div><span class="ops-eyebrow">MEFRION OPERATIONS</span><h1>今日の運営 🐾</h1><p>対応が必要なことを、ここから確認できます。</p></div><button id="ops-refresh" type="button">↻ 更新</button></header>
  <div id="ops-message" role="status" aria-live="polite"></div>
  <div class="ops-metrics" id="ops-metrics"></div>
+ <section class="ops-card" aria-label="利用分析"><div class="ops-card-head"><div><span class="ops-eyebrow">PRODUCT ANALYTICS</span><h2>MEFRIONの成長と使い心地</h2><p id="product-status">計測状況を確認しています</p></div><select id="product-days" aria-label="分析期間"><option value="7">7日間</option><option value="30" selected>30日間</option><option value="90">90日間</option></select></div>
+ <div id="product-summary" class="ops-metrics"></div>
+ <h3>日ごとの利用と初回起動</h3><div id="product-daily"></div>
+ <h3>直近48時間の利用端末数（日本時間）</h3><div id="product-hourly" class="product-chart"></div><div id="product-hour-table"></div>
+ <h3>継続率</h3><div id="product-retention"></div>
+ <h3>初回利用・機能別の利用状況</h3><div id="product-funnel"></div><div id="product-events"></div>
+ <h3>読み込み・処理の品質</h3><div id="product-rates"></div><div id="product-quality"></div>
+ <h3>一般ユーザーと運営投稿</h3><div id="product-content"></div>
+ <h3>アプリのバージョン別</h3><div id="product-versions"></div>
+ <h3>App Store公式データ</h3><p id="product-apple-status">Apple連携を確認しています</p><p class="ops-footnote">毎日取得。ダウンロードは通常2日、インストールは通常5日まで更新されます。インストールはAppleへのデータ共有に同意した利用者の値で、少人数の場合は非表示です。未取得は0にしません。Appleのレポート日付を使用します。</p><div id="product-apple"></div>
+ <details><summary>公式数値を手動で記録（自動取得とは別）</summary><p>Apple公式画面の日別数値を転記します。空欄は未取得です。アプリ初回起動とダウンロードは異なる指標です。</p><form id="product-store-form" class="product-store"><label>対象日<input type="date" name="day" required></label><label>初回ダウンロード<input type="number" name="first" min="0"></label><label>再ダウンロード<input type="number" name="again" min="0"></label><label>インストール<input type="number" name="installs" min="0"></label><button type="submit">保存</button></form></details><div id="product-store"></div>
+ <p class="ops-footnote">利用指標は新しいアプリから届いた計測のみ。端末数にはゲストを含み、複数端末・再インストールで同じ人が複数に数えられる場合があります。登録者DAUはサーバーで確認したアカウント単位です。自動アクセスや不正なクライアントによる偽装を完全には排除できないため、売上・請求・セキュリティ判断の根拠には使いません。共有ボタンはSNSを開く操作であり、投稿完了やダウンロードを示しません。画像・動画の時間は準備完了までで、画面内表示や再生開始の時間とは異なります。Xの共有リンクからApp Storeへの移動は計測します。SNS内の投稿完了・インストールへの結び付き・Apple公式DL数は上の自動連携欄で別に確認します。</p>
+ </section>
  <section class="ops-card"><div class="ops-card-head"><div><span class="ops-eyebrow">TO DO</span><h2>先に見てほしいこと</h2></div></div><div id="ops-alerts" class="ops-alerts"></div></section>
  <div class="ops-grid">
   <section class="ops-card"><span class="ops-eyebrow">TODAY</span><h2>アプリの動き</h2><div id="ops-activity"></div></section>

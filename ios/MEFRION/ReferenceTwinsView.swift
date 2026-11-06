@@ -563,6 +563,7 @@ private struct ReferenceShareView:View {
         return URL(string:"instagram-stories://share?source_application=\(source)")
     }
     private func shareToInstagramStories(image:UIImage) {
+        CloudFamilyClient.shared.productEvent("share_open",detail:"instagram")
         guard let url=instagramURL,UIApplication.shared.canOpenURL(url) else {shareError="Instagramアプリを入れてから試してね。";return}
         guard let data=image.pngData() else {shareError="カードを作れませんでした。もう一度お試しください。";return}
         UIPasteboard.general.setItems([["com.instagram.sharedSticker.backgroundImage":data]],options:[.expirationDate:Date().addingTimeInterval(300)])
@@ -571,9 +572,10 @@ private struct ReferenceShareView:View {
         }
     }
     private func shareToX(image:UIImage) {
+        CloudFamilyClient.shared.productEvent("share_open",detail:"x")
         guard let data=image.pngData() else {shareError="カードを作れませんでした。もう一度お試しください。";return}
         UIPasteboard.general.setItems([["public.png":data]],options:[.expirationDate:Date().addingTimeInterval(300)])
-        let message="うちの子のそっくり、見つけたよ 🐾 #MEFRION"
+        let message="うちの子のそっくり、見つけたよ 🐾 #MEFRION https://mefrion.vercel.app/open/x"
         let encoded=message.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed) ?? ""
         guard let appURL=URL(string:"twitter://post?message=\(encoded)"),
               let webURL=URL(string:"https://x.com/intent/tweet?text=\(encoded)") else {return}

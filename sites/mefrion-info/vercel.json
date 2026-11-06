@@ -3,9 +3,32 @@
   "framework": null,
   "outputDirectory": "public",
   "trailingSlash": false,
-  "functions": { "api/site.mjs": { "maxDuration": 30 } },
+  "functions": {
+    "api/site.mjs": {
+      "maxDuration": 30
+    },
+    "api/apple-sync.mjs": {
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
-    { "source": "/", "destination": "/api/site?__mefrion_path=index.html" },
-    { "source": "/:path*", "destination": "/api/site?__mefrion_path=:path*" }
+    {
+      "source": "/metrics/apple-sync",
+      "destination": "/api/apple-sync"
+    },
+    {
+      "source": "/",
+      "destination": "/api/site?__mefrion_path=index.html"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/api/site?__mefrion_path=:path*"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/metrics/apple-sync",
+      "schedule": "30 20 * * *"
+    }
   ]
 }

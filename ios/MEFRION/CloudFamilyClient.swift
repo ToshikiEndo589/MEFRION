@@ -189,6 +189,58 @@ final class CloudFamilyClient:ObservableObject {
         #endif
     }
     var configured:Bool { !key.isEmpty }
+    private struct ProductEvent:Codable {let id:UUID;let name:String;let detail:String;let ms:Int?;let version:String;let actor:String?}
+    private var productSending=false
+    private var productLastActive:Date?
+    private var productSession:Date?
+    func productActive() {
+        #if DEBUG
+        return
+        #else
+        let now=Date()
+        if productSession == nil || now.timeIntervalSince(productLastActive ?? .distantPast)>1800 {
+            productSession=now;productEvent("session")
+        }
+        if productLastActive == nil || now.timeIntervalSince(productLastActive!)>=55 {productEvent("active")}
+        productLastActive=now
+        if !UserDefaults.standard.bool(forKey:"MEFRIONProductFirstOpen") {
+            productEvent("first_open");UserDefaults.standard.set(true,forKey:"MEFRIONProductFirstOpen")
+        }
+        #endif
+    }
+    func productEvent(_ name:String,detail:String="",ms:Int?=nil) {
+        #if DEBUG
+        return // Development and synthetic fixtures never enter production metrics.
+        #else
+        guard !isolated,configured else{return}
+        let defaults=UserDefaults.standard
+        var queue=(defaults.data(forKey:"MEFRIONProductQueue").flatMap {try? JSONDecoder().decode([ProductEvent].self,from:$0)}) ?? []
+        let version=Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
+        queue.append(ProductEvent(id:UUID(),name:name,detail:detail,ms:ms,version:version,actor:authenticated ? currentUserID : nil))
+        defaults.set(try? JSONEncoder().encode(Array(queue.suffix(200))),forKey:"MEFRIONProductQueue")
+        guard !productSending else{return};productSending=true
+        Task {await flushProductEvents()}
+        #endif
+    }
+    private func flushProductEvents() async {
+        defer {productSending=false}
+        for _ in 0..<10 {
+        try? await Task.sleep(for:.seconds(2))
+        let defaults=UserDefaults.standard
+        let install=defaults.string(forKey:"MEFRIONProductInstallation") ?? UUID().uuidString
+        defaults.set(install,forKey:"MEFRIONProductInstallation")
+        guard let bytes=defaults.data(forKey:"MEFRIONProductQueue"),let queue=try? JSONDecoder().decode([ProductEvent].self,from:bytes),!queue.isEmpty,let url=URL(string:base+"/rest/v1/rpc/mefrion_product_events") else{return}
+        let batch=Array(queue.prefix(20));guard let events=try? JSONSerialization.jsonObject(with:JSONEncoder().encode(batch)) else{return}
+        var req=URLRequest(url:url);req.httpMethod="POST";req.timeoutInterval=10
+        req.setValue(key,forHTTPHeaderField:"apikey");req.setValue("application/json",forHTTPHeaderField:"Content-Type")
+        if authenticated,let bearer=session?.access_token {req.setValue("Bearer "+bearer,forHTTPHeaderField:"Authorization")}
+        req.httpBody=try? JSONSerialization.data(withJSONObject:["p_install":install,"p_events":events])
+        guard let (data,response)=try? await http.data(for:req),let response=response as? HTTPURLResponse,response.statusCode==200,String(data:data,encoding:.utf8)=="true" else{return}
+        let sent=Set(batch.map(\.id))
+        let latest=(defaults.data(forKey:"MEFRIONProductQueue").flatMap {try? JSONDecoder().decode([ProductEvent].self,from:$0)}) ?? []
+        defaults.set(try? JSONEncoder().encode(latest.filter {!sent.contains($0.id)}),forKey:"MEFRIONProductQueue")
+        }
+    }
     private enum Failure:LocalizedError {
         case unavailable,providerUnavailable,notAuthenticated,denied,invalid,network,dailyLimit,referenceLimit,emailNotAuthorized,emailRateLimited,emailAlreadyRegistered,contentTextBlocked
         var errorDescription:String? { switch self { case .referenceLimit:return "参考写真の検索はゲスト10回・会員50回/日（日本時間）までです。明日またお試しください。";case .unavailable:return "サービスに接続できません。時間をおいて再試行してください。";case .providerUnavailable:return "このログイン方法は現在利用できません。メールでログインしてください。";case .notAuthenticated:return "ログインが必要です。メールとパスワードを確認してください。";case .denied:return "操作できません。権限・招待・写真の状態を確認してください。";case .invalid:return "入力内容を確認してください。";case .network:return "接続できません。再試行してください。";case .dailyLimit:return "本日の検索回数を使い切りました。ゲスト初回1回・会員5回/日（日本時間）です。";case .emailNotAuthorized:return "このメールアドレスには現在確認メールを送れません。メール配信の設定が必要です。";case .emailRateLimited:return "メール送信の回数制限に達しました。時間をおいて再試行してください。";case .emailAlreadyRegistered:return "このメールアドレスは登録済みです。ログインまたはパスワードの復旧をお試しください。";case .contentTextBlocked:return "この文章は投稿できないよ。やさしい言葉に直してね。" } }
@@ -198,6 +250,9 @@ final class CloudFamilyClient:ObservableObject {
         if uiReviewOnly {throw Failure.unavailable}
         #endif
         guard configured,let url=URL(string:base+path) else {throw Failure.unavailable}
+        let metricsStarted=Date();var metricsOK=false
+        let operation:String=path.contains("video") ? "video" : path.contains("public-image") ? "image" : path.contains("feed") ? "feed" : path.contains("signup") ? "signup" : path.contains("request_publication") ? "upload" : path.contains("delete") ? "delete" : ""
+        defer {if !operation.isEmpty && !Task.isCancelled {productEvent(metricsOK ? "request_success" : "request_failure",detail:operation,ms:Int(Date().timeIntervalSince(metricsStarted)*1000))}}
         var req=URLRequest(url:url,cachePolicy:.reloadIgnoringLocalAndRemoteCacheData)
         req.setValue(key,forHTTPHeaderField:"apikey")
         if let token { req.setValue("Bearer "+token,forHTTPHeaderField:"Authorization") }
@@ -207,7 +262,7 @@ final class CloudFamilyClient:ObservableObject {
         guard let response=response as? HTTPURLResponse else {throw Failure.network}
         // A lost upload response may leave the object stored. finish_photo below
         // checks the registered path and provider before treating it as complete.
-        if raw != nil && Self.isExistingUpload(status:response.statusCode,data:data) {return data}
+        if raw != nil && Self.isExistingUpload(status:response.statusCode,data:data) {metricsOK=true;return data}
         if response.statusCode==401 {throw Failure.notAuthenticated}
         if !(200..<300).contains(response.statusCode),
            let payload=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any] {
@@ -230,6 +285,7 @@ final class CloudFamilyClient:ObservableObject {
             if details.contains("email_exists") || details.contains("already registered") {throw Failure.emailAlreadyRegistered}
         }
         guard (200..<300).contains(response.statusCode) else {throw Failure.denied}
+        metricsOK=true
         return data
     }
     static func isExistingUpload(status:Int,data:Data)->Bool {
@@ -330,6 +386,7 @@ final class CloudFamilyClient:ObservableObject {
         if sessionStorageEnabled {try saveSession(candidate)}
         try uploads.activate(actor:userID)
         session=candidate;currentUserID=userID;authenticated=true
+        productEvent("active")
         do {try await loadPets()} catch {invalidateSession();throw error}
         if let email=userObject?["email"] as? String {try? await completePendingFirstPet(email:email)}
     }
@@ -345,6 +402,7 @@ final class CloudFamilyClient:ObservableObject {
         if sessionStorageEnabled {try saveSession(candidate)}
         try uploads.activate(actor:userID)
         session=candidate;currentUserID=userID;authenticated=true
+        productEvent("active")
         do {try await loadPets()} catch {invalidateSession();throw error}
         if let email=userObject?["email"] as? String {try? await completePendingFirstPet(email:email)}
     }
@@ -353,6 +411,7 @@ final class CloudFamilyClient:ObservableObject {
         #if DEBUG
         if isolated,ProcessInfo.processInfo.arguments.contains("--ui-signup-fixture") {return false}
         #endif
+        productEvent("signup_start")
         let data=try await request("/auth/v1/signup",body:["email":email,"password":password,"data":["data_handling_confirmation":true]])
         // A previous registration attempt may have left a local Pet draft. This
         // registration flow never creates a Pet without the user's later choice.
@@ -390,7 +449,7 @@ final class CloudFamilyClient:ObservableObject {
         guard code.count>=6,code.count<=12,code.allSatisfy(\.isNumber) else {throw Failure.invalid}
         let data=try await request("/auth/v1/verify",body:["email":email,"token":code,"type":recovery ? "recovery" : "signup"])
         invalidateSession();try await adoptAuth(data)
-        if !recovery {try? await completePendingFirstPet(email:email)}
+        if !recovery {try? await completePendingFirstPet(email:email);productEvent("signup_success")}
     }
     static func pkceChallenge(_ verifier:String)->String {
         Data(SHA256.hash(data:Data(verifier.utf8))).base64EncodedString().replacingOccurrences(of:"+",with:"-").replacingOccurrences(of:"/",with:"_").replacingOccurrences(of:"=",with:"")
@@ -746,6 +805,8 @@ final class CloudFamilyClient:ObservableObject {
         return try await downloadVideo(id,privateMedia:true)
     }
     private func downloadVideo(_ id:String,privateMedia:Bool) async throws->URL {
+        let videoStarted=Date();var videoOK=false
+        defer {if !Task.isCancelled {productEvent(videoOK ? "video_ready" : "video_failure",ms:Int(Date().timeIntervalSince(videoStarted)*1000))}}
         #if DEBUG
         if isolated,!privateMedia,ProcessInfo.processInfo.arguments.contains("--ui-video-fixture"),
            let encoded=ProcessInfo.processInfo.environment["MEFRION_TEST_VIDEO_BASE64"],encoded.count<20000,
@@ -753,7 +814,7 @@ final class CloudFamilyClient:ObservableObject {
             try await Task.sleep(for:.seconds(2))
             let output=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString+".mp4")
             try data.write(to:output,options:[.atomic,.completeFileProtection])
-            return output
+            videoOK=true;return output
         }
         #endif
         let path=privateMedia ? "/functions/v1/private-video?photo="+id : "/functions/v1/public-image?media="+id+"&format=video"
@@ -763,7 +824,7 @@ final class CloudFamilyClient:ObservableObject {
         guard !data.isEmpty,data.count<=50*1024*1024,data.count>8,data[4..<8].elementsEqual("ftyp".utf8) else {throw Failure.invalid}
         let output=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString+".mp4")
         try data.write(to:output,options:[.atomic,.completeFileProtection])
-        return output
+        videoOK=true;return output
     }
     private func trimPublicVideoCache() {
         var bytes=publicVideoOrder.reduce(0) {total,id in
@@ -876,7 +937,11 @@ final class CloudFamilyClient:ObservableObject {
     func loadProvidedPhotos() async throws {providedPhotos=[];providedPhotos=try await rpc("provided_photos")}
     func setPublicProfile(pet:String,enabled:Bool,explicit:Bool=false) async throws {let _:Bool=try await rpc("set_public_profile",["p_pet":pet,"p_enabled":enabled,"p_explicit":explicit]);if !enabled {clearPublicViews()}}
     func requestPublication(pet:String,photos:[String],body:String,key:UUID,tags:[String]=[]) async throws->CloudPublication {
-        try await rpc("request_tagged_publication",["p_pet":pet,"p_photos":photos,"p_tags":Array(Set(tags+[pet])).sorted(),"p_body":body,"p_request_key":key.uuidString,"p_explicit":true])
+        let productStarted=Date();var productOK=false;productEvent("post_start")
+        defer {productEvent(productOK ? "post_success" : "post_failure",ms:Int(Date().timeIntervalSince(productStarted)*1000))}
+
+        let result:CloudPublication=try await rpc("request_tagged_publication",["p_pet":pet,"p_photos":photos,"p_tags":Array(Set(tags+[pet])).sorted(),"p_body":body,"p_request_key":key.uuidString,"p_explicit":true])
+        productOK=true;return result
     }
     func stopPublication(id:String) async throws {let _:Bool=try await rpc("stop_publication",["p_post":id]);clearPublicViews()}
     private struct FeedPage:Decodable {let items:[CloudPublicPost];let next_date:String?;let next_id:String?;let valid_known_ids:[String]}
@@ -1151,9 +1216,7 @@ final class CloudFamilyClient:ObservableObject {
     }
     private struct FeedImagePayload {let image:UIImage;let compressed:Data}
     private func fetchPublicImage(_ media:String,signedIn:Bool) async->FeedImagePayload? {
-        #if DEBUG
         let requestStarted=Date()
-        #endif
         let path="/functions/v1/public-image?media="+media
         let bytes=try? await (signedIn ? authenticatedRequest(path) : request(path))
         #if DEBUG
@@ -1163,6 +1226,7 @@ final class CloudFamilyClient:ObservableObject {
         #if DEBUG
         Self.feedLogger.info("photo_network_ms=\(transferMS) photo_total_ms=\(Int(Date().timeIntervalSince(requestStarted)*1000)) ok=\(image != nil)")
         #endif
+        if !Task.isCancelled {productEvent(image == nil ? "image_failure" : "image_ready",ms:Int(Date().timeIntervalSince(requestStarted)*1000))}
         guard let image,let bytes else {return nil}
         return FeedImagePayload(image:image,compressed:bytes)
     }
@@ -1311,6 +1375,9 @@ final class CloudFamilyClient:ObservableObject {
         return assets
     }
     func referenceSearch(query:ReferenceQuery,species:String,consent:Bool,requestID:UUID) async throws->[ReferencePetAsset] {
+        let productStarted=Date();var productOK=false;productEvent("twins_start")
+        defer {productEvent(productOK ? "twins_success" : "twins_failure",ms:Int(Date().timeIntervalSince(productStarted)*1000))}
+
         guard consent,["dog","cat"].contains(species),query.values.count==768,query.values.allSatisfy(\.isFinite),query.fingerprint.count==144,query.resemblance.count==384,query.resemblance.allSatisfy(\.isFinite),query.color.count==64,query.color.allSatisfy({$0.isFinite && $0>=0}) else {throw Failure.invalid}
         let defaults=UserDefaults.standard
         let saved=defaults.string(forKey:"MEFRIONReferenceGuestID").flatMap(UUID.init(uuidString:)) ?? UUID()
@@ -1325,7 +1392,7 @@ final class CloudFamilyClient:ObservableObject {
         let data=try await referenceRequest("search_v2",["p_species":species,"p_query":descriptor,"p_color":color,"p_legacy":vector,"p_fingerprint":query.fingerprint,"p_mean":query.mean,"p_algorithm":PetResemblance.algorithm,"p_consent":consent,"p_guest":guest.uuidString,"p_request":requestID.uuidString])
         let assets=try JSONDecoder().decode([ReferencePetAsset].self,from:data)
         guard assets.count<=3,assets.allSatisfy({$0.species==species && $0.demoOnly}) else {throw Failure.invalid}
-        return assets
+        productOK=true;return assets
     }
     func referenceImage(id:String) async throws->UIImage {
         guard id.range(of:"^pexels-[0-9]+$",options:.regularExpression) != nil else {throw Failure.invalid}

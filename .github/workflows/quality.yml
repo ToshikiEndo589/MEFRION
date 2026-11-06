@@ -16,6 +16,22 @@ jobs:
       - run: python scripts/check_shippable_secrets.py
       - run: python -m unittest discover -s tests -v
       - run: python scripts/check_repository.py
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sites/mefrion-info
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: sites/mefrion-info/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: git diff --exit-code -- worker/index.js dist/privacy.html
   database:
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +47,7 @@ jobs:
       - run: supabase db reset --local
       - name: Check database access boundaries and tied feed cursors
         run: |
-          for test in account_security operator_login_policy security_observability feed_cursor; do
+          for test in account_security operator_login_policy security_observability feed_cursor product_analytics apple_metrics; do
             psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -v ON_ERROR_STOP=1 -f "supabase/tests/$test.sql"
           done
       - if: always()

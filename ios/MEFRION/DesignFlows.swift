@@ -824,6 +824,7 @@ struct CloudPostEntryView:View {
                             try await client.editPhoto(CloudPhoto(id:id,path:"",captured:nil,title:"",mine:true),pet:pet.id,captured:nil,title:"",kind:nil,note:text)
                         }
                     }
+                    client.productEvent("album_save")
                     albumSaved=true
                 } else {
                     for id in photoIDs {try await client.setAlbumVisibility(photo:id,visible:false)}

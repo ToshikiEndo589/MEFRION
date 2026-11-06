@@ -18,6 +18,8 @@ replaceCopy('/terms.html','問題のある投稿やアカウントはアプリ�
 const reviewCopy='公開投稿の写真・動画と投稿文は公開前に運営が確認します。';
 pages['/terms.html'].body=pages['/terms.html'].body.replaceAll(reviewCopy+reviewCopy,reviewCopy);
 for(const path of ['/privacy.html','/terms.html'])replaceCopy(path,'2026年11月1日更新','2026年11月2日更新');
+const analyticsCopy='<p>利用状況と品質の改善のため、アプリが生成するランダムな端末識別子、起動・機能の利用・処理の成否・所要時間・アプリバージョンを収集します。ログイン中はアカウントと関連付けます。写真・投稿文・パスワード・認証コードはこの利用分析へ送りません。識別子はサーバーでハッシュ化し、詳細記録は最大90日を目安に保持します。広告追跡には使用しません。</p>';
+if(!pages['/privacy.html'].body.includes('ランダムな端末識別子'))pages['/privacy.html'].body=pages['/privacy.html'].body.replace('<h2>2. 取り扱う情報と使い道</h2>','<h2>2. 取り扱う情報と使い道</h2>'+analyticsCopy);
 for(const name of ['security.js','security.css','content.js','overview.js','overview.css'])pages['/console/'+name]={type:name.endsWith('.js')?'application/javascript; charset=utf-8':'text/css; charset=utf-8',body:await readFile(new URL('console/'+name,root),'utf8')};
 if(!pages['/console/cloud.js'].body.includes("if(typeof clearOverview==='function')clearOverview();"))
  pages['/console/cloud.js'].body=pages['/console/cloud.js'].body.replace("if(typeof clearSecurity==='function')clearSecurity();", "if(typeof clearSecurity==='function')clearSecurity();if(typeof clearOverview==='function')clearOverview();");

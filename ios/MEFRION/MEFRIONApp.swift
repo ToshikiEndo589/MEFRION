@@ -8,7 +8,7 @@ struct MEFRIONApp: App {
         WindowGroup { RootView().environmentObject(store).tint(Theme.actionText)
             .onChange(of:phase) {_,next in if next == .active {try? store.pruneReferenceHistory()}}
             .onReceive(Timer.publish(every:60,on:.main,in:.common).autoconnect()) {_ in
-                if phase == .active {try? store.pruneReferenceHistory()}
+                if phase == .active {try? store.pruneReferenceHistory();CloudFamilyClient.shared.productActive()}
             }
         }
     }
@@ -38,8 +38,13 @@ struct RootView: View {
             #else
             standardContent
             #endif
-        }.task {if useCloud && !ProcessInfo.processInfo.arguments.contains("--twins-vision-self-check") {await CloudFamilyClient.shared.restore();await checkRetirementReceipt()}}
-            .onChange(of:phase) {_,next in if next == .active {Task {await checkRetirementReceipt()}}}
+        }.task {if useCloud && !ProcessInfo.processInfo.arguments.contains("--twins-vision-self-check") {await CloudFamilyClient.shared.restore();CloudFamilyClient.shared.productActive();await checkRetirementReceipt()}}
+            .onChange(of:phase) {_,next in if next == .active {CloudFamilyClient.shared.productActive();Task {await checkRetirementReceipt()}}}
+            .onChange(of:selected) {_,tab in
+                let names=["home","album","post","twins","profile"]
+                CloudFamilyClient.shared.productEvent("tab",detail:names[tab])
+                if tab==1 {CloudFamilyClient.shared.productEvent("album_open")}
+            }
             .onChange(of:retirementReceipt) {_,_ in Task {await checkRetirementReceipt()}}
             .onReceive(Timer.publish(every:30,on:.main,in:.common).autoconnect()) {_ in if phase == .active && !retirementReceipt.isEmpty {Task {await checkRetirementReceipt()}}}
             .alert("アカウントの削除が完了しました",isPresented:$retirementComplete) {

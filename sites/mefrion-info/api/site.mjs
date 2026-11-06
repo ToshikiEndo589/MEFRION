@@ -1,4 +1,5 @@
 import site from '../worker/index.js';
+import {sharedArrival} from '../analytics/landing.mjs';
 import { observe } from '../security/monitor.mjs';
 
 // Public pages share the existing router. Off-site encrypted backup storage
@@ -28,6 +29,7 @@ export default async function handler(req, res) {
     }
     if (rewrittenPath.length) url.pathname = '/' + rewrittenPath[0].replace(/^\/+/, '');
     url.searchParams.delete('__mefrion_path');
+    if(await sharedArrival(req,res,url))return;
     const response = await route(new Request(url, { method: req.method || 'GET' }));
     res.statusCode = response.status;
     observe(req, url, response.status);

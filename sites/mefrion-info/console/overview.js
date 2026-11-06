@@ -23,7 +23,7 @@ async function refreshOverview(){
   opsCases=cases;renderOverview(data);renderCases(cases);
   ops('ops-email-status').textContent=delivery.last_sent_at?'メール通知：最終送信 '+opsDate(delivery.last_sent_at):'メール通知：初回送信待ち';
   if(delivery.last_failure_at&&(!delivery.last_sent_at||new Date(delivery.last_failure_at)>new Date(delivery.last_sent_at)))ops('ops-email-status').textContent='メール通知：送信エラーを確認してください';
-  ops('ops-message').textContent='';status('運営ホームを更新しました。');scheduleOverview();
+  ops('ops-message').textContent='';status('運営ホームを更新しました。');scheduleOverview();await refreshProductAnalytics();
  }catch(error){if(stamp===opsStamp)ops('ops-message').textContent=error.message;throw error;}
 }
 function renderOverview(data){
@@ -118,3 +118,32 @@ ops('ops-case-form')?.addEventListener('submit',event=>{event.preventDefault();c
 });});
 ops('ops-history-close')?.addEventListener('click',()=>ops('ops-history-dialog').close());
 for(const id of ['reports-nav','security-nav','content-nav','seed-refresh'])ops(id)?.addEventListener('click',clearOverview,{capture:true});
+
+function productTable(id,headers,rows){const root=ops(id);root.replaceChildren();if(!rows?.length){root.append(opsNode('p','まだ計測データがありません。'));return;}const wrap=opsNode('div');wrap.className='product-scroll';const table=opsNode('table');table.className='product-table';const download=opsNode('button','CSV');download.type='button';download.addEventListener('click',()=>{const cell=v=>'\"'+String(v??'').replace(/^[\s\u0000-\u001f]*[=+@-]/,"'$&").replaceAll('\"','\"\"')+'\"';const csv='\uFEFF'+[headers,...rows].map(row=>row.map(cell).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const link=opsNode('a');link.href=url;link.download='MEFRION-'+id+'.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});root.append(download);const head=opsNode('tr');for(const h of headers)head.append(opsNode('th',h));const thead=opsNode('thead');thead.append(head);table.append(thead);const body=opsNode('tbody');for(const values of rows){const tr=opsNode('tr');for(const value of values)tr.append(opsNode('td',value??'未取得'));body.append(tr);}table.append(body);wrap.append(table);root.append(wrap);}
+async function refreshProductAnalytics(){
+ const stamp=generation;
+ try{
+ const data=await rpc('operator_product_analytics',{p_days:Number(ops('product-days').value)});
+ if(stamp!==generation||panel!=='overview')return;
+ ops('product-status').textContent=data.started_at?'計測開始 '+opsDate(data.started_at)+' / 集計は日本時間':'対応アプリからの初回データ待ち。過去の利用履歴は推定しません。';
+ ops('product-summary').replaceChildren(opsMetric('DAU（端末）',data.devices.dau,'今日・ゲスト含む'),opsMetric('WAU（端末）',data.devices.wau,'直近7日'),opsMetric('MAU（端末）',data.devices.mau,'直近30日'),opsMetric('現在の登録者',data.registered.total,'メール確認済み・ゲスト等を除く'));
+ const daily=data.daily||[];productTable('product-daily',['日付','利用端末','登録者の利用','起動セッション','初回起動','登録確認済み人数'],daily.map(r=>[r.day,r.devices,r.members,r.sessions,r.first_opens,r.new_accounts]));
+ const c=data.collection;if(c){const warning=c.events_today>=c.daily_limit||c.stored_events>=c.storage_limit;ops('product-status').append(document.createTextNode(' / 直近24時間 '+opsCount(c.events_today)+'イベント・保存 '+opsCount(c.stored_events)+'件'+(warning?'：計測上限のため一部データが欠ける可能性があります。':' / 生イベント90日保存')));}
+ const chart=ops('product-hourly');chart.replaceChildren();const lookup=new Map((data.hourly||[]).map(r=>[r.hour.slice(0,13),r]));const hours=Array.from({length:48},(_,i)=>{const key=new Date(Date.now()+9*3600000-(47-i)*3600000).toISOString().slice(0,13);return lookup.get(key)||{hour:key+':00',devices:0,sessions:0};});const maximum=Math.max(1,...hours.map(r=>r.devices));for(const row of hours){const bar=opsNode('div');bar.style.height=Math.max(2,row.devices/maximum*120)+'px';bar.title=row.hour+' / '+row.devices+'端末 / '+row.sessions+'起動';bar.setAttribute('aria-label',bar.title);chart.append(bar);}if(!hours.length)chart.textContent='時間別の利用データ待ち';
+ productTable('product-retention',['初回観測から','対象端末','再利用端末','継続率'],(data.retention||[]).map(r=>[r.day+'日後',r.eligible,r.returned,r.eligible?(100*r.returned/r.eligible).toFixed(1)+'%':'対象期間待ち']));
+ productTable('product-funnel',['初回起動した端末','起動後に登録確認','登録後に投稿受付'],[[data.funnel.first_open,data.funnel.registered_after_open,data.funnel.posted_after_registration]]);
+ productTable('product-hour-table',['時刻(JST)','アプリ利用端末','起動回数','計測イベント数','共有リンクの到着'],hours.map(r=>[r.hour,r.devices,r.sessions,r.events||0,r.share_visits||0]));
+ const labels={first_open:'初回観測した起動',session:'起動セッション',active:'利用中',tab:'タブ表示',signup_start:'登録開始',signup_success:'メール登録確認',post_start:'投稿送信開始',post_success:'投稿受付成功',post_failure:'投稿受付失敗',album_open:'アルバム表示',album_save:'アルバム保存',twins_start:'そっくり検索開始',twins_success:'検索結果取得',twins_failure:'検索失敗',share_visit:'共有リンクからApp Storeへ移動',share_open:'共有先を開く',share_complete:'共有完了',image_ready:'画像準備完了',image_failure:'画像準備失敗',video_ready:'動画準備完了',video_failure:'動画準備失敗',request_success:'通信成功',request_failure:'通信失敗'};
+ const events=data.events||[];productTable('product-events',['操作','区分','回数','端末数'],events.map(r=>[labels[r.name]||r.name,r.detail||'—',r.n,r.devices]));
+ const rateRows=[];for(const [success,failure,label] of [['twins_success','twins_failure','そっくり検索'],['post_success','post_failure','投稿受付'],['image_ready','image_failure','画像準備'],['video_ready','video_failure','動画準備']]){const ok=events.filter(r=>r.name===success).reduce((a,r)=>a+Number(r.n),0),bad=events.filter(r=>r.name===failure).reduce((a,r)=>a+Number(r.n),0);rateRows.push([label,ok,bad,ok+bad?(100*ok/(ok+bad)).toFixed(1)+'%':'未計測']);}productTable('product-rates',['処理','成功','失敗','成功率'],rateRows);
+ productTable('product-quality',['処理','区分','件数','中央値(ms)','95%(ms)'],events.filter(r=>r.p50_ms!==null).map(r=>[labels[r.name]||r.name,r.detail||'—',r.n,Math.round(r.p50_ms),Math.round(r.p95_ms)]));
+ productTable('product-content',['一般投稿','一般投稿者','運営投稿'],[[data.content.user_posts,data.content.user_posters,data.content.managed_posts]]);
+ productTable('product-versions',['バージョン','端末数','失敗イベント'],(data.versions||[]).map(r=>[r.app_version,r.devices,r.failures]));
+ productTable('product-store',['日付','初回DL','再DL','インストール'],(data.store||[]).map(r=>[r.day,r.first_downloads,r.redownloads,r.installations]));
+ try{const apple=await rpc('operator_apple_metrics',{p_days:Number(ops('product-days').value)});if(stamp!==generation||panel!=='overview')return;const states={not_configured:'Apple接続設定待ち',request_required:'Appleで継続レポートの生成設定が必要',awaiting_reports:'Appleのレポート生成待ち',ok:'自動連携中',apple_auth:'Appleの権限・キーを確認してください'};ops('product-apple-status').textContent=(states[apple.status]||'同期エラー・再試行待ち')+' / 最終確認 '+opsDate(apple.last_attempt)+' / 最終取得 '+opsDate(apple.last_success);productTable('product-apple',['日付（Apple）','初回DL','再DL','インストール（同意利用者）','DL処理日','インストール処理日'],(apple.days||[]).map(r=>[r.day,r.first_downloads,r.redownloads,r.installations,r.download_processed,r.install_processed]));}catch{ops('product-apple-status').textContent='Apple自動連携の状態を取得できません。';}
+ ops('product-content').append(opsLine('アルバム利用端末',opsCount(data.album.devices)),opsLine('別の日にもアルバムを見た端末',opsCount(data.album.returning)));
+ ops('product-summary').append(opsMetric('登録者DAU',data.registered.dau,'今日・アカウント単位'),opsMetric('登録者WAU',data.registered.wau,'直近7日'),opsMetric('登録者MAU',data.registered.mau,'直近30日'));
+ }catch{ops('product-status').textContent='利用分析を取得できません。接続と本番への配備状況を確認してください。';}
+}
+ops('product-days')?.addEventListener('change',()=>perform(refreshProductAnalytics));
+ops('product-store-form')?.addEventListener('submit',event=>{event.preventDefault();const f=new FormData(event.currentTarget);perform(async()=>{const number=k=>f.get(k)===''?null:Number(f.get(k));await rpc('operator_store_metric',{p_day:f.get('day'),p_first:number('first'),p_again:number('again'),p_installs:number('installs')});await refreshProductAnalytics();});});
