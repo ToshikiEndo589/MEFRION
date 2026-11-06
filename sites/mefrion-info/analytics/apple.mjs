@@ -26,7 +26,7 @@ async function boundedBytes(response,max){if(!response.ok)throw Error('download'
 export async function collectApple(env,fetcher=fetch){
  if(!env.ASC_KEY_ID||!env.ASC_ISSUER_ID||!env.ASC_PRIVATE_KEY)return {status:'not_configured',rows:[]};
  const jwt=appleJWT(env);let requests=0;const json=async path=>{if(++requests>160)throw Error('budget');const u=new URL(path,API);if(u.origin!==API)throw Error('origin');const r=await fetcher(u,{headers:{Authorization:'Bearer '+jwt},redirect:'error',signal:AbortSignal.timeout(8000)});if(r.status===401||r.status===403)throw Error('apple_auth');if(!r.ok)throw Error('apple_api');return JSON.parse((await boundedBytes(r,2_000_000)).toString())};
- const list=async path=>{let all=[],next=path;for(let page=0;next&&page<20;page++){const result=await json(next);all.push(...result.data||[]);next=result.links?.next;if(page===19&&next)throw Error('pagination')}return all};
+ const list=async path=>{let all=[],next=path;for(let page=0;next&&page<20;page++){const result=await json(next);all.push(...result.data||[]);next=result.links?.next;if(page===19&&next)throw Error('pagination')}return [...new Map(all.map(item=>[item.id,item])).values()]};
  const pending=await list('/v1/apps/'+APP_ID+'/analyticsReportRequests?limit=200');const ongoing=pending.filter(r=>r.attributes?.accessType==='ONGOING'&&!r.attributes?.stoppedDueToInactivity);if(!ongoing.length)return {status:'request_required',rows:[]};
  // Use one current request: old/snapshot requests would otherwise duplicate data.
  const request=ongoing[0];const reports=await list('/v1/analyticsReportRequests/'+encodeURIComponent(request.id)+'/reports?limit=200');const selected=[];
