@@ -57,9 +57,20 @@ actor DemoTwinsEngine {
     private func queryFeature(_ image:CGImage) throws->VisualFeature {
         guard image.width>=DemoTwinsPolicy.minimumPixels,image.height>=DemoTwinsPolicy.minimumPixels else {throw DemoTwinsError.photoQuality}
         let feature=try visualFeature(image)
-        let colour=stride(from:0,to:feature.values.count,by:4).map{(feature.values[$0]+feature.values[$0+1]+feature.values[$0+2])/3}
-        let mean=colour.reduce(0,+)/Float(colour.count)
-        let variance=colour.reduce(Float(0)){$0+($1-mean)*($1-mean)}/Float(colour.count)
+        var colour:[Float]=[]
+        for index in stride(from:0,to:feature.values.count,by:4) {
+            let red=feature.values[index]
+            let green=feature.values[index+1]
+            let blue=feature.values[index+2]
+            colour.append((red+green+blue)/Float(3))
+        }
+        let mean:Float=colour.reduce(Float(0),+)/Float(colour.count)
+        var squaredDeviation:Float=0
+        for value in colour {
+            let delta:Float=value-mean
+            squaredDeviation += delta*delta
+        }
+        let variance:Float=squaredDeviation/Float(colour.count)
         guard mean>0.02,variance>0.0001 else {throw DemoTwinsError.photoQuality}
         return feature
     }
