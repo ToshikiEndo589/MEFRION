@@ -67,4 +67,3 @@ export async function upstream(fetcher, url, headers, body, report = false) {
     throw new AdsError(502, body ? 'write_unconfirmed' : 'provider_unavailable');
   }
 }
-
