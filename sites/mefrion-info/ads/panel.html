@@ -1,0 +1,86 @@
+<section id="ads-workspace" hidden aria-labelledby="ads-title">
+ <div class="ads-hero">
+  <div><p class="ads-label">MEFRION / ADVERTISING</p><h1 id="ads-title">Ads<span>.</span></h1><p>配信状況とアプリの獲得成果を、ひとつの画面で。</p></div>
+  <span id="ads-connection" class="ads-badge" role="status">接続を確認中</span>
+ </div>
+ <nav id="ads-platforms" aria-label="広告媒体">
+  <button type="button" data-platform="all" aria-pressed="true">全媒体</button>
+  <button type="button" data-platform="x" aria-pressed="false">X</button>
+  <button type="button" data-platform="instagram" aria-pressed="false">Instagram</button>
+  <button type="button" data-platform="tiktok" aria-pressed="false">TikTok</button>
+ </nav>
+ <section class="ads-card" aria-labelledby="ads-report-title">
+  <div class="ads-heading">
+   <div><p class="ads-label">PERFORMANCE</p><h2 id="ads-report-title">配信レポート</h2></div>
+   <button id="ads-export" type="button" hidden>CSVを出力</button>
+  </div>
+  <form id="ads-period">
+   <label>開始日<input type="date" name="start" required></label>
+   <label>終了日<input type="date" name="end" required></label>
+   <label>集計単位<select name="level"><option value="campaign">キャンペーン</option><option value="adgroup">広告セット・広告グループ</option><option value="ad">広告</option></select></label>
+   <button type="submit">適用</button>
+   <label class="ads-compare"><input type="checkbox" name="compare">同じ長さの直前期間と比較する</label>
+  </form>
+  <p id="ads-report-status" class="ads-muted" role="status"></p>
+  <div id="ads-report"></div>
+ </section>
+ <section id="ads-optimization" class="ads-card" aria-labelledby="ads-optimization-title" hidden>
+  <div class="ads-heading"><div><p class="ads-label">OPTIMIZATION</p><h2 id="ads-optimization-title">改善のヒント</h2></div>
+   <label id="ads-target-label">目標インストール単価<input id="ads-target" type="number" min="0" max="999999999" step="0.01" placeholder="任意"></label>
+  </div>
+  <p class="ads-muted">同じ媒体・期間の実績を基準に比較します。CTRは1,000表示以上、目標CPIは20インストール以上の広告が対象です。</p>
+  <div id="ads-diagnostics" aria-live="polite"></div>
+ </section>
+ <section id="ads-delivery" class="ads-card" aria-labelledby="ads-campaigns-title" hidden>
+  <div class="ads-heading">
+   <div><p class="ads-label">DELIVERY CONTROL</p><h2 id="ads-campaigns-title">キャンペーン管理</h2></div>
+   <a id="ads-manager" target="_blank" rel="noopener noreferrer">広告マネージャー ↗</a>
+  </div>
+  <p id="ads-delivery-note" class="ads-muted"></p>
+  <div id="ads-campaigns" aria-live="polite"></div>
+  <button id="ads-more" type="button" hidden>次のキャンペーンを表示</button>
+ </section>
+ <section class="ads-card" aria-labelledby="ads-link-title">
+  <div class="ads-heading">
+   <div><p class="ads-label">APP STORE ATTRIBUTION</p><h2 id="ads-link-title">初回ダウンロード・継続率</h2></div>
+   <a href="https://appstoreconnect.apple.com/apps/6825337314/analytics" target="_blank" rel="noopener noreferrer">App Store Connect ↗</a>
+  </div>
+  <div class="ads-columns">
+   <div>
+    <h3>広告ごとの計測リンク</h3>
+    <form id="ads-link-form">
+     <label>既存のキャンペーンリンク<input name="base" type="url" required placeholder="https://apps.apple.com/…?pt=…&amp;ct=…"></label>
+     <label>広告の識別名<input name="campaign" required maxlength="40" pattern="[A-Za-z0-9_\-]+" placeholder="ig_sokkuri_reels_01"></label>
+     <button type="submit">計測リンクを作る</button>
+    </form>
+    <div id="ads-link-result" hidden>
+     <label>広告に設定するURL<input id="ads-link-url" readonly></label>
+     <button id="ads-copy" type="button">コピー</button>
+    </div>
+    <p id="ads-link-status" role="status"></p>
+   </div>
+   <div>
+    <h3>Appleの集計を取り込む</h3>
+    <p class="ads-muted">Appleのキャンペーン別集計をテンプレートに記入します。非表示の数値は空欄で。読み込んだ集計はこのセッションだけに表示します。</p>
+    <button id="ads-apple-template" type="button">CSVテンプレート</button>
+    <label>集計CSV<input id="ads-apple-file" type="file" accept=".csv,text/csv"></label>
+    <p id="ads-apple-status" class="ads-muted" role="status"></p>
+   </div>
+  </div>
+  <div class="ads-heading"><h3>Appleの初回ダウンロード</h3>
+   <button type="button" id="ads-apple-fetch">表示期間のデータを取得</button>
+  </div>
+  <p id="ads-apple-feed-status" class="ads-muted" role="status">詳細レポートからキャンペーントークン別に取得します。</p>
+  <div id="ads-apple-feed"></div>
+  <div id="ads-apple-results"></div>
+  <p class="ads-muted">Appleの初回ダウンロード・継続率と、媒体の計測インストールはそれぞれの基準で集計されます。CSVで広告とAppleのトークンをひも付けると、広告費と期間が一致するキャンペーンのApple基準CPIを表示します。</p>
+ </section>
+</section>
+<dialog id="ads-confirm" aria-labelledby="ads-confirm-title">
+ <form method="dialog">
+  <h2 id="ads-confirm-title"></h2>
+  <p id="ads-confirm-summary"></p>
+  <p id="ads-confirm-notice"></p>
+  <div class="ads-dialog-actions"><button value="cancel">キャンセル</button><button id="ads-confirm-start" value="confirm">確認</button></div>
+ </form>
+</dialog>

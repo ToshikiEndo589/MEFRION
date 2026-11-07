@@ -9,9 +9,37 @@
     },
     "api/apple-sync.mjs": {
       "maxDuration": 60
+    },
+    "api/x-ads.mjs": {
+      "maxDuration": 25
+    },
+    "api/instagram-ads.mjs": {
+      "maxDuration": 25
+    },
+    "api/tiktok-ads.mjs": {
+      "maxDuration": 25
+    },
+    "api/apple-ads.mjs": {
+      "maxDuration": 25
     }
   },
   "rewrites": [
+    {
+      "source": "/ads/api/x",
+      "destination": "/api/x-ads"
+    },
+    {
+      "source": "/ads/api/tiktok",
+      "destination": "/api/tiktok-ads"
+    },
+    {
+      "source": "/ads/api/instagram",
+      "destination": "/api/instagram-ads"
+    },
+    {
+      "source": "/ads/api/apple",
+      "destination": "/api/apple-ads"
+    },
     {
       "source": "/metrics/apple-sync",
       "destination": "/api/apple-sync"

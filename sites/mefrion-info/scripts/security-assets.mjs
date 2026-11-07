@@ -56,6 +56,35 @@ else html=html.replace('<section id="confirmation"',overviewFragment+'<!-- overv
 pages['/console/'].body=html;
 pages['/console/security']={...pages['/console/'],body:html.replace('<body>','<body data-console-panel="security">').replace('<title>MEFRION クラウド運営管理</title>','<title>セキュリティ監視｜MEFRION</title>')};
 pages['/console/content']={...pages['/console/'],body:html.replace('<body>','<body data-console-panel="content">').replace('<title>MEFRION クラウド運営管理</title>','<title>公開前の投稿｜MEFRION</title>')};
+for (const name of ['ui.js','ui.css','insights.js']) {
+ pages['/ads/'+name]={type:name.endsWith('.js')?'application/javascript; charset=utf-8':'text/css; charset=utf-8',body:await readFile(new URL('ads/'+name,root),'utf8')};
+}
+const adsPanel=await readFile(new URL('ads/panel.html',root),'utf8');
+const cloud=pages['/console/cloud.js'];
+if(!cloud.body.includes("if(panel==='ads')return refreshAds();")) {
+ cloud.body=cloud.body
+  .replace('function clear(){',"function clear(){if(typeof clearAds==='function')clearAds();")
+  .replace("$('main-heading').textContent='運営管理'", "$('main-heading').textContent=panel==='ads'?'Ads':'運営管理'")
+  .replace('async function refresh(){', "async function refresh(){\n if(panel==='ads')return refreshAds();")
+  .replace(' let seedOnly=false;', " if(panel==='ads')return refresh();\n let seedOnly=false;")
+  .replace('perform(async()=>{const permissions=await request', "perform(async()=>{if(panel==='ads')return refresh();const permissions=await request");
+}
+let adsHtml=html.replace('<body>','<body data-console-panel="ads">')
+ .replace('<title>MEFRION クラウド運営管理</title>','<title>Ads｜MEFRION</title>')
+ .replace('<span>MEFRION / クラウド運営管理</span><a href="/console/">一括管理へ</a>','<span>MEFRION / Ads</span><a href="/console/">運営画面へ</a>')
+ .replace('<h1 id="main-heading">運営管理</h1>','<h1 id="main-heading">Ads</h1>')
+ .replace(/<p class="notice">[^<]+<\/p>/,'<p class="notice">MEFRIONの広告管理。管理者アカウントと二段階認証でログインしてください。</p>')
+ .replace('最新の通報を取得','広告を更新')
+ .replace(/<script src="\/console\/[^"\s]+" defer><\/script>/g,'')
+ .replace(/<link rel="stylesheet" href="\/console\/(?:overview|security)\.css">/g,'')
+ .replace('<body data-console-panel="ads">','<link rel="stylesheet" href="/ads/ui.css"><script src="/console/cloud.js" defer></script><script src="/ads/ui.js" defer></script><body data-console-panel="ads">');
+for (const panel of ['security','content','overview']) {
+ const sectionStart=adsHtml.indexOf('<section id="'+panel+'-section"');
+ const sectionEnd='<!-- '+panel+'-panel-end -->';
+ const end=adsHtml.indexOf(sectionEnd,sectionStart);
+ if(sectionStart>=0 && end>=0) adsHtml=adsHtml.slice(0,sectionStart)+adsHtml.slice(end+sectionEnd.length);
+}
+pages['/ads/']={...pages['/console/'],body:adsHtml.replace('</main>',adsPanel+'</main>')};
 await writeFile(path,'const PAGES='+JSON.stringify(pages)+';'+source.slice(at));
 await mkdir(new URL('dist/',root),{recursive:true});
 for(const name of ['index.html','privacy.html','terms.html'])await writeFile(new URL('dist/'+name,root),pages['/'+name].body);
