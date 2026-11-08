@@ -15,6 +15,10 @@ body[data-console-panel="ads"]:has(#ads-workspace:not([hidden])) main > .notice 
 .ads-hero .ads-label { color: #d9c8fa; }
 .ads-badge { background: #ffffff21; padding: .45rem .75rem; border-radius: 2rem; font-size: .8rem; white-space: nowrap; }
 .ads-card { background: white; border: 1px solid #e5dff0; }
+#ads-password-settings { padding-block: .85rem; }
+#ads-password-settings summary { cursor: pointer; font-weight: 700; }
+#ads-password-form input { width: 100%; }
+#ads-password-status:empty { display: none; }
 .ads-heading { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; justify-content: space-between; }
 .ads-heading h2 { margin: .35rem 0; }
 .ads-row { padding: 1rem 0; border-top: 1px solid #ece7f1; }

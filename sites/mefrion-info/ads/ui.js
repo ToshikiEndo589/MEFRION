@@ -77,6 +77,9 @@ function clearAds() {
   for (const id of ['ads-link-status', 'ads-apple-status']) $(id).textContent = '';
   $('ads-link-result').hidden = true;
   $('ads-link-form').reset();
+  $('ads-password-form').reset();
+  $('ads-password-settings').open = false;
+  $('ads-password-status').textContent = '';
   $('ads-apple-feed-status').textContent = '詳細レポートからキャンペーントークン別に取得します。';
   adsReports = {};
   adsPrevious = {};
@@ -419,6 +422,52 @@ async function refreshAds() {
 const adsDate = days => new Date(Date.now() + days * 86400000).toISOString().slice(0, 10);
 $('ads-period').elements.start.value = adsDate(-7);
 $('ads-period').elements.end.value = adsDate(-1);
+$('ads-password-settings').addEventListener('toggle', () => {
+  if (!$('ads-password-settings').open) $('ads-password-form').reset();
+});
+$('ads-password-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  perform(async () => {
+    const feedback = $('ads-password-status');
+    if (!token || !mfaComplete || Date.now() / 1000 >= expires) {
+      clear();
+      status('Adsにログインし直してからパスワードを設定してください。');
+      return;
+    }
+
+    const password = $('ads-password-new').value;
+    if (Array.from(password).length < 12 || new TextEncoder().encode(password).length > 72) {
+      feedback.textContent = '12文字以上で設定してください。長い場合は72バイト以内に収めてください。';
+      return;
+    }
+    if (password !== $('ads-password-confirm').value) {
+      feedback.textContent = '確認用のパスワードが一致しません。';
+      return;
+    }
+
+    const stamp = generation;
+    feedback.textContent = 'パスワードを保存しています…';
+    try {
+      await request('/auth/v1/user', { password }, token, false, 'PUT');
+      if (stamp === generation) feedback.textContent = '保存しました。次回はメールアドレスとこのパスワードでログインできます。';
+    } catch (error) {
+      if (stamp !== generation) {
+        status('ログインし直して、パスワードの設定を確認してください。');
+        return;
+      }
+      const messages = {
+        reauthentication_needed: 'メールのコードでAdsに入り直してから、パスワードを設定してください。',
+        weak_password: '別の、推測されにくいパスワードにしてください。',
+        same_password: '現在と同じパスワードです。',
+        current_password_required: '設定済みのパスワードでログインできます。',
+      };
+      feedback.textContent = messages[error.code] || '保存を確認できませんでした。通信状態を確認してください。';
+    } finally {
+      form.reset();
+    }
+  });
+});
 $('ads-platforms').addEventListener('click', event => {
   const next = event.target.closest('button')?.dataset.platform;
   if (!next || next === adsPlatform) return;

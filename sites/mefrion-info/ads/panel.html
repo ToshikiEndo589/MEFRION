@@ -3,6 +3,16 @@
   <div><p class="ads-label">MEFRION / ADVERTISING</p><h1 id="ads-title">Ads<span>.</span></h1><p>配信状況とアプリの獲得成果を、ひとつの画面で。</p></div>
   <span id="ads-connection" class="ads-badge" role="status">接続を確認中</span>
  </div>
+ <details id="ads-password-settings" class="ads-card">
+  <summary>ログイン用パスワードを設定</summary>
+  <p class="ads-muted" id="ads-password-help">12文字以上で設定してください。次回からメールアドレスとパスワードでログインを始められます。</p>
+  <form id="ads-password-form" method="post">
+   <label>新しいパスワード<input id="ads-password-new" type="password" autocomplete="new-password" required aria-describedby="ads-password-help"></label>
+   <label>新しいパスワード（確認）<input id="ads-password-confirm" type="password" autocomplete="new-password" required></label>
+   <button type="submit">パスワードを保存</button>
+  </form>
+  <p id="ads-password-status" role="status" aria-live="polite"></p>
+ </details>
  <nav id="ads-platforms" aria-label="広告媒体">
   <button type="button" data-platform="all" aria-pressed="true">全媒体</button>
   <button type="button" data-platform="x" aria-pressed="false">X</button>
