@@ -91,3 +91,20 @@ body[data-console-panel="ads"] #ads-workspace { border: 0; padding: 0; backgroun
 #ads-period .ads-compare input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--accent); }
 .ads-kpis small { color: #51427b; font-size: .78rem; }
 body[data-console-panel="ads"] #session button { background: #6141a4; }
+.experiment-tools { margin-top: 1rem; }
+.experiment-tools select { width: 100%; }
+.experiment-tools label, .experiment-form label { display: block; margin: .65rem 0; }
+.experiment-form { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; }
+.experiment-form label { margin: 0; max-width: 100%; }
+.experiment-form input { display: block; max-width: 100%; }
+.experiment-planner { padding: .85rem 0; border-block: 1px solid var(--line); margin-top: 1rem; }
+.experiment-planner[open] summary { margin-bottom: .8rem; }
+.experiment-planner summary { cursor: pointer; font-weight: 700; }
+.experiment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 10rem)); gap: .6rem; }
+.experiment-option { display: grid; gap: .4rem; padding: .4rem; border: 1px solid var(--line); border-radius: .7rem; font-size: .8rem; overflow-wrap: anywhere; }
+.experiment-option:has(input:checked) { background: #f3edff; border-color: #7351b5; }
+.experiment-option img { width: 100%; height: auto; border-radius: .45rem; display: block; }
+.experiment-option input { accent-color: var(--accent); }
+.experiment-preview-group { margin: .8rem 0; }
+.experiment-preview-group summary { cursor: pointer; margin: .5rem 0; }
+.experiment-result-notice { padding: .7rem .85rem; background: #f3edff; border-radius: .65rem; }

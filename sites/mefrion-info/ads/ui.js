@@ -21,6 +21,10 @@ const adsMessages = {
   invalid_dates: '有効な日付を選び、期間を31日以内にしてください。',
   unsupported_level: 'この媒体はキャンペーン単位で集計します。',
   apple_report_unavailable: 'Appleの詳細レポートを取得できませんでした。接続を確認するか、期間を短くしてください。',
+  experiment_not_configured: 'Metaのビジネスと広告アカウントを接続すると、結果を取得できます。',
+  experiment_missing: 'この広告アカウントのテストが見つかりません。テストIDを確認してください。',
+  experiment_wrong_type: 'Metaのクリエイティブテストで、1グループに1広告を割り当てた2〜5案を指定してください。',
+  experiment_window: '7日以内のテストを指定してください。期間または広告アカウントの通貨を確認してください。',
 };
 
 let adsPlatform = 'all';
@@ -34,6 +38,11 @@ let adsAppleFeed = null;
 let adsSort = 'spendMicros';
 let adsMath;
 const adsMathReady = import('/ads/insights.js');
+let experimentStudio;
+const experimentStudioReady = import('/ads/experiment-ui.js').then(({ mountExperiments }) => {
+  experimentStudio = mountExperiments({ request: adsRequest, table: adsTable, money: adsMoney,
+    session: () => token && mfaComplete && Date.now() / 1000 < expires ? generation : null });
+}).catch(() => { $('experiment-watch-status').textContent = '実験室を読み込めませんでした。ページを更新してください。'; });
 const adsNames = {
   spendMicros: '消化額', impressions: '表示', clicks: 'リンク・遷移クリック', ctr: 'CTR', cpc: 'CPC',
   cpm: 'CPM', installs: '媒体計測インストール', cpi: '媒体CPI', results: '媒体CV', cpa: 'CPA',
@@ -71,6 +80,7 @@ async function adsRequest(platform, { query = {}, body } = {}) {
 function clearAds() {
   adsRevision++;
   $('ads-workspace').hidden = true;
+  experimentStudio?.reset();
   $('main-heading').hidden = false;
   for (const id of ['ads-campaigns', 'ads-report', 'ads-apple-results', 'ads-apple-feed', 'ads-diagnostics']) $(id).replaceChildren();
   for (const id of ['ads-link-url', 'ads-target', 'ads-apple-file']) $(id).value = '';
@@ -383,6 +393,7 @@ async function refreshAds() {
   if (stamp !== adsRevision) return;
   $('ads-workspace').hidden = false;
   $('main-heading').hidden = true;
+  experimentStudioReady.then(() => { if (stamp === adsRevision) experimentStudio?.resume(); });
   const form = $('ads-period');
   const level = form.elements.level;
   level.disabled = ['all', 'x'].includes(adsPlatform);

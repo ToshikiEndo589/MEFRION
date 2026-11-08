@@ -56,7 +56,7 @@ else html=html.replace('<section id="confirmation"',overviewFragment+'<!-- overv
 pages['/console/'].body=html;
 pages['/console/security']={...pages['/console/'],body:html.replace('<body>','<body data-console-panel="security">').replace('<title>MEFRION クラウド運営管理</title>','<title>セキュリティ監視｜MEFRION</title>')};
 pages['/console/content']={...pages['/console/'],body:html.replace('<body>','<body data-console-panel="content">').replace('<title>MEFRION クラウド運営管理</title>','<title>公開前の投稿｜MEFRION</title>')};
-for (const name of ['ui.js','ui.css','insights.js']) {
+for (const name of ['ui.js','ui.css','insights.js','experiments.js','experiment-ui.js']) {
  pages['/ads/'+name]={type:name.endsWith('.js')?'application/javascript; charset=utf-8':'text/css; charset=utf-8',body:await readFile(new URL('ads/'+name,root),'utf8')};
 }
 const adsPanel=await readFile(new URL('ads/panel.html',root),'utf8');

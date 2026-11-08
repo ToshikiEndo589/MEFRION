@@ -91,6 +91,9 @@ export function adsHandler(env = process.env, fetcher = fetch, provider = 'x', a
       }
       const params = new URL(req.url, 'https://mefrion.vercel.app').searchParams;
       const action = params.get('view') || 'campaigns';
+      if (action === 'experiment' && client.experiment) {
+        return send(200, { connected: true, study: await client.experiment(params.get('id')) });
+      }
       if (action === 'report') {
         const query = reportQuery(params);
         const report = await client.report(query);

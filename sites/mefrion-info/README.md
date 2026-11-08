@@ -94,6 +94,20 @@ activation.
 Build with `node scripts/security-assets.mjs`. Run
 `node --test scripts/*.test.mjs`. Tests use mock advertisers and Apple fixtures.
 
+The Creative Lab creates up to 24 JPEG variants on-device and exports a ZIP
+with distinct App Store campaign links. Set `META_ADS_BUSINESS_ID` in production
+to read Creative Tests for the connected Meta business. Create a `SPLIT_TEST_V2`
+in Meta Experiments with one ad per cell, balanced assignment, a single ad set
+with Instagram-only manual placements, and matching ad copy. Start and end on
+the ad account's midnight boundaries and use a duration of at most seven days.
+Use fresh campaign links exclusively for the test. The workspace refreshes the
+selected study while open and joins Apple counts to the verified creative URLs.
+The result uses measured first downloads per unit of spend, waits for Apple's
+attribution window and complete report dates, and requires 20 visible downloads
+per arm, a multiple-comparison adjusted rate test, and a practical 15% difference.
+Privacy-suppressed or incomplete data stays unresolved. Meta owns scheduling and
+delivery. A suggested image never starts or changes a campaign automatically.
+
 [X Ads API](https://docs.x.com/x-ads-api/analytics) ·
 [Meta Marketing API SDK](https://github.com/meta/facebook-nodejs-business-sdk) ·
 [TikTok API for Business](https://business-api.tiktok.com/portal/docs/marketing-api/v2.0) ·

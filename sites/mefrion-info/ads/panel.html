@@ -19,6 +19,51 @@
   <button type="button" data-platform="instagram" aria-pressed="false">Instagram</button>
   <button type="button" data-platform="tiktok" aria-pressed="false">TikTok</button>
  </nav>
+ <section id="ads-experiments" class="ads-card" aria-labelledby="ads-experiment-title">
+  <div class="ads-heading"><div><p class="ads-label">CREATIVE LAB</p><h2 id="ads-experiment-title">広告クリエイティブ実験室</h2></div></div>
+  <p class="ads-muted">写真から広告案をまとめて作成し、Instagramの画像テストをApp Storeの初回ダウンロードで比較します。</p>
+  <div class="ads-columns experiment-tools">
+   <div>
+    <h3>1. 広告案を作る</h3>
+    <form id="experiment-create">
+     <label>広告に使う写真（2〜8枚）<input name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple required></label>
+     <label>画像内の見出し<input name="headline" maxlength="24" value="犬と猫だけのSNS" required></label>
+     <label>配置に合わせたサイズ<select name="ratio"><option value="portrait">縦長 9:16 · ストーリーズ</option><option value="feed">縦長 4:5 · フィード</option><option value="square">正方形 1:1</option></select></label>
+     <button type="submit">広告案を生成</button>
+    </form>
+    <p id="experiment-create-status" class="ads-muted" role="status"></p>
+   </div>
+   <div>
+    <h3>2. テストを準備する</h3>
+    <form id="experiment-export">
+     <label>MEFRIONのApp Store計測リンク<input name="base" type="url" required placeholder="https://apps.apple.com/…?pt=…&amp;ct=…"></label>
+     <button type="submit" disabled>選んだ画像と計測リンクを保存</button>
+    </form>
+    <p class="ads-muted">同じ見た目の枠から2〜5案を選びます。Metaの「実験」で画像ごとに1広告を均等に割り当て、同じ広告セット・広告文・Instagram専用の配置で配信します。開始と終了はアカウントの午前0時に揃え、最長7日間で設定します。</p>
+    <a href="https://adsmanager.facebook.com/" target="_blank" rel="noopener noreferrer">Meta広告マネージャ ↗</a>
+    <p id="experiment-export-status" class="ads-muted" role="status"></p>
+   </div>
+  </div>
+  <div id="experiment-previews" aria-label="生成した広告案"></div>
+  <details class="experiment-planner">
+   <summary>検出したい差から必要な予算を見積もる</summary>
+   <form id="experiment-plan" class="experiment-form">
+    <label>現在の獲得単価（円）<input name="cpi" type="number" min="1" max="1000000" step="1" required></label>
+    <label>比べる案の数<input name="variants" type="number" min="2" max="5" value="2" required></label>
+    <label>見つけたい単価の改善（%）<input name="lift" type="number" min="5" max="50" value="20" required></label>
+    <button type="submit">目安を計算</button>
+   </form>
+   <p id="experiment-plan-result" class="ads-muted" role="status"></p>
+  </details>
+  <h3>3. テスト結果を自動判定する</h3>
+  <form id="experiment-watch" class="experiment-form">
+   <label>MetaのクリエイティブテストID<input name="study" required maxlength="24" inputmode="numeric" pattern="[0-9]{1,24}"></label>
+   <button type="submit">テストを確認</button>
+  </form>
+  <p class="ads-muted">広告ごとの計測リンクが必要です。画面を開いている間は自動更新します。配信終了後、Appleの集計を待ち、差が明確な場合だけ有力案を表示します。</p>
+  <p id="experiment-watch-status" role="status"></p>
+  <div id="experiment-result" aria-live="polite"></div>
+ </section>
  <section class="ads-card" aria-labelledby="ads-report-title">
   <div class="ads-heading">
    <div><p class="ads-label">PERFORMANCE</p><h2 id="ads-report-title">配信レポート</h2></div>

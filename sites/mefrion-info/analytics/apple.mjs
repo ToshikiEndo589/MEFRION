@@ -79,7 +79,7 @@ export async function collectAppleCampaigns(env,{start,end},fetcher=fetch){
  const report=reports.find(row=>row.attributes?.name==='App Store Downloads Detailed');
  if(!report)return {status:'awaiting_reports',rows:[]};
  const cutoff=new Date(Date.parse(end)+7*86400000).toISOString().slice(0,10);
- const instances=(await source.instances(report)).filter(row=>row.attributes.processingDate>=start&&row.attributes.processingDate<=cutoff).slice(0,14);
+ const instances=(await source.instances(report)).filter(row=>row.attributes.processingDate>=start&&row.attributes.processingDate<=cutoff).slice(0,16);
  const dates=new Map();
  for(let offset=0;offset<instances.length;offset+=3){
   const batches=await Promise.all(instances.slice(offset,offset+3).map(async instance=>{
