@@ -8,7 +8,7 @@ const providers = {
   x: [xAdsConfig, xAdsClient], instagram: [instagramConfig, instagramClient], tiktok: [tiktokConfig, tiktokClient],
 };
 
-export async function authorize(headers, fetcher, change = false) {
+export async function authorize(headers, fetcher, change = false, instagramOperatorId = null) {
   const bearer = headers?.authorization;
   if (typeof bearer !== 'string' || !/^Bearer [\w.-]{20,8192}$/.test(bearer)) {
     throw new AdsError(401, 'login_required');
@@ -28,18 +28,31 @@ export async function authorize(headers, fetcher, change = false) {
   const permissions = await rpc('mefrion_seed_permissions');
   check(permissions);
   if (permissions.ok && (await permissions.json())?.publish === true) return true;
-  if (change) throw new AdsError(403, 'admin_required');
+  if (change && !instagramOperatorId) throw new AdsError(403, 'admin_required');
 
   // This lightweight read checks the active operator role, allowlisted
   // identity, current session and verified MFA through require_moderator.
   const operator = await rpc('mefrion_operator_alert_status');
   check(operator);
   if (!operator.ok) throw new AdsError(403, 'operator_required');
+  if (instagramOperatorId) {
+    const user = await fetcher(config.url + '/auth/v1/user', {
+      method: 'GET', headers: { Authorization: bearer, apikey: config.anon_key },
+      redirect: 'error', signal: AbortSignal.timeout(5000),
+    });
+    check(user);
+    if (user.ok && (await user.json())?.id === instagramOperatorId) return true;
+  }
+  if (change) throw new AdsError(403, 'admin_required');
   return false;
 }
 
 export function adsHandler(env = process.env, fetcher = fetch, provider = 'x', audit = console.info) {
   const [readConfig, createClient] = providers[provider];
+  // Do not grant the Instagram operator broader console, X or TikTok powers.
+  const instagramOperatorId = provider === 'instagram' && env.VERCEL_ENV === 'production' &&
+    /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(env.META_ADS_OPERATOR_USER_ID || '')
+    ? env.META_ADS_OPERATOR_USER_ID : null;
   return async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -53,7 +66,7 @@ export function adsHandler(env = process.env, fetcher = fetch, provider = 'x', a
           !/^application\/json(?:;|$)/i.test(req.headers?.['content-type'] || ''))) {
         throw new AdsError(403, 'origin_denied');
       }
-      const canManage = await authorize(req.headers, fetcher, change);
+      const canManage = await authorize(req.headers, fetcher, change, instagramOperatorId);
       const config = readConfig(env);
       if (!config) {
         if (change) throw new AdsError(503, 'provider_not_connected');

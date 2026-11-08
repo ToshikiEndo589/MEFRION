@@ -33,7 +33,7 @@ writes.
 | Platform | Server-only connection variables | Delivery controls |
 | --- | --- | --- |
 | X | `X_ADS_ACCOUNT_ID`, `X_ADS_CONSUMER_KEY`, `X_ADS_CONSUMER_SECRET`, `X_ADS_ACCESS_TOKEN`, `X_ADS_ACCESS_TOKEN_SECRET` | `X_ADS_ENABLE_ACTIVATION`, `X_ADS_CURRENCY`, `X_ADS_MAX_TOTAL_MICROS` |
-| Instagram | `META_ADS_ACCOUNT_ID` (digits without `act_`), `META_ADS_ACCESS_TOKEN`, `META_ADS_API_VERSION` (supported Graph API version such as `v25.0`) | `META_ADS_ENABLE_ACTIVATION`, `META_ADS_CURRENCY`, `META_ADS_MAX_TOTAL_MICROS` |
+| Instagram | `META_ADS_ACCOUNT_ID` (digits without `act_`), `META_ADS_ACCESS_TOKEN`, `META_ADS_API_VERSION` (a supported Graph API version), `META_ADS_APP_SECRET` (when using app secret proof) | `META_ADS_ENABLE_ACTIVATION`, `META_ADS_CURRENCY`, `META_ADS_MAX_TOTAL_MICROS`, `META_ADS_OPERATOR_USER_ID` (optional verified operator ID for Instagram only) |
 | TikTok | `TIKTOK_ADS_ADVERTISER_ID`, `TIKTOK_ADS_ACCESS_TOKEN` | `TIKTOK_ADS_ENABLE_ACTIVATION`, `TIKTOK_ADS_CURRENCY`, `TIKTOK_ADS_MAX_TOTAL_MICROS` |
 
 X requires an approved Ads API app and user access. Instagram requires Meta
@@ -53,6 +53,17 @@ Each write checks the latest available provider state. Check the media manager
 after an unconfirmed write before trying again. The media manager is the source
 of truth for billing and delivery. Vercel runtime logs record the provider,
 campaign ID, requested state and confirmation outcome, without credentials.
+
+For Instagram, verify the MEFRION Instagram identity and payment setup in the
+intended Meta ad account before enabling delivery. Use a token scoped to that
+account and store it in the Vercel Production environment. The optional operator
+ID is the Supabase Auth user UUID, not an email address. This setting grants
+Instagram delivery access only after the server verifies the active operator
+role, current session, MFA, and matching user ID. It does not grant broader
+admin rights. Start by reviewing a campaign that is already paused, with
+Instagram-only placements, a lifetime budget and an end date, without changing
+its status. Use the approved currency and per-campaign cap before turning on
+activation.
 
 ### Interpret the reports
 

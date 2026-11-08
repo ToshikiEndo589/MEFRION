@@ -1,3 +1,4 @@
+import { createHmac } from 'node:crypto';
 import { AdsError } from './x-ads.mjs';
 import { currencyCode, micros, number, numericId, requireChange, title, upstream, verifyChange } from './report.mjs';
 
@@ -6,6 +7,7 @@ export function instagramConfig(env) {
       !/^v\d{2}\.0$/.test(env.META_ADS_API_VERSION || '')) return null;
   return {
     account: env.META_ADS_ACCOUNT_ID, token: env.META_ADS_ACCESS_TOKEN, version: env.META_ADS_API_VERSION,
+    proof: env.META_ADS_APP_SECRET ? createHmac('sha256', env.META_ADS_APP_SECRET).update(env.META_ADS_ACCESS_TOKEN).digest('hex') : null,
     enable: env.META_ADS_ENABLE_ACTIVATION === 'true', cap: micros(env.META_ADS_MAX_TOTAL_MICROS, 1),
     currency: currencyCode(env.META_ADS_CURRENCY),
   };
@@ -32,11 +34,12 @@ export function instagramClient(config, fetcher) {
   const accountPath = 'act_' + config.account;
   const request = async (path, query = {}, body) => {
     const url = new URL('https://graph.facebook.com/' + config.version + '/' + path);
-    url.search = new URLSearchParams(query);
+    const proof = config.proof ? { appsecret_proof: config.proof } : {};
+    url.search = new URLSearchParams({ ...query, ...(body ? {} : proof) });
     const data = await upstream(fetcher, url, {
       Authorization: 'Bearer ' + config.token,
       ...(body ? { 'Content-Type': 'application/x-www-form-urlencoded' } : {}),
-    }, body && new URLSearchParams(body).toString(), path.endsWith('/insights'));
+    }, body && new URLSearchParams({ ...body, ...proof }).toString(), path.endsWith('/insights'));
     if (!data || data.error) throw new AdsError(502, body ? 'write_unconfirmed' : 'provider_unavailable');
     return data;
   };
@@ -56,8 +59,9 @@ export function instagramClient(config, fetcher) {
     return { rows, partial: true };
   };
   function campaign(row, account, scoped = false) {
-    if (!numericId(row?.id) || row.account_id !== config.account || !['ACTIVE', 'PAUSED'].includes(row.status)) return null;
-    const currency = account.account_id === config.account ? currencyCode(account.currency) : null;
+    if (!numericId(row?.id) || row.account_id !== config.account || account.account_id !== config.account ||
+        !['ACTIVE', 'PAUSED'].includes(row.status)) return null;
+    const currency = currencyCode(account.currency);
     // Meta reports budgets in minor units, including a zero-decimal JPY.
     const decimals = currency ? new Intl.NumberFormat('en', { style: 'currency', currency }).resolvedOptions().maximumFractionDigits : 2;
     const unit = 10 ** (6 - decimals);

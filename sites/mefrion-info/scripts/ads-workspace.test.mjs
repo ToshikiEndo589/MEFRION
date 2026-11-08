@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createHash, generateKeyPairSync } from 'node:crypto';
+import { createHash, createHmac, generateKeyPairSync } from 'node:crypto';
 import test from 'node:test';
 import { adsHandler } from '../api/x-ads.mjs';
 import { appleAdsHandler } from '../api/apple-ads.mjs';
@@ -23,13 +23,18 @@ const headers = {
 const dates = 'start=2026-11-05&end=2026-11-06';
 const change = { id, updatedAt, status: 'ACTIVE', currency: 'JPY', totalMicros: 2000000000 };
 
-async function invoke(provider, scenario, { query = '', body, permissions = { publish: true }, moderator = false, settings = env } = {}) {
+async function invoke(provider, scenario, { query = '', body, permissions = { publish: true }, moderator = false, userId, settings = env } = {}) {
   const calls = [], audit = [];
   const response = { setHeader() {}, end(value) { this.body = JSON.parse(value); } };
   const fetcher = async (input, options) => {
     const url = new URL(input);
     calls.push({ url, options });
     if (url.hostname.endsWith('.supabase.co')) {
+      if (url.pathname === '/auth/v1/user') {
+        assert.equal(options.headers.Authorization, headers.authorization);
+        assert.equal(options.redirect, 'error');
+        return userId ? Response.json({ id: userId }) : new Response('{}', { status: 401 });
+      }
       if (url.pathname.endsWith('/mefrion_operator_alert_status')) {
         return new Response('null', { status: moderator ? 200 : 403 });
       }
@@ -92,6 +97,47 @@ test('a verified moderator can view Ads, but cannot change delivery', async () =
     assert.equal(write.statusCode, 403);
     assert.equal(write.calls.length, 1);
   }
+});
+
+test('only the named, currently authorized operator can review and change Instagram delivery', async () => {
+  const userId = '11111111-2222-4333-8444-555555555555';
+  const settings = { ...env, META_ADS_OPERATOR_USER_ID: userId };
+  const operator = { permissions: { publish: false }, moderator: true, userId, settings };
+  const reviewed = await invoke('instagram', metaScenario(), { ...operator, query: 'view=review&id=' + id });
+  assert.equal(reviewed.statusCode, 200);
+  assert.equal(reviewed.body.item.canActivate, true);
+  const write = await invoke('instagram', metaScenario(), { ...operator, body: change });
+  assert.equal(write.statusCode, 200);
+  assert.equal(write.calls.at(-1).options.body, 'status=ACTIVE');
+  const never = () => assert.fail('provider must not be called');
+  for (const [options, code] of [
+    [{ userId: 'other' }, 403], [{ userId: undefined }, 401], [{ moderator: false }, 403],
+    [{ settings: { ...settings, VERCEL_ENV: 'preview' } }, 403],
+  ]) {
+    const denied = await invoke('instagram', never, { ...operator, ...options, body: change });
+    assert.equal(denied.statusCode, code);
+  }
+  for (const provider of ['x', 'tiktok']) {
+    const denied = await invoke(provider, never, { ...operator, body: change });
+    assert.equal(denied.statusCode, 403);
+    assert.equal(denied.calls.length, 1);
+  }
+});
+
+test('Meta app secret proof stays server side and is sent only to Meta', async () => {
+  const settings = { ...env, META_ADS_APP_SECRET: 'mock-app-secret' };
+  const expected = createHmac('sha256', settings.META_ADS_APP_SECRET).update(settings.META_ADS_ACCESS_TOKEN).digest('hex');
+  const scenario = metaScenario();
+  const reply = await invoke('instagram', (url, options) => {
+    assert.equal(url.origin, 'https://graph.facebook.com');
+    assert.equal(options.headers.Authorization, 'Bearer ' + settings.META_ADS_ACCESS_TOKEN);
+    const parameters = options.method === 'POST' ? new URLSearchParams(options.body) : url.searchParams;
+    assert.equal(parameters.get('appsecret_proof'), expected);
+    assert.doesNotMatch(url.href, /mock-app-secret|meta-secret/);
+    return scenario(url, options);
+  }, { settings, body: change });
+  assert.equal(reply.statusCode, 200);
+  assert.doesNotMatch(JSON.stringify([reply.body, reply.audit]), new RegExp('mock-app-secret|meta-secret|' + expected));
 });
 
 test('Instagram reports strictly exclude Facebook spend and map only the expected app install action', async () => {
