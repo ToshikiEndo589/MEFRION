@@ -8,25 +8,34 @@ const providers = {
   x: [xAdsConfig, xAdsClient], instagram: [instagramConfig, instagramClient], tiktok: [tiktokConfig, tiktokClient],
 };
 
-export async function authorize(headers, fetcher) {
+export async function authorize(headers, fetcher, change = false) {
   const bearer = headers?.authorization;
   if (typeof bearer !== 'string' || !/^Bearer [\w.-]{20,8192}$/.test(bearer)) {
     throw new AdsError(401, 'login_required');
   }
   const config = await (await site.fetch(new Request('https://mefrion.vercel.app/console/config.json'))).json();
-  const response = await fetcher(config.url + '/rest/v1/rpc/mefrion_seed_permissions', {
+  const rpc = name => fetcher(config.url + '/rest/v1/rpc/' + name, {
     method: 'POST',
     headers: { Authorization: bearer, apikey: config.anon_key, 'Content-Type': 'application/json' },
     body: '{}',
     redirect: 'error',
     signal: AbortSignal.timeout(5000),
   });
-  if (response.status === 401) throw new AdsError(401, 'login_required');
-  if (response.status === 403) throw new AdsError(403, 'admin_required');
-  if (!response.ok) throw new AdsError(503, 'auth_unavailable');
-  // The existing publish permission is exclusive to active admins, and
-  // require_seed verifies the approved identity, live session, and MFA.
-  if ((await response.json()).publish !== true) throw new AdsError(403, 'admin_required');
+  const check = response => {
+    if (response.status === 401) throw new AdsError(401, 'login_required');
+    if (!response.ok && response.status !== 403) throw new AdsError(503, 'auth_unavailable');
+  };
+  const permissions = await rpc('mefrion_seed_permissions');
+  check(permissions);
+  if (permissions.ok && (await permissions.json())?.publish === true) return true;
+  if (change) throw new AdsError(403, 'admin_required');
+
+  // This lightweight read checks the active operator role, allowlisted
+  // identity, current session and verified MFA through require_moderator.
+  const operator = await rpc('mefrion_operator_alert_status');
+  check(operator);
+  if (!operator.ok) throw new AdsError(403, 'operator_required');
+  return false;
 }
 
 export function adsHandler(env = process.env, fetcher = fetch, provider = 'x', audit = console.info) {
@@ -44,7 +53,7 @@ export function adsHandler(env = process.env, fetcher = fetch, provider = 'x', a
           !/^application\/json(?:;|$)/i.test(req.headers?.['content-type'] || ''))) {
         throw new AdsError(403, 'origin_denied');
       }
-      await authorize(req.headers, fetcher);
+      const canManage = await authorize(req.headers, fetcher, change);
       const config = readConfig(env);
       if (!config) {
         if (change) throw new AdsError(503, 'provider_not_connected');
@@ -74,11 +83,14 @@ export function adsHandler(env = process.env, fetcher = fetch, provider = 'x', a
         const report = await client.report(query);
         return send(200, { connected: true, ...query, ...report, fetchedAt: new Date().toISOString() });
       }
-      if (action === 'review' && client.review) return send(200, { item: await client.review(params.get('id')) });
+      if (action === 'review' && client.review) {
+        if (!canManage) throw new AdsError(403, 'admin_required');
+        return send(200, { item: await client.review(params.get('id')) });
+      }
       if (action !== 'campaigns') throw new AdsError(400, 'bad_request');
       const cursor = params.get('cursor');
       if (cursor && cursor.length > 500) throw new AdsError(400, 'bad_request');
-      return send(200, { connected: true, ...await client.list(cursor) });
+      return send(200, { connected: true, ...await client.list(cursor), canManage });
     } catch (error) {
       if (error instanceof SyntaxError) return send(400, { code: 'bad_request' });
       if (error instanceof AdsError) return send(error.status, { code: error.message });

@@ -23,13 +23,18 @@ const headers = {
 const dates = 'start=2026-11-05&end=2026-11-06';
 const change = { id, updatedAt, status: 'ACTIVE', currency: 'JPY', totalMicros: 2000000000 };
 
-async function invoke(provider, scenario, { query = '', body, permissions = { publish: true }, settings = env } = {}) {
+async function invoke(provider, scenario, { query = '', body, permissions = { publish: true }, moderator = false, settings = env } = {}) {
   const calls = [], audit = [];
   const response = { setHeader() {}, end(value) { this.body = JSON.parse(value); } };
   const fetcher = async (input, options) => {
     const url = new URL(input);
     calls.push({ url, options });
-    if (url.hostname.endsWith('.supabase.co')) return Response.json(permissions);
+    if (url.hostname.endsWith('.supabase.co')) {
+      if (url.pathname.endsWith('/mefrion_operator_alert_status')) {
+        return new Response('null', { status: moderator ? 200 : 403 });
+      }
+      return Response.json(permissions);
+    }
     const result = await scenario(url, options);
     return result instanceof Response ? result : Response.json(result);
   };
@@ -62,15 +67,30 @@ function metaScenario({ platforms = ['instagram'], row = {}, more = false } = {}
   };
 }
 
-test('all new routes enforce admin scope and preview has no live provider access', async () => {
+test('reporting requires an operator role and preview has no live provider access', async () => {
   for (const provider of ['instagram', 'tiktok', 'apple']) {
     const unexpected = () => assert.fail('provider request');
     const staff = await invoke(provider, unexpected, { permissions: { publish: false } });
     assert.equal(staff.statusCode, 403);
-    assert.equal(staff.calls.length, 1);
+    assert.equal(staff.calls.length, 2);
     const preview = await invoke(provider, unexpected, { settings: { ...env, VERCEL_ENV: 'preview' } });
     assert.equal(preview.statusCode, 200);
     assert.equal(preview.calls.length, 1);
+  }
+});
+
+test('a verified moderator can view Ads, but cannot change delivery', async () => {
+  const settings = { VERCEL_ENV: 'production' };
+  const moderator = { permissions: { publish: false }, moderator: true, settings };
+  for (const provider of ['x', 'instagram', 'tiktok', 'apple']) {
+    const unexpected = () => assert.fail('provider request');
+    const report = await invoke(provider, unexpected, moderator);
+    assert.equal(report.statusCode, 200);
+    assert.match(report.calls[1].url.pathname, /mefrion_operator_alert_status$/);
+    if (provider === 'apple') continue;
+    const write = await invoke(provider, unexpected, { ...moderator, body: change });
+    assert.equal(write.statusCode, 403);
+    assert.equal(write.calls.length, 1);
   }
 });
 

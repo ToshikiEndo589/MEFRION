@@ -18,9 +18,9 @@ The console requires a confirmed operator, verified TOTP, active Auth session an
 
 ## Ads
 
-Vercel serves the separate Ads workspace at `/ads`. An active operator session
-with verified TOTP and the administrator's publish permission is required for
-every advertising and Apple request. The workspace does not use the Supabase
+Vercel serves the separate Ads workspace at `/ads`. Reporting requires an active
+moderator or administrator session with verified TOTP. Changing delivery also
+requires the administrator's publish permission. The workspace does not use the Supabase
 service-role key. Preview deployments do not contact live advertisers or Apple.
 
 ### Connect an advertiser

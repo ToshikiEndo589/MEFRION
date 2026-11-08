@@ -7,7 +7,8 @@ const adsPlatforms = {
 };
 const adsMessages = {
   login_required: 'ログインし直してください。',
-  admin_required: 'Adsは管理者アカウントで利用できます。',
+  admin_required: '配信開始・停止には管理者権限が必要です。',
+  operator_required: 'Adsを開くには有効な運営権限と二段階認証が必要です。',
   x_access_denied: '広告アカウントのAPI権限を確認してください。',
   provider_access_denied: '広告アカウントのAPI権限を確認してください。',
   x_rate_limit: '取得上限に達しました。少し時間をおいて更新してください。',
@@ -59,8 +60,10 @@ async function adsRequest(platform, { query = {}, body } = {}) {
     if (body) throw Error(adsMessages.write_unconfirmed);
     throw error;
   }
-  if (session === token && result.status === 401) clear();
-  if (session === token && data.code === 'admin_required') clearAds();
+  if (session === token && (result.status === 401 || data.code === 'operator_required')) {
+    clear();
+    status(adsMessages[data.code] || adsMessages.login_required);
+  }
   if (!result.ok) throw Error(adsMessages[data.code] || '広告データを取得できませんでした。接続を確認して更新してください。');
   return data;
 }
@@ -312,7 +315,7 @@ function adsConfirm(platform, item, accountId, next) {
   $('ads-confirm').showModal();
 }
 
-function adsRow(platform, item, accountId) {
+function adsRow(platform, item, accountId, canManage = true) {
   const row = node('article');
   row.className = 'ads-row ads-delivery-row';
   row.dataset.campaignId = item.id;
@@ -322,7 +325,7 @@ function adsRow(platform, item, accountId) {
     node('p', '日額 ' + adsMoney(item.dailyMicros, item.currency) + ' / 総額 ' + adsMoney(item.totalMicros, item.currency)));
   row.append(summary);
   const next = item.canActivate ? 'ACTIVE' : item.canPause || (platform === 'x' && item.status === 'ACTIVE' && item.updatedAt) ? 'PAUSED' : null;
-  if (next || item.needsReview) {
+  if (canManage && (next || item.needsReview)) {
     const button = node('button', item.needsReview ? '配信先を確認' : next === 'ACTIVE' ? '配信開始…' : '配信停止…');
     button.type = 'button';
     button.addEventListener('click', () => {
@@ -356,7 +359,8 @@ async function adsLoadDelivery(platform, stamp, append = false) {
     if (stamp !== adsRevision) return;
     if (!append) out.replaceChildren();
     if (!result.connected) return out.append(node('p', '広告APIを接続するとキャンペーンが表示されます。'));
-    if (result.items.length) out.append(...result.items.map(item => adsRow(platform, item, result.accountId)));
+    if (result.canManage !== true) $('ads-delivery-note').textContent += ' 配信操作には管理者権限が必要です。';
+    if (result.items.length) out.append(...result.items.map(item => adsRow(platform, item, result.accountId, result.canManage === true)));
     else if (!append) out.append(node('p', '操作対象のキャンペーンがありません。'));
     if (result.partial) out.append(node('p', '一部のキャンペーンを表示しています。残りは媒体の管理画面で確認できます。'));
     adsCursor = result.next || null;

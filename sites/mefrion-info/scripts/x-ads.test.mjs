@@ -33,7 +33,10 @@ async function invoke(req, { permissions = { publish: true }, settings = env, cu
   const handler = adsHandler(settings, async (input, options) => {
     const url = new URL(input);
     calls.push({ url, method: options.method, authorization: options.headers.Authorization });
-    if (url.hostname.endsWith('.supabase.co')) return Response.json(permissions);
+    if (url.hostname.endsWith('.supabase.co')) {
+      if (url.pathname.endsWith('/mefrion_operator_alert_status')) return new Response('null', { status: 403 });
+      return Response.json(permissions);
+    }
     if (options.method === 'PUT') {
       return Response.json({ data: { ...current, entity_status: url.searchParams.get('entity_status') } });
     }
@@ -61,7 +64,7 @@ test('anonymous and non-admin sessions cannot reach X', async () => {
   assert.equal(anonymous.calls.length, 0);
   const staff = await invoke(request, { permissions: { edit: true, publish: false } });
   assert.equal(staff.statusCode, 403);
-  assert.equal(staff.calls.length, 1);
+  assert.equal(staff.calls.length, 2);
   const badOrigin = await invoke({
     ...request, method: 'POST', body: activation,
     headers: { ...request.headers, origin: 'https://untrusted.invalid' },
